@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -47,6 +48,115 @@ namespace Bromine.Core
         }
 
         /// <summary>
+        /// Get the URL of the current page.
+        /// </summary>
+        public string Url => _driver.Url;
+
+        /// <summary>
+        /// Get the HTML source.
+        /// </summary>
+        public string Source => _driver.PageSource;
+
+        /// <summary>
+        /// Get the HTML title.
+        /// </summary>
+        public string Title => _driver.Title;
+
+        /// <summary>
+        /// Get the driver logs.
+        /// </summary>
+        public ILogs Logs => _driver.Manage().Logs;
+
+        /// <summary>
+        /// Manipulate cookies.
+        /// </summary>
+        public ICookieJar Cookies => _driver.Manage().Cookies;
+
+        /// <summary>
+        /// Manipulate currently focused window.
+        /// </summary>
+        public IWindow Window => _driver.Manage().Window;
+
+        /// <summary>
+        /// Position of the browser window.
+        /// </summary>
+        public Point Position => _driver.Manage().Window.Position;
+
+        /// <summary>
+        /// Size ofthe browser window.
+        /// </summary>
+        public Size Size => _driver.Manage().Window.Size;
+
+        #region Navigate
+        /// <summary>
+        /// Navigate to the given URL.
+        /// </summary>
+        /// <param name="url">URL to navigate to.</param>
+        public void NavigateToUrl(string url)
+        {
+            _driver.Navigate().GoToUrl(url);
+        }
+
+        /// <summary>
+        /// Navigate back to the previous page.
+        /// </summary>
+        public void NavigateBack()
+        {
+            _driver.Navigate().Back();
+        }
+
+        /// <summary>
+        /// Navigate forward.
+        /// </summary>
+        public void NavigateForward()
+        {
+            _driver.Navigate().Forward();
+        }
+
+        /// <summary>
+        /// Refresh the current page.
+        /// </summary>
+        public void Refresh()
+        {
+            _driver.Navigate().Refresh();
+        }
+        #endregion
+
+        #region Window
+        /// <summary>
+        /// Maxamize the window.
+        /// </summary>
+        public void Maxamize()
+        {
+            _driver.Manage().Window.Maximize();
+        }
+
+        /// <summary>
+        /// Minimize the window.
+        /// </summary>
+        public void Minimize()
+        {
+            _driver.Manage().Window.Minimize();
+        }
+
+        /// <summary>
+        /// Maximize the size of the browser window.
+        /// </summary>
+        public void FullScreen()
+        {
+            _driver.Manage().Window.FullScreen();
+        }
+        #endregion
+
+        /// <summary>
+        /// Close the Browser and WebDriver.
+        /// </summary>
+        public void Dispose()
+        {
+            _driver.Quit();
+        }
+
+        /// <summary>
         /// Get a Chrome browser driver.
         /// </summary>
         /// <param name="hideDriverWindow">If true do not display the webdriver dialog.</param>
@@ -70,25 +180,6 @@ namespace Bromine.Core
             chromeDriverService.HideCommandPromptWindow = true;
 
             return new ChromeDriver(chromeDriverService, options);
-        }
-
-        /// <summary>
-        /// Get the URL of the current page.
-        /// </summary>
-        public string Url => _driver.Url;
-
-        /// <summary>
-        /// Navigate to the given URL.
-        /// </summary>
-        /// <param name="url">URL to navigate to.</param>
-        public void NavigateToUrl(string url)
-        {
-            _driver.Navigate().GoToUrl(url);
-        }
-
-        public void Dispose()
-        {
-            _driver.Quit();
         }
 
         /// <summary>
