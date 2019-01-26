@@ -18,24 +18,24 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="browser">Type of browser to initialize.</param>
         /// <param name="isHeadless">Do not render a UI when true. This will run faster.</param>
-        public Driver(BrowserType browser, bool isHeadless = false, bool hideDriverWindow = true)
+        public Driver(Models.DriverOptions options)
         {
-            switch(browser)
+            switch(options.Browser)
             {
                 case BrowserType.Chrome:
                     {
-                        _driver = InitializeChromeDriver(isHeadless, hideDriverWindow);
+                        WebDriver = InitializeChromeDriver(options.IsHeadless, options.HideDriverWindow);
                         break;
                     }
                 case BrowserType.Edge:
                     {
                         // TODO: If isHeadless = true Log message not supported.
-                        _driver = InitializeEdgeDriver(hideDriverWindow);
+                        WebDriver = InitializeEdgeDriver(options.HideDriverWindow);
                         break;
                     }
                 case BrowserType.Firefox:
                     {
-                        _driver = InitializeFirefoxDriver(isHeadless, hideDriverWindow);
+                        WebDriver = InitializeFirefoxDriver(options.IsHeadless, options.HideDriverWindow);
                         break;
                     }
                 default:
@@ -50,42 +50,44 @@ namespace Bromine.Core
         /// <summary>
         /// Get the URL of the current page.
         /// </summary>
-        public string Url => _driver.Url;
+        public string Url => WebDriver.Url;
 
         /// <summary>
         /// Get the HTML source.
         /// </summary>
-        public string Source => _driver.PageSource;
+        public string Source => WebDriver.PageSource;
 
         /// <summary>
         /// Get the HTML title.
         /// </summary>
-        public string Title => _driver.Title;
+        public string Title => WebDriver.Title;
 
         /// <summary>
         /// Get the driver logs.
         /// </summary>
-        public ILogs Logs => _driver.Manage().Logs;
+        public ILogs Logs => WebDriver.Manage().Logs;
 
         /// <summary>
         /// Manipulate cookies.
         /// </summary>
-        public ICookieJar Cookies => _driver.Manage().Cookies;
+        public ICookieJar Cookies => WebDriver.Manage().Cookies;
 
         /// <summary>
         /// Manipulate currently focused window.
         /// </summary>
-        public IWindow Window => _driver.Manage().Window;
+        public IWindow Window => WebDriver.Manage().Window;
 
         /// <summary>
         /// Position of the browser window.
         /// </summary>
-        public Point Position => _driver.Manage().Window.Position;
+        public Point Position => WebDriver.Manage().Window.Position;
 
         /// <summary>
         /// Size ofthe browser window.
         /// </summary>
-        public Size Size => _driver.Manage().Window.Size;
+        public Size Size => WebDriver.Manage().Window.Size;
+
+        internal IWebDriver WebDriver { get; }
 
         #region Navigate
         /// <summary>
@@ -94,7 +96,7 @@ namespace Bromine.Core
         /// <param name="url">URL to navigate to.</param>
         public void NavigateToUrl(string url)
         {
-            _driver.Navigate().GoToUrl(url);
+            WebDriver.Navigate().GoToUrl(url);
         }
 
         /// <summary>
@@ -102,7 +104,7 @@ namespace Bromine.Core
         /// </summary>
         public void NavigateBack()
         {
-            _driver.Navigate().Back();
+            WebDriver.Navigate().Back();
         }
 
         /// <summary>
@@ -110,7 +112,7 @@ namespace Bromine.Core
         /// </summary>
         public void NavigateForward()
         {
-            _driver.Navigate().Forward();
+            WebDriver.Navigate().Forward();
         }
 
         /// <summary>
@@ -118,7 +120,7 @@ namespace Bromine.Core
         /// </summary>
         public void Refresh()
         {
-            _driver.Navigate().Refresh();
+            WebDriver.Navigate().Refresh();
         }
         #endregion
 
@@ -128,7 +130,7 @@ namespace Bromine.Core
         /// </summary>
         public void Maxamize()
         {
-            _driver.Manage().Window.Maximize();
+            WebDriver.Manage().Window.Maximize();
         }
 
         /// <summary>
@@ -136,7 +138,7 @@ namespace Bromine.Core
         /// </summary>
         public void Minimize()
         {
-            _driver.Manage().Window.Minimize();
+            WebDriver.Manage().Window.Minimize();
         }
 
         /// <summary>
@@ -144,7 +146,7 @@ namespace Bromine.Core
         /// </summary>
         public void FullScreen()
         {
-            _driver.Manage().Window.FullScreen();
+            WebDriver.Manage().Window.FullScreen();
         }
         #endregion
 
@@ -153,7 +155,7 @@ namespace Bromine.Core
         /// </summary>
         public void Dispose()
         {
-            _driver.Quit();
+            WebDriver.Quit();
         }
 
         /// <summary>
@@ -225,8 +227,6 @@ namespace Bromine.Core
         }
 
         private const string headlessFlagString = "--headless";
-
-        private IWebDriver _driver { get; }
     }
 
 
