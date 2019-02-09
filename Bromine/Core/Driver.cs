@@ -14,10 +14,27 @@ namespace Bromine.Core
     public class Driver: IDisposable
     {
         /// <summary>
+        /// Service the Chrome driver is running on provided it has been initialized at object construction.
+        /// NOTE: only one DriverService is valid at a time.
+        /// </summary>
+        public ChromeDriverService ChromeDriverService { get; private set; }
+
+        /// <summary>
+        /// Service the Firefox driver is running on provided it has been initialized at object construction.
+        /// NOTE: only one DriverService is valid at a time.
+        /// </summary>
+        public FirefoxDriverService FirefoxDriverService { get; private set; }
+
+        /// <summary>
+        /// Service the Edge driver is running on provided it has been initialized at object construction.
+        /// NOTE: only one DriverService is valid at a time.
+        /// </summary>
+        public EdgeDriverService EdgeDriverService { get; private set; }
+
+        /// <summary>
         /// Initialize an IWebDriver for the given browser and desired configuration.
         /// </summary>
-        /// <param name="browser">Type of browser to initialize.</param>
-        /// <param name="isHeadless">Do not render a UI when true. This will run faster.</param>
+        /// <param name="options">Object to bass desired browser driver configuration.</param>
         public Driver(Models.DriverOptions options)
         {
             switch(options.Browser)
@@ -38,13 +55,7 @@ namespace Bromine.Core
                         WebDriver = InitializeFirefoxDriver(options.IsHeadless, options.HideDriverWindow);
                         break;
                     }
-                default:
-                    {
-                        // TODO: Log not supported type.
-                        break;
-                    }
             }
-
         }
 
         /// <summary>
@@ -126,9 +137,9 @@ namespace Bromine.Core
 
         #region Window
         /// <summary>
-        /// Maxamize the window.
+        /// Maximize the window.
         /// </summary>
-        public void Maxamize()
+        public void Maximize()
         {
             WebDriver.Manage().Window.Maximize();
         }
@@ -155,7 +166,10 @@ namespace Bromine.Core
         /// </summary>
         public void Dispose()
         {
-            WebDriver.Quit();
+            WebDriver?.Quit();
+            ChromeDriverService?.Dispose();
+            FirefoxDriverService?.Dispose();
+            EdgeDriverService?.Dispose();
         }
 
         /// <summary>
@@ -167,21 +181,30 @@ namespace Bromine.Core
         private IWebDriver InitializeChromeDriver(bool isHeadless = true, bool hideDriverWindow = true)
         {
             var options = new ChromeOptions();
-            var chromeDriverService = ChromeDriverService.CreateDefaultService();
+            ChromeDriverService = ChromeDriverService.CreateDefaultService();
 
             if (hideDriverWindow)
             {
-                chromeDriverService.HideCommandPromptWindow = true;
+                ChromeDriverService.HideCommandPromptWindow = true;
             }
 
             if (isHeadless)
             {
-                options.AddArgument(headlessFlagString);
+                options.AddArgument(HeadlessFlagString);
             }
 
-            chromeDriverService.HideCommandPromptWindow = true;
+            ChromeDriverService.HideCommandPromptWindow = true;
 
-            return new ChromeDriver(chromeDriverService, options);
+            try
+            {
+                return new ChromeDriver(ChromeDriverService, options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Dispose();
+                throw;
+            }
         }
 
         /// <summary>
@@ -193,19 +216,28 @@ namespace Bromine.Core
         private IWebDriver InitializeFirefoxDriver(bool isHeadless = false, bool hideDriverWindow = true)
         {
             var options = new FirefoxOptions();
-            var firefoxDriverService = FirefoxDriverService.CreateDefaultService();
+            FirefoxDriverService = FirefoxDriverService.CreateDefaultService();
 
             if (hideDriverWindow)
             {
-                firefoxDriverService.HideCommandPromptWindow = true;
+                FirefoxDriverService.HideCommandPromptWindow = true;
             }
 
             if (isHeadless)
             {
-                options.AddArgument(headlessFlagString);
+                options.AddArgument(HeadlessFlagString);
             }
 
-            return new FirefoxDriver(firefoxDriverService, options);
+            try
+            {
+                return new FirefoxDriver(FirefoxDriverService, options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Dispose();
+                throw;
+            }
         }
 
         /// <summary>
@@ -216,17 +248,26 @@ namespace Bromine.Core
         private IWebDriver InitializeEdgeDriver(bool hideDriverWindow = true)
         {
             var options = new EdgeOptions();
-            var edgeDriverService = EdgeDriverService.CreateDefaultService();
+            EdgeDriverService = EdgeDriverService.CreateDefaultService();
 
             if (hideDriverWindow)
             {
-                edgeDriverService.HideCommandPromptWindow = true;
+                EdgeDriverService.HideCommandPromptWindow = true;
             }
 
-            return new EdgeDriver(edgeDriverService, options);
+            try
+            {
+                return new EdgeDriver(EdgeDriverService, options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Dispose();
+                throw;
+            }
         }
 
-        private const string headlessFlagString = "--headless";
+        private const string HeadlessFlagString = "--headless";
     }
 
 
