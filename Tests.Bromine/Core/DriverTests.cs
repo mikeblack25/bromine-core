@@ -1,13 +1,15 @@
 ﻿using System;
 
-using Tests.Bromine.Common;
+using Bromine.Core;
+using Bromine.Models;
 
+using Tests.Bromine.Common;
 using Xunit;
 
-namespace Bromine.Core
+namespace Tests.Bromine.Core
 {
     /// <summary>
-    /// Test Driver behavior.
+    /// Test the behavior of the Driver class.
     /// </summary>
     public class DriverTests: IDisposable
     {
@@ -21,11 +23,12 @@ namespace Bromine.Core
         [InlineData(BrowserType.Firefox), Trait(Category.Browser, Category.Firefox)]
         public void InitializeBrowserDefaultsTest(BrowserType browser)
         {
-            _driver = new Driver(browser);
+            var driverOptions = new DriverOptions(browser);
+            Driver = new Driver(driverOptions);
 
-            _driver.NavigateToUrl(googleUrl);
+            Driver.NavigateToUrl(GoogleUrl);
 
-            Assert.Equal(googleUrl, _driver.Url);
+            Assert.Equal(GoogleUrl, Driver.Url);
         }
 
         /// <summary>
@@ -37,19 +40,23 @@ namespace Bromine.Core
         [InlineData(BrowserType.Firefox), Trait(Category.Browser, Category.Firefox)]
         public void InitializeBrowserIsHeadlessTest(BrowserType browser)
         {
-            _driver = new Driver(browser, true);
+            var driverOptions = new DriverOptions(browser, true);
+            Driver = new Driver(driverOptions);
 
-            _driver.NavigateToUrl(googleUrl);
+            Driver.NavigateToUrl(GoogleUrl);
 
-            Assert.Equal(googleUrl, _driver.Url);
+            Assert.Equal(GoogleUrl, Driver.Url);
         }
 
-        void IDisposable.Dispose()
+        /// <summary>
+        /// Dispose of the Driver resource.
+        /// </summary>
+        public void Dispose()
         {
-            _driver.Dispose();
+            Driver?.Dispose();
         }
 
-        private const string googleUrl = "https://www.google.com/?gws_rd=ssl";
-        private Driver _driver;
+        private const string GoogleUrl = "https://www.google.com/?gws_rd=ssl";
+        private Driver Driver { get; set; }
     }
 }
