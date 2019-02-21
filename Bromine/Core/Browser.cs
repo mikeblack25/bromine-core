@@ -6,12 +6,25 @@ using System.Collections.Generic;
 
 namespace Bromine.Core
 {
+    /// <summary>
+    /// Provides ability to interact with a web browser.
+    /// </summary>
     public class Browser : IDisposable
     {
         /// <summary>
         /// Url of the current page.
         /// </summary>
         public string Url => _driver.Url;
+
+        /// <summary>
+        /// Title of the current page.
+        /// </summary>
+        public string Title => _driver.Title;
+
+        /// <summary>
+        /// Get the HTML source (DOM).
+        /// </summary>
+        public string Source => _driver.Source;
 
         /// <summary>
         /// Helpers to find elements.
@@ -33,7 +46,7 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="browser">Type of browser to use.</param>
         /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
-        /// <param name="secondsToImplicitWait">Number of seconds to wait for an condition. This is only applicable when enabmeImplicitWait is true.</param>
+        /// <param name="secondsToImplicitWait">Seconds to wait for a given condition. This is only applicable when enabmeImplicitWait is true.</param>
         public Browser(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5)
             : this(new Models.BrowserOptions(browser, enableImplicitWait, secondsToImplicitWait))
         {
@@ -117,6 +130,6 @@ namespace Bromine.Core
             _driver.WebDriver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, secondsToWait);
         }
 
-        private Driver _driver;
+        private Driver _driver { get; set; }
     }
 }
