@@ -1,8 +1,8 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace Bromine.Core
 {
@@ -80,6 +80,22 @@ namespace Bromine.Core
             try
             {
                 _driver.WebDriver.Navigate().GoToUrl(url);
+            }
+            catch (Exception ex)
+            {
+                Exceptions.Add(ex);
+            }
+        }
+
+        /// <summary>
+        /// Navigate to the given file.
+        /// </summary>
+        /// <param name="path"></param>
+        public void NavigateToFile(string path)
+        {
+            try
+            {
+                _driver.WebDriver.Navigate().GoToUrl($"file://{path}");
             }
             catch (Exception ex)
             {

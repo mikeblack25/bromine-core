@@ -181,6 +181,8 @@ namespace Bromine.Core
         private IWebDriver InitializeChromeDriver(bool isHeadless = true, bool hideDriverWindow = true)
         {
             var options = new ChromeOptions();
+            options.AddArgument("--allow-file-access-from-files");
+
             ChromeDriverService = ChromeDriverService.CreateDefaultService();
 
             if (hideDriverWindow)

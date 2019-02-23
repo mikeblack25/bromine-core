@@ -25,6 +25,25 @@ namespace Bromine.Core
         }
 
         /// <summary>
+        /// Find Elements by ID.
+        /// </summary>
+        /// <param name="id">ID to locate an element.</param>
+        /// <returns></returns>
+        public List<Element> ElementsById(string id)
+        {
+            var list = new List<Element>();
+
+            var elements = _driver.FindElements(By.Id(id));
+
+            foreach (var element in elements)
+            {
+                list.Add(new Element(element, id, LocatorType.Id));
+            }
+
+            return list;
+        }
+
+        /// <summary>
         /// Find Element by Class identifier.
         /// </summary>
         /// <param name="className">Class name to locate an element.</param>
@@ -74,7 +93,7 @@ namespace Bromine.Core
 
             foreach (var element in elements)
             {
-                list.Add(new Element(element));
+                list.Add(new Element(element, cssSelector, LocatorType.CssSelector));
             }
 
             return list;
@@ -88,6 +107,25 @@ namespace Bromine.Core
         public Element ElementByText(string elementText)
         {
             return new Element(_driver.FindElement(By.LinkText(elementText)), elementText, LocatorType.Text);
+        }
+
+        /// <summary>
+        /// Find Elements by text.
+        /// </summary>
+        /// <param name="elementText">Element text of the HTML element to find.</param>
+        /// <returns></returns>
+        public List<Element> ElementsByText(string elementText)
+        {
+            var list = new List<Element>();
+
+            var elements = _driver.FindElements(By.LinkText(elementText));
+
+            foreach (var element in elements)
+            {
+                list.Add(new Element(element, elementText, LocatorType.Text));
+            }
+
+            return list;
         }
 
         /// <summary>
