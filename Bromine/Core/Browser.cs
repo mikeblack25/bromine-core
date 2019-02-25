@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -42,14 +43,21 @@ namespace Bromine.Core
         public List<Exception> Exceptions { get; private set; }
 
         /// <summary>
+        /// Get the path to the last screenshot;
+        /// </summary>
+        public string LastScreenshotPath { get; private set; }
+
+        /// <summary>
         /// Provides methods of interacting with the web browser.
         /// </summary>
         /// <param name="browser">Type of browser to use.</param>
         /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
         /// <param name="secondsToImplicitWait">Seconds to wait for a given condition. This is only applicable when enabmeImplicitWait is true.</param>
-        public Browser(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5)
+        /// <param name="stringShotDirectory">Location to store screenshots. If this is not provided screenshots will be put in a Screenshots directory in the output path.</param>
+        public Browser(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5, string stringShotDirectory = "")
             : this(new Models.BrowserOptions(browser, enableImplicitWait, secondsToImplicitWait))
         {
+            InitializeScreenshotDirectory(stringShotDirectory);
         }
 
         /// <summary>
@@ -134,6 +142,25 @@ namespace Bromine.Core
         }
 
         /// <summary>
+        /// Take a screenshot of the visible page.
+        /// </summary>
+        /// <param name="name">Name of the file of the screenshot.</param>
+        public void TakeScreenshot(string name)
+        {
+            LastScreenshotPath = $@"{_screenshotPath}\{name}.jpg";
+
+            try
+            {
+                var screenshot = _driver.Screenshot;
+                screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Jpeg);
+            }
+            catch (Exception ex)
+            {
+                Exceptions.Add(ex);
+            }
+        }
+
+        /// <summary>
         /// Dispose of the Selenium WebDriver.
         /// </summary>
         public void Dispose()
@@ -146,6 +173,24 @@ namespace Bromine.Core
             _driver.WebDriver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, secondsToWait);
         }
 
+        private void InitializeScreenshotDirectory(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                path = $@"{AppDomain.CurrentDomain.BaseDirectory}\{_screenshotsDirectory}";
+            }
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            _screenshotPath = path;
+        }
+
         private Driver _driver { get; set; }
+
+        private string _screenshotsDirectory => "Screenshots";
+        private string _screenshotPath { get; set; }
     }
 }

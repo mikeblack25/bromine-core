@@ -5,6 +5,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Support.Extensions;
 
 namespace Bromine.Core
 {
@@ -97,6 +98,11 @@ namespace Bromine.Core
         /// Size ofthe browser window.
         /// </summary>
         public Size Size => WebDriver.Manage().Window.Size;
+
+        /// <summary>
+        /// Take a screenshot for the given visible page.
+        /// </summary>
+        public Screenshot Screenshot => WebDriver.TakeScreenshot();
 
         internal IWebDriver WebDriver { get; }
 
