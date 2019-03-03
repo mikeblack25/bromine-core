@@ -38,6 +38,10 @@ namespace Tests.Bromine.Core
 
             TryText(TextString);
             TryTexts(TextString);
+
+            TryPartialText(TextString.Substring(2));
+
+            TryTag("div");
         }
 
         /// <summary>
@@ -143,6 +147,30 @@ namespace Tests.Bromine.Core
             catch
             {
                 ErrorList.Add($"Unable to find elements by text: {text}");
+            }
+        }
+
+        private void TryPartialText(string text)
+        {
+            try
+            {
+                Browser.Find.ElementByPartialText(text);
+            }
+            catch
+            {
+                ErrorList.Add($"Unable to find element by partial text: {text}");
+            }
+        }
+
+        private void TryTag(string text)
+        {
+            try
+            {
+                Browser.Find.ElementByTag(text);
+            }
+            catch
+            {
+                ErrorList.Add($"Unable to find elements by tag: {text}");
             }
         }
 

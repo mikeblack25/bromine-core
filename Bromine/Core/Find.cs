@@ -156,6 +156,6 @@ namespace Bromine.Core
             return elementsList;
         }
 
-        private IWebDriver _driver;
+        private IWebDriver _driver { get; }
     }
 }

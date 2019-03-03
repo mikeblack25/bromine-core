@@ -12,12 +12,9 @@ namespace Bromine.Models
         /// </summary>
         /// <param name="browser">Type of browser to use.</param>
         /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
-        /// <param name="secondsToImplicitWait">Number of seconds to wait for an condition. This is only applicable when enabmeImplicitWait is true.</param>
-        public BrowserOptions(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5)
+        /// <param name="secondsToImplicitWait">Number of seconds to wait for an condition. This is only applicable when enableImplicitWait is true.</param>
+        public BrowserOptions(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5) : this(new DriverOptions(browser), enableImplicitWait, secondsToImplicitWait)
         {
-            Driver = new DriverOptions(browser);
-            EnableImplicitWait = enableImplicitWait;
-            SecondsToImplicitWait = secondsToImplicitWait;
         }
 
         /// <summary>
@@ -25,7 +22,7 @@ namespace Bromine.Models
         /// </summary>
         /// <param name="options">Advanced browser driver configuration options.</param>
         /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
-        /// <param name="secondsToImplicitWait">Number of seconds to wait for an condition. This is only applicable when enabmeImplicitWait is true.</param>
+        /// <param name="secondsToImplicitWait">Number of seconds to wait for an condition. This is only applicable when enableImplicitWait is true.</param>
         public BrowserOptions(DriverOptions options, bool enableImplicitWait = true, int secondsToImplicitWait = 5)
         {
             Driver = options;
@@ -44,7 +41,7 @@ namespace Bromine.Models
         public DriverOptions Driver { get; set; }
 
         /// <summary>
-        /// The amount of time for a condition to be satasfied before failing.
+        /// The amount of time for a condition to be satisfied before failing.
         /// </summary>
         public bool EnableImplicitWait { get; set; }
 
