@@ -26,7 +26,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyNavigate()
         {
-            Browser.NavigateToUrl(AmazonUrl);
+            Browser.Navigate.ToUrl(AmazonUrl);
 
             Assert.Equal(AmazonUrl, Browser.Url);
         }
@@ -37,7 +37,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifySourceAndTitle()
         {
-            Browser.NavigateToUrl(AmazonUrl);
+            Browser.Navigate.ToUrl(AmazonUrl);
 
             Assert.Contains(Amazon, Browser.Source);
             Assert.Contains(Amazon, Browser.Title);
@@ -49,7 +49,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyScreenshot()
         {
-            Browser.NavigateToUrl(AmazonUrl);
+            Browser.Navigate.ToUrl(AmazonUrl);
 
             Browser.TakeScreenshot("Amazon Test");
 

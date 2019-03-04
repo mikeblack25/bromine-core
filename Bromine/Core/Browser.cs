@@ -15,17 +15,17 @@ namespace Bromine.Core
         /// <summary>
         /// Url of the current page.
         /// </summary>
-        public string Url => _driver.Url;
+        public string Url => Driver.Url;
 
         /// <summary>
         /// Title of the current page.
         /// </summary>
-        public string Title => _driver.Title;
+        public string Title => Driver.Title;
 
         /// <summary>
         /// Get the HTML source (DOM).
         /// </summary>
-        public string Source => _driver.Source;
+        public string Source => Driver.Source;
 
         /// <summary>
         /// Helpers to find elements.
@@ -33,14 +33,19 @@ namespace Bromine.Core
         public Find Find { get; }
 
         /// <summary>
+        /// Helpers to navigate to pages and files.
+        /// </summary>
+        public Navigate Navigate { get; }
+
+        /// <summary>
         /// List of element that were called.
         /// </summary>
-        public List<Element> CalledElements { get; private set; }
+        public List<Element> CalledElements { get; }
 
         /// <summary>
         /// List of exceptions.
         /// </summary>
-        public List<Exception> Exceptions { get; private set; }
+        public List<Exception> Exceptions { get; }
 
         /// <summary>
         /// Get the path to the last screenshot;
@@ -52,7 +57,7 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="browser">Type of browser to use.</param>
         /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
-        /// <param name="secondsToImplicitWait">Seconds to wait for a given condition. This is only applicable when enabmeImplicitWait is true.</param>
+        /// <param name="secondsToImplicitWait">Seconds to wait for a given condition. This is only applicable when enableImplicitWait is true.</param>
         /// <param name="stringShotDirectory">Location to store screenshots. If this is not provided screenshots will be put in a Screenshots directory in the output path.</param>
         public Browser(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5, string stringShotDirectory = "")
             : this(new Models.BrowserOptions(browser, enableImplicitWait, secondsToImplicitWait))
@@ -69,46 +74,15 @@ namespace Bromine.Core
             CalledElements = new List<Element>();
             Exceptions = new List<Exception>();
 
-            _driver = new Driver(options.Driver);
+            Driver = new Driver(options.Driver);
 
             if (options.EnableImplicitWait)
             {
                 EnableImplicitWait(options.SecondsToImplicitWait);
             }
 
-            Find = new Find(_driver.WebDriver);
-        }
-
-        /// <summary>
-        /// Navigate to the given URL.
-        /// </summary>
-        /// <param name="url">URL to navigate to.</param>
-        public void NavigateToUrl(string url)
-        {
-            try
-            {
-                _driver.WebDriver.Navigate().GoToUrl(url);
-            }
-            catch (Exception ex)
-            {
-                Exceptions.Add(ex);
-            }
-        }
-
-        /// <summary>
-        /// Navigate to the given file.
-        /// </summary>
-        /// <param name="path"></param>
-        public void NavigateToFile(string path)
-        {
-            try
-            {
-                _driver.WebDriver.Navigate().GoToUrl($"file://{path}");
-            }
-            catch (Exception ex)
-            {
-                Exceptions.Add(ex);
-            }
+            Find = new Find(Driver.WebDriver);
+            Navigate = new Navigate(Driver, Exceptions);
         }
 
         /// <summary>
@@ -123,13 +97,13 @@ namespace Bromine.Core
 
             try
             {
-                var wait = new DefaultWait<IWebDriver>(_driver.WebDriver)
+                var wait = new DefaultWait<IWebDriver>(Driver.WebDriver)
                 {
                     Timeout = TimeSpan.FromSeconds(timeToWait),
                     PollingInterval = TimeSpan.FromMilliseconds(250)
                 };
 
-                wait.Until(x => condition() == true);
+                wait.Until(x => condition());
 
                 result = true;
             }
@@ -147,11 +121,11 @@ namespace Bromine.Core
         /// <param name="name">Name of the file of the screenshot.</param>
         public void TakeScreenshot(string name)
         {
-            LastScreenshotPath = $@"{_screenshotPath}\{name}.jpg";
+            LastScreenshotPath = $@"{ScreenshotPath}\{name}.jpg";
 
             try
             {
-                var screenshot = _driver.Screenshot;
+                var screenshot = Driver.Screenshot;
                 screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Jpeg);
             }
             catch (Exception ex)
@@ -165,12 +139,12 @@ namespace Bromine.Core
         /// </summary>
         public void Dispose()
         {
-            _driver?.Dispose();
+            Driver?.Dispose();
         }
 
         private void EnableImplicitWait(int secondsToWait)
         {
-            _driver.WebDriver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, secondsToWait);
+            Driver.WebDriver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, secondsToWait);
         }
 
         private void InitializeScreenshotDirectory(string path)
@@ -185,12 +159,12 @@ namespace Bromine.Core
                 Directory.CreateDirectory(path);
             }
 
-            _screenshotPath = path;
+            ScreenshotPath = path;
         }
 
-        private Driver _driver { get; set; }
+        private Driver Driver { get; }
 
         private string _screenshotsDirectory => "Screenshots";
-        private string _screenshotPath { get; set; }
+        private string ScreenshotPath { get; set; }
     }
 }

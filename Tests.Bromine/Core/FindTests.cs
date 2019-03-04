@@ -25,7 +25,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByTest()
         {
-            Browser.NavigateToFile($@"{BasePath}\{AmazonHome}");
+            Browser.Navigate.ToFile($@"{BasePath}\{AmazonHome}");
 
             TryId(IdString);
             TryIds(IdString);
