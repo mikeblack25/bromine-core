@@ -12,10 +12,11 @@ namespace Bromine.Core
         /// Construct a Navigate object for the given driver type.
         /// </summary>
         /// <param name="driver"></param>
+        /// <param name="exceptions"></param>
         public Navigate(Driver driver, List<Exception> exceptions)
         {
-            _driver = driver;
-            _exceptions = exceptions;
+            Driver = driver;
+            Exceptions = exceptions;
         }
 
         /// <summary>
@@ -26,11 +27,11 @@ namespace Bromine.Core
         {
             try
             {
-                _driver.WebDriver.Navigate().GoToUrl(url);
+                Driver.WebDriver.Navigate().GoToUrl(url);
             }
             catch (Exception ex)
             {
-                _exceptions.Add(ex);
+                Exceptions.Add(ex);
             }
         }
 
@@ -42,11 +43,11 @@ namespace Bromine.Core
         {
             try
             {
-                _driver.WebDriver.Navigate().GoToUrl($"file://{path}");
+                Driver.WebDriver.Navigate().GoToUrl($"file://{path}");
             }
             catch (Exception ex)
             {
-                _exceptions.Add(ex);
+                Exceptions.Add(ex);
             }
         }
 
@@ -55,7 +56,7 @@ namespace Bromine.Core
         /// </summary>
         public void Back()
         {
-            _driver.NavigateBack();
+            Driver.NavigateBack();
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace Bromine.Core
         /// </summary>
         public void Forward()
         {
-            _driver.NavigateForward();
+            Driver.NavigateForward();
         }
 
         /// <summary>
@@ -71,11 +72,11 @@ namespace Bromine.Core
         /// </summary>
         public void Refresh()
         {
-            _driver.Refresh();
+            Driver.Refresh();
         }
 
-        private Driver _driver { get; }
+        private Driver Driver { get; }
 
-        private List<Exception> _exceptions { get; }
+        private List<Exception> Exceptions { get; }
     }
 }

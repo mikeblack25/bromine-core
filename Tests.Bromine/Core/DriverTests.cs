@@ -12,6 +12,7 @@ using DriverOptions = Bromine.Models.DriverOptions;
 
 namespace Tests.Bromine.Core
 {
+    /// <inheritdoc />
     /// <summary>
     /// Test the behavior of the Driver class.
     /// </summary>
@@ -46,6 +47,7 @@ namespace Tests.Bromine.Core
             BrowserInit(driverOptions);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Dispose of the Driver resource.
         /// </summary>

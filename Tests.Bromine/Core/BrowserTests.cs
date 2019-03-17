@@ -1,36 +1,15 @@
-﻿using System;
-using System.IO;
-
-using Bromine.Core;
+﻿using System.IO;
 
 using Xunit;
 
 namespace Tests.Bromine.Core
 {
+    /// <inheritdoc />
     /// <summary>
     /// Test Browser behavior.
     /// </summary>
-    public class BrowserTests: IDisposable
+    public class BrowserTests : CoreTestsBase
     {
-        /// <summary>
-        /// Construct a Browser and test Browser behavior.
-        /// </summary>
-        public BrowserTests()
-        {
-            Browser = new Browser(BrowserType.Chrome);
-        }
-
-        /// <summary>
-        /// Verify navigation to a URL works.
-        /// </summary>
-        [Fact]
-        public void VerifyNavigate()
-        {
-            Browser.Navigate.ToUrl(AmazonUrl);
-
-            Assert.Equal(AmazonUrl, Browser.Url);
-        }
-
         /// <summary>
         /// Verify page source and title properties return the expected values.
         /// </summary>
@@ -57,17 +36,5 @@ namespace Tests.Bromine.Core
 
             File.Delete(Browser.LastScreenshotPath); // Delete screenshot file for the test.
         }
-
-        /// <summary>
-        /// Dispose of the Browser resource.
-        /// </summary>
-        public void Dispose()
-        {
-            Browser.Dispose();
-        }
-
-        private const string Amazon = "Amazon";
-        private const string AmazonUrl = "https://www.amazon.com/";
-        private Browser Browser { get; }
     }
 }

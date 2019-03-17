@@ -8,56 +8,13 @@ using OpenQA.Selenium;
 
 namespace Bromine.Core
 {
+    /// <inheritdoc />
     /// <summary>
     /// Provides ability to interact with elements.
     /// </summary>
     public class Element : IWebElement
     {
-        /// <summary>
-        /// TagName attribute for the requested element.
-        /// </summary>
-        public string TagName => _element?.TagName;
-
-        /// <summary>
-        /// Text attribute for the requested element.
-        /// </summary>
-        public string Text => _element?.Text;
-
-        /// <summary>
-        /// Enabled attribute for the requested element.
-        /// </summary>
-        public bool Enabled => _element.Enabled;
-
-        /// <summary>
-        /// Selected attribute for the requeted element.
-        /// </summary>
-        public bool Selected => _element.Selected;
-
-        /// <summary>
-        /// Location attribute for the requested element.
-        /// </summary>
-        public Point Location => _element.Location;
-
-        /// <summary>
-        /// Size attribute for the requested element.
-        /// </summary>
-        public Size Size => _element.Size;
-
-        /// <summary>
-        /// Displayed attribute for the requested element.
-        /// </summary>
-        public bool Displayed => _element.Displayed;
-
-        /// <summary>
-        /// Details about the location strategy used for the requested element.
-        /// </summary>
-        public CallingInformation Information { get; private set; }
-
-        /// <summary>
-        /// List of exceptions for the requested element.
-        /// </summary>
-        public List<Exception> Exceptions { get; private set; }
-
+        /// <inheritdoc />
         /// <summary>
         /// Construct an Element object.
         /// </summary>
@@ -77,26 +34,38 @@ namespace Bromine.Core
             _isInitialized = true;
         }
 
+        /// <inheritdoc />
+        public string TagName => _element?.TagName;
+
+        /// <inheritdoc />
+        public string Text => _element?.Text;
+
+        /// <inheritdoc />
+        public bool Enabled => _element.Enabled;
+
+        /// <inheritdoc />
+        public bool Selected => _element.Selected;
+
+        /// <inheritdoc />
+        public Point Location => _element.Location;
+
+        /// <inheritdoc />
+        public Size Size => _element.Size;
+
+        /// <inheritdoc />
+        public bool Displayed => _element.Displayed;
+
         /// <summary>
-        /// Construct the default behavior of the Element object.
+        /// Details about the location strategy used for the requested element.
         /// </summary>
-        private Element()
-        {
-            Exceptions = new List<Exception>();
-            var stackTrace = new StackTrace();
-
-            Information = new CallingInformation
-            {
-                CallingMethod = stackTrace.GetFrame(2).GetMethod().Name,
-                CalledTimestamp = DateTime.Now
-            };
-
-            _isInitialized = false;
-        }
+        public CallingInformation Information { get; }
 
         /// <summary>
-        /// Clear the value attribute of the requested element.
+        /// List of exceptions for the requested element.
         /// </summary>
+        public List<Exception> Exceptions { get; }
+
+        /// <inheritdoc />
         public void Clear()
         {
             if (_isInitialized)
@@ -112,9 +81,7 @@ namespace Bromine.Core
             }
         }
 
-        /// <summary>
-        /// Click the requested element.
-        /// </summary>
+        /// <inheritdoc />
         public void Click()
         {
             if (_isInitialized)
@@ -239,8 +206,6 @@ namespace Bromine.Core
         /// <returns></returns>
         public string GetProperty(string propertyName)
         {
-            var property = string.Empty;
-
             if (_isInitialized)
             {
                 try
@@ -257,7 +222,7 @@ namespace Bromine.Core
         }
 
         /// <summary>
-        /// Update the value property for the requested eleemnt.
+        /// Update the value property for the requested element.
         /// </summary>
         /// <param name="text">Text to update to the requested element.</param>
         public void SendKeys(string text)
@@ -284,7 +249,7 @@ namespace Bromine.Core
         }
 
         /// <summary>
-        /// This method is requried to meet the IWebElement interface. Use <see cref="FindElement(By)"/> this mehod is not implemented.
+        /// This method is required to meet the IWebElement interface. Use <see cref="FindElement(By)"/> this method is not implemented.
         /// </summary>
         /// <param name="by">Locator strategy to use to find requested elements.</param>
         /// <returns></returns>
@@ -294,7 +259,7 @@ namespace Bromine.Core
         }
 
         /// <summary>
-        /// This method is requried to meet the IWebElement interface. Use <see cref="FindElements(By)"/> this mehod is not implemented.
+        /// This method is required to meet the IWebElement interface. Use <see cref="FindElements(By)"/> this method is not implemented.
         /// </summary>
         /// <param name="by">Locator strategy to use to find requested elements.</param>
         /// <returns></returns>
@@ -303,8 +268,25 @@ namespace Bromine.Core
             throw new NotImplementedException();
         }
 
-        private IWebElement _element;
-        private bool _isInitialized;
+        /// <summary>
+        /// Construct the default behavior of the Element object.
+        /// </summary>
+        private Element()
+        {
+            Exceptions = new List<Exception>();
+            var stackTrace = new StackTrace();
+
+            Information = new CallingInformation
+            {
+                CallingMethod = stackTrace.GetFrame(2).GetMethod().Name,
+                CalledTimestamp = DateTime.Now
+            };
+
+            _isInitialized = false;
+        }
+
+        private readonly IWebElement _element;
+        private readonly bool _isInitialized;
     }
 
 

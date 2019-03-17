@@ -31,11 +31,6 @@ namespace Bromine.Models
         }
 
         /// <summary>
-        /// Type of browser the driver is configured for.
-        /// </summary>
-        public BrowserType Browser => Driver.Browser;
-
-        /// <summary>
         /// Type of browser to use.
         /// </summary>
         public DriverOptions Driver { get; set; }

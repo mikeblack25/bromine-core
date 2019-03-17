@@ -7,11 +7,46 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Bromine.Core
 {
+    /// <inheritdoc />
     /// <summary>
     /// Provides ability to interact with a web browser.
     /// </summary>
     public class Browser : IDisposable
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// Provides methods of interacting with the web browser.
+        /// </summary>
+        /// <param name="browser">Type of browser to use.</param>
+        /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
+        /// <param name="secondsToImplicitWait">Seconds to wait for a given condition. This is only applicable when enableImplicitWait is true.</param>
+        /// <param name="stringShotDirectory">Location to store screenshots. If this is not provided screenshots will be put in a Screenshots directory in the output path.</param>
+        public Browser(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5, string stringShotDirectory = "")
+            : this(new Models.BrowserOptions(browser, enableImplicitWait, secondsToImplicitWait))
+        {
+            InitializeScreenshotDirectory(stringShotDirectory);
+        }
+
+        /// <summary>
+        /// Provides methods of interacting with the web browser.
+        /// </summary>
+        /// <param name="options">Provides advanced browser and driver configuration.</param>
+        public Browser(Models.BrowserOptions options)
+        {
+            CalledElements = new List<Element>();
+            Exceptions = new List<Exception>();
+
+            Driver = new Driver(options.Driver);
+
+            if (options.EnableImplicitWait)
+            {
+                EnableImplicitWait(options.SecondsToImplicitWait);
+            }
+
+            Find = new Find(Driver.WebDriver);
+            Navigate = new Navigate(Driver, Exceptions);
+        }
+
         /// <summary>
         /// Url of the current page.
         /// </summary>
@@ -51,39 +86,6 @@ namespace Bromine.Core
         /// Get the path to the last screenshot;
         /// </summary>
         public string LastScreenshotPath { get; private set; }
-
-        /// <summary>
-        /// Provides methods of interacting with the web browser.
-        /// </summary>
-        /// <param name="browser">Type of browser to use.</param>
-        /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
-        /// <param name="secondsToImplicitWait">Seconds to wait for a given condition. This is only applicable when enableImplicitWait is true.</param>
-        /// <param name="stringShotDirectory">Location to store screenshots. If this is not provided screenshots will be put in a Screenshots directory in the output path.</param>
-        public Browser(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5, string stringShotDirectory = "")
-            : this(new Models.BrowserOptions(browser, enableImplicitWait, secondsToImplicitWait))
-        {
-            InitializeScreenshotDirectory(stringShotDirectory);
-        }
-
-        /// <summary>
-        /// Provides methods of interacting with the web browser.
-        /// </summary>
-        /// <param name="options">Provides advanced browser and driver configuration.</param>
-        public Browser(Models.BrowserOptions options)
-        {
-            CalledElements = new List<Element>();
-            Exceptions = new List<Exception>();
-
-            Driver = new Driver(options.Driver);
-
-            if (options.EnableImplicitWait)
-            {
-                EnableImplicitWait(options.SecondsToImplicitWait);
-            }
-
-            Find = new Find(Driver.WebDriver);
-            Navigate = new Navigate(Driver, Exceptions);
-        }
 
         /// <summary>
         /// Wait for a given condition to be true.

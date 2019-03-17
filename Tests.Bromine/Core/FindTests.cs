@@ -1,24 +1,13 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-
-using Bromine.Core;
-
-using Xunit;
-using System.Collections.Generic;
+﻿using Xunit;
 
 namespace Tests.Bromine.Core
 {
+    /// <inheritdoc />
     /// <summary>
     /// Test the behavior of the Find class.
     /// </summary>
-    public class FindTests : IDisposable
+    public class FindTests : CoreTestsBase
     {
-        public FindTests()
-        {
-            Browser = new Browser(BrowserType.Chrome);
-        }
-
         /// <summary>
         /// Tests the supported Find.ElementBy methods to ensure elements can be located properly.
         /// </summary>
@@ -47,9 +36,9 @@ namespace Tests.Bromine.Core
         /// <summary>
         /// Dispose of the browser when the test is done.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
-            Browser.Dispose();
+            Browser?.Dispose();
 
             Assert.True(ErrorList.Count == 0, string.Join(",", ErrorList));
         }
@@ -173,12 +162,6 @@ namespace Tests.Bromine.Core
                 ErrorList.Add($"Unable to find elements by tag: {text}");
             }
         }
-
-        private Browser Browser { get; }
-        private List<string> ErrorList = new List<string>();
-
-        private string BasePath => $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6)}\Pages";
-        private string AmazonHome => @"Amazon.com\Amazon.com.html";
 
         private string IdString => "s-suggestion";
         private string ClassString => "a-link-normal";
