@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
+using Bromine;
 using Bromine.Core;
 
 namespace Tests.Bromine.Core
@@ -25,7 +26,7 @@ namespace Tests.Bromine.Core
         /// <summary>
         /// Main entry point to interact with a web browser.
         /// </summary>
-        internal Browser Browser { get; }
+        internal IBrowser Browser { get; }
 
         /// <summary>
         /// List of errors generated during a test.

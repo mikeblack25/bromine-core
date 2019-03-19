@@ -7,11 +7,8 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Bromine.Core
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// Provides ability to interact with a web browser.
-    /// </summary>
-    public class Browser : IDisposable
+    /// <inheritdoc cref="IBrowser" />
+    public class Browser : IBrowser
     {
         /// <inheritdoc />
         /// <summary>
@@ -47,52 +44,31 @@ namespace Bromine.Core
             Navigate = new Navigate(Driver, Exceptions);
         }
 
-        /// <summary>
-        /// Url of the current page.
-        /// </summary>
+        /// <inheritdoc />
         public string Url => Driver.Url;
 
-        /// <summary>
-        /// Title of the current page.
-        /// </summary>
+        /// <inheritdoc />
         public string Title => Driver.Title;
 
-        /// <summary>
-        /// Get the HTML source (DOM).
-        /// </summary>
+        /// <inheritdoc />
         public string Source => Driver.Source;
 
-        /// <summary>
-        /// Helpers to find elements.
-        /// </summary>
+        /// <inheritdoc />
         public Find Find { get; }
 
-        /// <summary>
-        /// Helpers to navigate to pages and files.
-        /// </summary>
+        /// <inheritdoc />
         public Navigate Navigate { get; }
 
-        /// <summary>
-        /// List of element that were called.
-        /// </summary>
+        /// <inheritdoc />
         public List<Element> CalledElements { get; }
 
-        /// <summary>
-        /// List of exceptions.
-        /// </summary>
+        /// <inheritdoc />
         public List<Exception> Exceptions { get; }
 
-        /// <summary>
-        /// Get the path to the last screenshot;
-        /// </summary>
+        /// <inheritdoc />
         public string LastScreenshotPath { get; private set; }
 
-        /// <summary>
-        /// Wait for a given condition to be true.
-        /// </summary>
-        /// <param name="condition">Condition to check every 250 ms for the specified wait time.</param>
-        /// <param name="timeToWait">Time in seconds to wait for the condition to be satasfied.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool Wait(Func<bool> condition, int timeToWait = 1)
         {
             var result = false;
@@ -117,10 +93,7 @@ namespace Bromine.Core
             return result;
         }
 
-        /// <summary>
-        /// Take a screenshot of the visible page.
-        /// </summary>
-        /// <param name="name">Name of the file of the screenshot.</param>
+        /// <inheritdoc />
         public void TakeScreenshot(string name)
         {
             LastScreenshotPath = $@"{ScreenshotPath}\{name}.jpg";
@@ -136,9 +109,7 @@ namespace Bromine.Core
             }
         }
 
-        /// <summary>
-        /// Dispose of the Selenium WebDriver.
-        /// </summary>
+        /// <inheritdoc />
         public void Dispose()
         {
             Driver?.Dispose();
