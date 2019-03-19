@@ -9,10 +9,10 @@ using OpenQA.Selenium.Support.Extensions;
 
 namespace Bromine.Core
 {
-    /// <inheritdoc />
     /// <summary>
     /// Provide access to browser drivers.
     /// </summary>
+    // ReSharper disable once InheritdocConsiderUsage
     public class Driver: IDisposable
     {
         /// <summary>

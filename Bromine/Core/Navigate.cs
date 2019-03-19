@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Bromine.Core
 {
     /// <summary>
-    /// Class to enable with browser navigation.
+    /// Class to enable browser navigation.
     /// </summary>
     public class Navigate
     {

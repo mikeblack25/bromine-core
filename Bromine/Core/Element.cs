@@ -318,7 +318,7 @@ namespace Bromine.Core
 
 
     /// <summary>
-    /// Supported element locator strategies to find elements.
+    /// Supported ways to locate an element.
     /// </summary>
     public enum LocatorType
     {

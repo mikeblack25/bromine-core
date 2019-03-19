@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
+using Bromine.Models;
+
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
@@ -10,16 +12,17 @@ namespace Bromine.Core
     /// <inheritdoc cref="IBrowser" />
     public class Browser : IBrowser
     {
-        /// <inheritdoc />
         /// <summary>
-        /// Provides methods of interacting with the web browser.
+        /// Create a simple Browser object to interact with Elements.
+        /// The driver will be configured based on the browser value selected.
+        /// For advanced Browser configuration use Browser(BrowserOptions options) to construct a Browser object.
         /// </summary>
         /// <param name="browser">Type of browser to use.</param>
         /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
         /// <param name="secondsToImplicitWait">Seconds to wait for a given condition. This is only applicable when enableImplicitWait is true.</param>
         /// <param name="stringShotDirectory">Location to store screenshots. If this is not provided screenshots will be put in a Screenshots directory in the output path.</param>
         public Browser(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5, string stringShotDirectory = "")
-            : this(new Models.BrowserOptions(browser, enableImplicitWait, secondsToImplicitWait))
+            : this(new BrowserOptions(browser, enableImplicitWait, secondsToImplicitWait))
         {
             InitializeScreenshotDirectory(stringShotDirectory);
         }
@@ -28,7 +31,7 @@ namespace Bromine.Core
         /// Provides methods of interacting with the web browser.
         /// </summary>
         /// <param name="options">Provides advanced browser and driver configuration.</param>
-        public Browser(Models.BrowserOptions options)
+        public Browser(BrowserOptions options)
         {
             CalledElements = new List<Element>();
             Exceptions = new List<Exception>();
