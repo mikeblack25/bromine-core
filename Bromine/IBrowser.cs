@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 using Bromine.Core;
 
@@ -57,6 +58,20 @@ namespace Bromine
         /// <param name="timeToWait">Time in seconds to wait for the condition to be satisfied.</param>
         /// <returns></returns>
         bool Wait(Func<bool> condition, int timeToWait = 1);
+
+        /// <summary>
+        /// Take a screenshot of requested element.
+        /// </summary>
+        /// <param name="name">Name of the file of the screenshot.</param>
+        /// <param name="element">Element to take a screenshot of.</param>
+        void TakeScreenshot(string name, Element element);
+
+        /// <summary>
+        /// Take a screenshot of requested region on the screen.
+        /// </summary>
+        /// <param name="name">Name of the file of the screenshot.</param>
+        /// <param name="screenShotRegion">Region to take a screenshot of.</param>
+        void TakeScreenshot(string name, Rectangle screenShotRegion);
 
         /// <summary>
         /// Take a screenshot of the visible page.

@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 
 using Bromine.Models;
@@ -97,14 +98,31 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
+        public void TakeScreenshot(string name, Element element)
+        {
+            TakeScreenshot(name, new Rectangle(element.Location, element.Size));
+        }
+
+        /// <inheritdoc />
+        public void TakeScreenshot(string name, Rectangle screenShotRegion)
+        {
+            TakeScreenshot(name);
+
+            var bmpImage = new Bitmap(Image.FromFile(LastScreenshotPath));
+            var cropedImag = bmpImage.Clone(screenShotRegion, bmpImage.PixelFormat);
+
+            Screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Jpeg);
+        }
+
+        /// <inheritdoc />
         public void TakeScreenshot(string name)
         {
             LastScreenshotPath = $@"{ScreenshotPath}\{name}.jpg";
 
             try
             {
-                var screenshot = Driver.Screenshot;
-                screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Jpeg);
+                Screenshot = Driver.Screenshot;
+                Screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Jpeg);
             }
             catch (Exception ex)
             {
@@ -139,6 +157,7 @@ namespace Bromine.Core
         }
 
         private Driver Driver { get; }
+        private Screenshot Screenshot { get; set; }
 
         private string _screenshotsDirectory => "Screenshots";
         private string ScreenshotPath { get; set; }
