@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Drawing;
+using System.IO;
 
 using Xunit;
 
@@ -35,6 +36,25 @@ namespace Tests.Bromine.Core
             Assert.True(File.Exists(Browser.LastScreenshotPath), $"Unable to find the expected screenshot at {Browser.LastScreenshotPath}");
 
             File.Delete(Browser.LastScreenshotPath); // Delete screenshot file for the test.
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Fact]
+        public void VerifyRegionScreenshot()
+        {
+            var initialPosition = new Point(0, 0);
+            var regionSize = new Size(50, 50);
+            var region = new Rectangle(initialPosition, regionSize);
+
+            Browser.Navigate.ToUrl(AmazonUrl);
+
+            Browser.TakeScreenshot("Amazon Test", region);
+
+            //Assert.True(File.Exists(Browser.LastScreenshotPath), $"Unable to find the expected screenshot at {Browser.LastScreenshotPath}");
+
+            //File.Delete(Browser.LastScreenshotPath); // Delete screenshot file for the test.
         }
     }
 }

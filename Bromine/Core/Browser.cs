@@ -108,10 +108,13 @@ namespace Bromine.Core
         {
             TakeScreenshot(name);
 
-            var bmpImage = new Bitmap(Image.FromFile(LastScreenshotPath));
-            var cropedImag = bmpImage.Clone(screenShotRegion, bmpImage.PixelFormat);
+            var image = new Bitmap(Image.FromFile(LastScreenshotPath));
+            var croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
 
-            Screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Jpeg);
+            using (var writer = new StreamWriter(LastScreenshotPath))
+            {
+                writer.Write(croppedImage);
+            }
         }
 
         /// <inheritdoc />
