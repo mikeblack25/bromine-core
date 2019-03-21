@@ -58,7 +58,5 @@ namespace Tests.Bromine.Core
 
             Assert.Equal(AmazonUrl, Browser.Url);
         }
-
-        private Element CartButton => Browser.Find.ElementById("nav-cart");
     }
 }

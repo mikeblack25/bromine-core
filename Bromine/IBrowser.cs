@@ -47,9 +47,29 @@ namespace Bromine
         List<Exception> Exceptions { get; }
 
         /// <summary>
-        /// Get the path to the last screenshot;
+        /// Path where the last screenshot was saved;
         /// </summary>
         string LastScreenshotPath { get; }
+
+        /// <summary>
+        /// Last image saved at the <see cref="LastScreenshotPath"/>.
+        /// </summary>
+        Image LastImage { get; }
+
+        /// <summary>
+        /// Size of the last image saved at the <see cref="LastScreenshotPath"/>.
+        /// </summary>
+        Size LastImageSize { get; }
+
+        /// <summary>
+        /// Maximize the browser window.
+        /// </summary>
+        void Maximize();
+
+        /// <summary>
+        /// Minimize the browser window.
+        /// </summary>
+        void Minimize();
 
         /// <summary>
         /// Wait for a given condition to be true.
@@ -64,19 +84,19 @@ namespace Bromine
         /// </summary>
         /// <param name="name">Name of the file of the screenshot.</param>
         /// <param name="element">Element to take a screenshot of.</param>
-        void TakeScreenshot(string name, Element element);
+        void TakeElementScreenshot(string name, Element element);
 
         /// <summary>
         /// Take a screenshot of requested region on the screen.
         /// </summary>
         /// <param name="name">Name of the file of the screenshot.</param>
         /// <param name="screenShotRegion">Region to take a screenshot of.</param>
-        void TakeScreenshot(string name, Rectangle screenShotRegion);
+        void TakeRegionScreenshot(string name, Rectangle screenShotRegion);
 
         /// <summary>
         /// Take a screenshot of the visible page.
         /// </summary>
         /// <param name="name">Name of the file of the screenshot.</param>
-        void TakeScreenshot(string name);
+        void TakeVisibleScreenshot(string name);
     }
 }

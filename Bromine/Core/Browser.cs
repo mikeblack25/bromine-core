@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 
 using Bromine.Models;
@@ -72,6 +73,47 @@ namespace Bromine.Core
         /// <inheritdoc />
         public string LastScreenshotPath { get; private set; }
 
+        public void Maximize()
+        {
+            Driver.Maximize();
+        }
+
+        public void Minimize()
+        {
+            Driver.Minimize();
+        }
+
+        /// <summary>
+        /// <inheritdoc />
+        /// </summary>
+        public Image LastImage
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(LastScreenshotPath))
+                {
+                    return Image.FromFile(LastScreenshotPath);
+                }
+
+                return null;
+            }
+        }
+
+        public Size LastImageSize
+        {
+            get
+            {
+                var size = new Size();
+
+                if (LastImage != null)
+                {
+                    size = new Size(LastImage.Size.Width, LastImage.Size.Height);
+                }
+
+                return size;
+            }
+        }
+
         /// <inheritdoc />
         public bool Wait(Func<bool> condition, int timeToWait = 1)
         {
@@ -98,27 +140,35 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
-        public void TakeScreenshot(string name, Element element)
+        public void TakeElementScreenshot(string name, Element element)
         {
-            TakeScreenshot(name, new Rectangle(element.Location, element.Size));
+            
+            TakeRegionScreenshot(name, new Rectangle(element.Location, element.Size));
         }
 
         /// <inheritdoc />
-        public void TakeScreenshot(string name, Rectangle screenShotRegion)
+        public void TakeRegionScreenshot(string name, Rectangle screenShotRegion)
         {
-            TakeScreenshot(name);
+            Bitmap croppedImage;
 
-            var image = new Bitmap(Image.FromFile(LastScreenshotPath));
-            var croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
+            TakeVisibleScreenshot(name);
 
-            using (var writer = new StreamWriter(LastScreenshotPath))
+            using (var fileImage = Image.FromFile(LastScreenshotPath))
             {
-                writer.Write(croppedImage);
+                using (var image = new Bitmap(fileImage))
+                {
+                    croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
+                }
+            }
+
+            using (var writer = new FileStream(LastScreenshotPath, FileMode.OpenOrCreate))
+            {
+                croppedImage.Save(writer, ImageFormat.Jpeg);
             }
         }
 
         /// <inheritdoc />
-        public void TakeScreenshot(string name)
+        public void TakeVisibleScreenshot(string name)
         {
             LastScreenshotPath = $@"{ScreenshotPath}\{name}.jpg";
 

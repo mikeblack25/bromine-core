@@ -5,12 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="4.5.3" />
     <PackageReference Include="Selenium.Firefox.WebDriver" Version="0.23.0" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="73.0.3683.68" />
     <PackageReference Include="Selenium.WebDriver.MicrosoftDriver" Version="17.17134.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,16 +30,16 @@
     <None Update="chromedriver.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="EPPlus.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="EPPlus.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="geckodriver.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="MicrosoftWebDriver.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="System.Drawing.Common.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="WebDriver.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -48,6 +49,6 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y C:\Users\%USERNAME%\.nuget\packages\epplus\4.5.3\lib\netstandard2.0\EPPlus.dll $(ProjectDir)&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\epplus\4.5.3\lib\netstandard2.0\EPPlus.xml $(ProjectDir)&#xD;&#xA;&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.webdriver.chromedriver\73.0.3683.68\driver\win32\chromedriver.exe $(ProjectDir)&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.firefox.webdriver\0.23.0\driver\ghekodriver.exe $(ProjectDir)&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.webdriver.microsoftdriver\17.17134.0\driver\MicrosoftWebDriver.exe $(ProjectDir)" />
+    <Exec Command="xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.webdriver\3.141.0\lib\netstandard2.0\WebDriver.dll $(ProjectDir)&#xD;&#xA;xcopy /y C:\Users\%USERNAME%.\nuget\packages\selenium.webdriver\3.141.0\lib\netstandard2.0\WebDriver.xml $(ProjectDir)&#xD;&#xA;&#xD;&#xA;xcopy /y C:\Users\%USERNAME%.\.nuget\packages\system.drawing.common\4.5.1\lib\netstandard2.0\System.Drawing.Common.dll $(ProjectDir)&#xD;&#xA;&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.webdriver.chromedriver\73.0.3683.68\driver\win32\chromedriver.exe $(ProjectDir)&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.firefox.webdriver\0.23.0\driver\ghekodriver.exe $(ProjectDir)&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.webdriver.microsoftdriver\17.17134.0\driver\MicrosoftWebDriver.exe $(ProjectDir)" />
   </Target>
 </Project>

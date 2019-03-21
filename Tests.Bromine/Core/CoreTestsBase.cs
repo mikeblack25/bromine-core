@@ -26,12 +26,12 @@ namespace Tests.Bromine.Core
         /// <summary>
         /// Main entry point to interact with a web browser.
         /// </summary>
-        internal IBrowser Browser { get; }
+        public IBrowser Browser { get; }
 
         /// <summary>
         /// List of errors generated during a test.
         /// </summary>
-        internal List<string> ErrorList { get; }
+        public List<string> ErrorList { get; }
 
         /// <summary>
         /// Base path to all static html pages sourced in the Pages folder of the project.
@@ -47,6 +47,8 @@ namespace Tests.Bromine.Core
         /// Amazon
         /// </summary>
         internal string Amazon => "Amazon";
+
+        internal Element CartButton => Browser.Find.ElementById("nav-cart");
 
         /// <summary>
         /// https://www.amazon.com/
