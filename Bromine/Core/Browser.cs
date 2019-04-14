@@ -73,6 +73,9 @@ namespace Bromine.Core
         /// <inheritdoc />
         public string LastScreenshotPath { get; private set; }
 
+        /// <inheritdoc />
+        public string ScreenshotPath { get; private set; }
+
         public void Maximize()
         {
             Driver.Maximize();
@@ -153,9 +156,9 @@ namespace Bromine.Core
 
             TakeVisibleScreenshot(name);
 
-            using (var fileImage = Image.FromFile(LastScreenshotPath))
+            //using (var fileImage = Image.FromFile(LastScreenshotPath))
             {
-                using (var image = new Bitmap(fileImage))
+                using (var image = new Bitmap(LastScreenshotPath))
                 {
                     croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
                 }
@@ -213,6 +216,5 @@ namespace Bromine.Core
         private Screenshot Screenshot { get; set; }
 
         private string _screenshotsDirectory => "Screenshots";
-        private string ScreenshotPath { get; set; }
     }
 }

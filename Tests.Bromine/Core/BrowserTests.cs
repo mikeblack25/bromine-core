@@ -36,13 +36,14 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyScreenshot()
         {
+            var name = "Amazon Visible Page Screenshot";
+            DeleteInitialImage(name);
+
             Browser.Navigate.ToUrl(AmazonUrl);
 
-            Browser.TakeVisibleScreenshot("Amazon Visible Page Screenshot");
+            Browser.TakeVisibleScreenshot(name);
 
             Assert.True(File.Exists(Browser.LastScreenshotPath), $"Unable to find the expected screenshot at {Browser.LastScreenshotPath}");
-
-            File.Delete(Browser.LastScreenshotPath); // Delete screenshot file for the test.
         }
 
         /// <summary>
@@ -59,13 +60,14 @@ namespace Tests.Bromine.Core
             var regionSize = new Size(50, 50);
             var region = new Rectangle(initialPosition, regionSize);
 
+            var name = "Amazon Region Screenshot";
+            DeleteInitialImage(name);
+
             Browser.Navigate.ToUrl(AmazonUrl);
 
-            Browser.TakeRegionScreenshot("Amazon Region Screenshot", region);
+            Browser.TakeRegionScreenshot(name, region);
 
             Assert.Equal(regionSize, Browser.LastImageSize);
-
-            // File.Delete(Browser.LastScreenshotPath);
         }
 
         /// <summary>
@@ -80,15 +82,26 @@ namespace Tests.Bromine.Core
         {
             var regionSize = new Size(98, 44);
 
+            var name = "Amazon Element Screenshot";
+            DeleteInitialImage(name);
+
             Browser.Navigate.ToUrl(AmazonUrl);
 
             Browser.Maximize();
 
-            Browser.TakeElementScreenshot("Amazon Element Screenshot", CartButton);
+            Browser.TakeElementScreenshot(name, CartButton);
 
             Assert.Equal(regionSize, Browser.LastImageSize);
+        }
 
-            // File.Delete(Browser.LastScreenshotPath);
+        private void DeleteInitialImage(string name)
+        {
+            var path = $@"{Browser.ScreenshotPath}\{name}.png";
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
         }
     }
 }

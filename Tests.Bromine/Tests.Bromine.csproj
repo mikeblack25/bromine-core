@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -157,12 +157,6 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="$(SolutionDir)\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\Bromine\Bromine.csproj">
-      <Project>{e396d397-a8a9-459b-b361-f4378297bcd3}</Project>
-      <Name>Bromine</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Pages\Amazon.com\Amazon.com.html">
@@ -657,6 +651,12 @@
     <Content Include="Pages\Amazon.com\Amazon.com_files\XCM_Manual_1158428_swm_February_Editorial_400x39_Small_Business_Empowerment_1158428_us_storefronts_feb_swms_400x39_1548366110_jpg._CB455105052_.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bromines\Bromine.csproj">
+      <Project>{bb346a0f-1dd9-49ef-8d1f-da87b91963cd}</Project>
+      <Name>Bromine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

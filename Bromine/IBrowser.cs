@@ -52,6 +52,11 @@ namespace Bromine
         string LastScreenshotPath { get; }
 
         /// <summary>
+        /// Directory where screenshots are saved.
+        /// </summary>
+        string ScreenshotPath { get; }
+
+        /// <summary>
         /// Last image saved at the <see cref="LastScreenshotPath"/>.
         /// </summary>
         Image LastImage { get; }
