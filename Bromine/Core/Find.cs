@@ -11,7 +11,7 @@ namespace Bromine.Core
     {
         public Find(IWebDriver driver)
         {
-            _driver = driver;
+            Driver = driver;
         }
 
         /// <summary>
@@ -21,7 +21,26 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementById(string id)
         {
-            return new Element(_driver.FindElement(By.Id(id)), id, LocatorType.Id);
+            return new Element(Driver.FindElement(By.Id(id)), id, LocatorType.Id);
+        }
+
+        /// <summary>
+        /// Find Elements by ID.
+        /// </summary>
+        /// <param name="id">ID to locate an element.</param>
+        /// <returns></returns>
+        public List<Element> ElementsById(string id)
+        {
+            var list = new List<Element>();
+
+            var elements = Driver.FindElements(By.Id(id));
+
+            foreach (var element in elements)
+            {
+                list.Add(new Element(element, id, LocatorType.Id));
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -31,7 +50,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementByClass(string className)
         {
-            return new Element(_driver.FindElement(By.ClassName(className)), className, LocatorType.Class);
+            return new Element(Driver.FindElement(By.ClassName(className)), className, LocatorType.Class);
         }
 
         /// <summary>
@@ -42,7 +61,7 @@ namespace Bromine.Core
         public List<Element> ElementsByClass(string className)
         {
             var list = new List<Element>();
-            var elements = _driver.FindElements(By.ClassName(className));
+            var elements = Driver.FindElements(By.ClassName(className));
 
             foreach (var element in elements)
             {
@@ -59,7 +78,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementByCssSelector(string cssSelector)
         {
-            return new Element(_driver.FindElement(By.CssSelector(cssSelector)), cssSelector, LocatorType.CssSelector);
+            return new Element(Driver.FindElement(By.CssSelector(cssSelector)), cssSelector, LocatorType.CssSelector);
         }
 
         /// <summary>
@@ -70,11 +89,11 @@ namespace Bromine.Core
         public List<Element> ElementsByCssSelector(string cssSelector)
         {
             var list = new List<Element>();
-            var elements = _driver.FindElements(By.CssSelector(cssSelector));
+            var elements = Driver.FindElements(By.CssSelector(cssSelector));
 
             foreach (var element in elements)
             {
-                list.Add(new Element(element));
+                list.Add(new Element(element, cssSelector, LocatorType.CssSelector));
             }
 
             return list;
@@ -87,7 +106,26 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementByText(string elementText)
         {
-            return new Element(_driver.FindElement(By.LinkText(elementText)), elementText, LocatorType.Text);
+            return new Element(Driver.FindElement(By.LinkText(elementText)), elementText, LocatorType.Text);
+        }
+
+        /// <summary>
+        /// Find Elements by text.
+        /// </summary>
+        /// <param name="elementText">Element text of the HTML element to find.</param>
+        /// <returns></returns>
+        public List<Element> ElementsByText(string elementText)
+        {
+            var list = new List<Element>();
+
+            var elements = Driver.FindElements(By.LinkText(elementText));
+
+            foreach (var element in elements)
+            {
+                list.Add(new Element(element, elementText, LocatorType.Text));
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -97,7 +135,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementByPartialText(string partialElementText)
         {
-            return new Element(_driver.FindElement(By.PartialLinkText(partialElementText)), partialElementText, LocatorType.PartialText);
+            return new Element(Driver.FindElement(By.PartialLinkText(partialElementText)), partialElementText, LocatorType.PartialText);
         }
 
         /// <summary>
@@ -108,7 +146,7 @@ namespace Bromine.Core
         public List<Element> ElementByTag(string tag)
         {
             var elementsList = new List<Element>();
-            var elements = _driver.FindElements(By.TagName(tag));
+            var elements = Driver.FindElements(By.TagName(tag));
 
             foreach (var element in elements)
             {
@@ -118,6 +156,6 @@ namespace Bromine.Core
             return elementsList;
         }
 
-        private IWebDriver _driver;
+        private IWebDriver Driver { get; }
     }
 }

@@ -5,14 +5,43 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Support.Extensions;
 
 namespace Bromine.Core
 {
     /// <summary>
     /// Provide access to browser drivers.
     /// </summary>
+    // ReSharper disable once InheritdocConsiderUsage
     public class Driver: IDisposable
     {
+        /// <summary>
+        /// Initialize an IWebDriver for the given browser and desired configuration.
+        /// </summary>
+        /// <param name="options">Object to bass desired browser driver configuration.</param>
+        public Driver(Models.DriverOptions options)
+        {
+            switch (options.Browser)
+            {
+                case BrowserType.Chrome:
+                {
+                    WebDriver = InitializeChromeDriver(options.IsHeadless, options.HideDriverWindow);
+                    break;
+                }
+                case BrowserType.Edge:
+                {
+                    // TODO: If isHeadless = true Log message not supported.
+                    WebDriver = InitializeEdgeDriver(options.HideDriverWindow);
+                    break;
+                }
+                case BrowserType.Firefox:
+                {
+                    WebDriver = InitializeFirefoxDriver(options.IsHeadless, options.HideDriverWindow);
+                    break;
+                }
+            }
+        }
+
         /// <summary>
         /// Service the Chrome driver is running on provided it has been initialized at object construction.
         /// NOTE: only one DriverService is valid at a time.
@@ -30,33 +59,6 @@ namespace Bromine.Core
         /// NOTE: only one DriverService is valid at a time.
         /// </summary>
         public EdgeDriverService EdgeDriverService { get; private set; }
-
-        /// <summary>
-        /// Initialize an IWebDriver for the given browser and desired configuration.
-        /// </summary>
-        /// <param name="options">Object to bass desired browser driver configuration.</param>
-        public Driver(Models.DriverOptions options)
-        {
-            switch(options.Browser)
-            {
-                case BrowserType.Chrome:
-                    {
-                        WebDriver = InitializeChromeDriver(options.IsHeadless, options.HideDriverWindow);
-                        break;
-                    }
-                case BrowserType.Edge:
-                    {
-                        // TODO: If isHeadless = true Log message not supported.
-                        WebDriver = InitializeEdgeDriver(options.HideDriverWindow);
-                        break;
-                    }
-                case BrowserType.Firefox:
-                    {
-                        WebDriver = InitializeFirefoxDriver(options.IsHeadless, options.HideDriverWindow);
-                        break;
-                    }
-            }
-        }
 
         /// <summary>
         /// Get the URL of the current page.
@@ -97,6 +99,11 @@ namespace Bromine.Core
         /// Size ofthe browser window.
         /// </summary>
         public Size Size => WebDriver.Manage().Window.Size;
+
+        /// <summary>
+        /// Take a screenshot for the given visible page.
+        /// </summary>
+        public Screenshot Screenshot => WebDriver.TakeScreenshot();
 
         internal IWebDriver WebDriver { get; }
 
@@ -181,6 +188,8 @@ namespace Bromine.Core
         private IWebDriver InitializeChromeDriver(bool isHeadless = true, bool hideDriverWindow = true)
         {
             var options = new ChromeOptions();
+            options.AddArgument("--allow-file-access-from-files");
+
             ChromeDriverService = ChromeDriverService.CreateDefaultService();
 
             if (hideDriverWindow)

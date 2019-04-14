@@ -1,13 +1,18 @@
 ﻿using System;
 
 using Bromine.Core;
-using Bromine.Models;
 
 using Tests.Bromine.Common;
+
+using OpenQA.Selenium;
+
 using Xunit;
+
+using DriverOptions = Bromine.Models.DriverOptions;
 
 namespace Tests.Bromine.Core
 {
+    /// <inheritdoc />
     /// <summary>
     /// Test the behavior of the Driver class.
     /// </summary>
@@ -24,11 +29,8 @@ namespace Tests.Bromine.Core
         public void InitializeBrowserDefaultsTest(BrowserType browser)
         {
             var driverOptions = new DriverOptions(browser);
-            Driver = new Driver(driverOptions);
 
-            Driver.NavigateToUrl(GoogleUrl);
-
-            Assert.Equal(GoogleUrl, Driver.Url);
+            BrowserInit(driverOptions);
         }
 
         /// <summary>
@@ -41,19 +43,53 @@ namespace Tests.Bromine.Core
         public void InitializeBrowserIsHeadlessTest(BrowserType browser)
         {
             var driverOptions = new DriverOptions(browser, true);
-            Driver = new Driver(driverOptions);
 
-            Driver.NavigateToUrl(GoogleUrl);
-
-            Assert.Equal(GoogleUrl, Driver.Url);
+            BrowserInit(driverOptions);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Dispose of the Driver resource.
         /// </summary>
         public void Dispose()
         {
             Driver?.Dispose();
+        }
+
+        private void BrowserInit(DriverOptions driverOptions)
+        {
+            try
+            {
+                Driver = new Driver(driverOptions);
+
+                Driver.NavigateToUrl(GoogleUrl);
+
+                Assert.Equal(GoogleUrl, Driver.Url);
+            }
+            catch (WebDriverException e)
+            {
+                // The driver is not loaded on the computer.
+                if (e.Message.Contains("Cannot start the driver service on"))
+                {
+
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                // The driver is not loaded on the computer.
+                if (e.Message.Contains("Expected browser binary location, but unable to find binary in default location"))
+                {
+
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         private const string GoogleUrl = "https://www.google.com/?gws_rd=ssl";
