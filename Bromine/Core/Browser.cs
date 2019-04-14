@@ -163,19 +163,19 @@ namespace Bromine.Core
 
             using (var writer = new FileStream(LastScreenshotPath, FileMode.OpenOrCreate))
             {
-                croppedImage.Save(writer, ImageFormat.Jpeg);
+                croppedImage.Save(writer, ImageFormat.Png);
             }
         }
 
         /// <inheritdoc />
         public void TakeVisibleScreenshot(string name)
         {
-            LastScreenshotPath = $@"{ScreenshotPath}\{name}.jpg";
+            LastScreenshotPath = $@"{ScreenshotPath}\{name}.png";
 
             try
             {
                 Screenshot = Driver.Screenshot;
-                Screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Jpeg);
+                Screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Png);
             }
             catch (Exception ex)
             {

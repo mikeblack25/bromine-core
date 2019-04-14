@@ -36,6 +36,9 @@
     <None Update="MicrosoftWebDriver.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Newtonsoft.Json.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="System.Drawing.Common.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -47,8 +50,4 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.webdriver\3.141.0\lib\netstandard2.0\WebDriver.dll $(ProjectDir)&#xD;&#xA;xcopy /y C:\Users\%USERNAME%.\nuget\packages\selenium.webdriver\3.141.0\lib\netstandard2.0\WebDriver.xml $(ProjectDir)&#xD;&#xA;&#xD;&#xA;xcopy /y C:\Users\%USERNAME%.\.nuget\packages\system.drawing.common\4.5.1\lib\netstandard2.0\System.Drawing.Common.dll $(ProjectDir)&#xD;&#xA;&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.webdriver.chromedriver\73.0.3683.68\driver\win32\chromedriver.exe $(ProjectDir)&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.firefox.webdriver\0.23.0\driver\ghekodriver.exe $(ProjectDir)&#xD;&#xA;xcopy /y C:\Users\%USERNAME%\.nuget\packages\selenium.webdriver.microsoftdriver\17.17134.0\driver\MicrosoftWebDriver.exe $(ProjectDir)" />
-  </Target>
 </Project>
