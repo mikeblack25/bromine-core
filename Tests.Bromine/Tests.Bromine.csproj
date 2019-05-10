@@ -653,7 +653,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Bromines\Bromine.csproj">
+    <ProjectReference Include="..\Bromine\Bromine.csproj">
       <Project>{bb346a0f-1dd9-49ef-8d1f-da87b91963cd}</Project>
       <Name>Bromine</Name>
     </ProjectReference>
