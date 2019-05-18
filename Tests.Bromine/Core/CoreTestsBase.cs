@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
 using Bromine;
+using Bromine.Constants;
 using Bromine.Core;
 
 namespace Tests.Bromine.Core

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 
+using Bromine.Constants;
+
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
@@ -19,7 +21,7 @@ namespace Bromine.Core
         /// Initialize an IWebDriver for the given browser and desired configuration.
         /// </summary>
         /// <param name="options">Object to bass desired browser driver configuration.</param>
-        public Driver(Models.DriverOptions options)
+        public Driver(Models.BrowserConfiguration options)
         {
             switch (options.Browser)
             {
@@ -277,16 +279,5 @@ namespace Bromine.Core
         }
 
         private const string HeadlessFlagString = "--headless";
-    }
-
-
-    /// <summary>
-    /// Supported web browser types.
-    /// </summary>
-    public enum BrowserType
-    {
-        Chrome,
-        Firefox,
-        Edge
     }
 }

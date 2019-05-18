@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 
 using Bromine.Core;
+using Bromine.Models;
 
 namespace Bromine
 {
@@ -50,6 +51,11 @@ namespace Bromine
         /// Path where the last screenshot was saved;
         /// </summary>
         string LastScreenshotPath { get; }
+
+        /// <summary>
+        /// Browser configuration used to initialize the web driver.
+        /// </summary>
+        BrowserConfiguration BrowserConfiguration { get; }
 
         /// <summary>
         /// Directory where screenshots are saved.

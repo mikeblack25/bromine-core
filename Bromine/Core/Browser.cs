@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
+using Bromine.Constants;
 using Bromine.Models;
 
 using OpenQA.Selenium;
@@ -17,14 +18,11 @@ namespace Bromine.Core
         /// <summary>
         /// Create a simple Browser object to interact with Elements.
         /// The driver will be configured based on the browser value selected.
-        /// For advanced Browser configuration use Browser(BrowserOptions options) to construct a Browser object.
+        /// For advanced Browser configuration use Browser(BrowserConfiguration configuration) to construct a Browser object.
         /// </summary>
-        /// <param name="browser">Type of browser to use.</param>
-        /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
-        /// <param name="secondsToImplicitWait">Seconds to wait for a given condition. This is only applicable when enableImplicitWait is true.</param>
+        /// <param name="browser"><see cref="BrowserType"/></param>
         /// <param name="stringShotDirectory">Location to store screenshots. If this is not provided screenshots will be put in a Screenshots directory in the output path.</param>
-        public Browser(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5, string stringShotDirectory = "")
-            : this(new BrowserOptions(browser, enableImplicitWait, secondsToImplicitWait))
+        public Browser(BrowserType browser, string stringShotDirectory = "") : this(new BrowserConfiguration(browser))
         {
             InitializeScreenshotDirectory(stringShotDirectory);
         }
@@ -32,17 +30,19 @@ namespace Bromine.Core
         /// <summary>
         /// Provides methods of interacting with the web browser.
         /// </summary>
-        /// <param name="options">Provides advanced browser and driver configuration.</param>
-        public Browser(BrowserOptions options)
+        /// <param name="configuration">Provides advanced browser and driver configuration.</param>
+        public Browser(BrowserConfiguration configuration)
         {
             CalledElements = new List<Element>();
             Exceptions = new List<Exception>();
 
-            Driver = new Driver(options.Driver);
+            BrowserConfiguration = configuration;
 
-            if (options.EnableImplicitWait)
+            Driver = new Driver(BrowserConfiguration);
+
+            if (BrowserConfiguration.EnableImplicitWait)
             {
-                EnableImplicitWait(options.SecondsToImplicitWait);
+                EnableImplicitWait(BrowserConfiguration.SecondsToImplicitWait);
             }
 
             Find = new Find(Driver.WebDriver);
@@ -74,6 +74,9 @@ namespace Bromine.Core
         public string LastScreenshotPath { get; private set; }
 
         /// <inheritdoc />
+        public BrowserConfiguration BrowserConfiguration { get; }
+
+        /// <inheritdoc />
         public string ScreenshotPath { get; private set; }
 
         public void Maximize()
@@ -86,9 +89,7 @@ namespace Bromine.Core
             Driver.Minimize();
         }
 
-        /// <summary>
         /// <inheritdoc />
-        /// </summary>
         public Image LastImage
         {
             get
@@ -102,6 +103,7 @@ namespace Bromine.Core
             }
         }
 
+        /// <inheritdoc />
         public Size LastImageSize
         {
             get
@@ -156,12 +158,9 @@ namespace Bromine.Core
 
             TakeVisibleScreenshot(name);
 
-            //using (var fileImage = Image.FromFile(LastScreenshotPath))
+            using (var image = new Bitmap(LastScreenshotPath))
             {
-                using (var image = new Bitmap(LastScreenshotPath))
-                {
-                    croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
-                }
+                croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
             }
 
             using (var writer = new FileStream(LastScreenshotPath, FileMode.OpenOrCreate))
@@ -201,7 +200,7 @@ namespace Bromine.Core
         {
             if (string.IsNullOrEmpty(path))
             {
-                path = $@"{AppDomain.CurrentDomain.BaseDirectory}\{_screenshotsDirectory}";
+                path = $@"{AppDomain.CurrentDomain.BaseDirectory}\{ScreenshotsDirectory}";
             }
 
             if (!Directory.Exists(path))
@@ -215,6 +214,6 @@ namespace Bromine.Core
         private Driver Driver { get; }
         private Screenshot Screenshot { get; set; }
 
-        private string _screenshotsDirectory => "Screenshots";
+        private static string ScreenshotsDirectory => "Screenshots";
     }
 }

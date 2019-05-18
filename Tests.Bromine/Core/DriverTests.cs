@@ -1,14 +1,13 @@
 ﻿using System;
 
+using Bromine.Constants;
 using Bromine.Core;
-
+using Bromine.Models;
 using Tests.Bromine.Common;
 
 using OpenQA.Selenium;
 
 using Xunit;
-
-using DriverOptions = Bromine.Models.DriverOptions;
 
 namespace Tests.Bromine.Core
 {
@@ -28,7 +27,7 @@ namespace Tests.Bromine.Core
         [InlineData(BrowserType.Firefox), Trait(Category.Browser, Category.Firefox)]
         public void InitializeBrowserDefaultsTest(BrowserType browser)
         {
-            var driverOptions = new DriverOptions(browser);
+            var driverOptions = new BrowserConfiguration(browser);
 
             BrowserInit(driverOptions);
         }
@@ -42,7 +41,7 @@ namespace Tests.Bromine.Core
         [InlineData(BrowserType.Firefox), Trait(Category.Browser, Category.Firefox)]
         public void InitializeBrowserIsHeadlessTest(BrowserType browser)
         {
-            var driverOptions = new DriverOptions(browser, true);
+            var driverOptions = new BrowserConfiguration(browser, true);
 
             BrowserInit(driverOptions);
         }
@@ -56,11 +55,11 @@ namespace Tests.Bromine.Core
             Driver?.Dispose();
         }
 
-        private void BrowserInit(DriverOptions driverOptions)
+        private void BrowserInit(BrowserConfiguration browserConfiguration)
         {
             try
             {
-                Driver = new Driver(driverOptions);
+                Driver = new Driver(browserConfiguration);
 
                 Driver.NavigateToUrl(GoogleUrl);
 
