@@ -37,15 +37,16 @@ namespace Bromine.Core
 
             BrowserConfiguration = configuration;
 
-            Driver = new Driver(BrowserConfiguration);
+            Driver = new Driver(BrowserConfiguration, Exceptions);
 
             if (BrowserConfiguration.EnableImplicitWait)
             {
                 EnableImplicitWait(BrowserConfiguration.SecondsToImplicitWait);
             }
 
-            Find = new Find(Driver.WebDriver);
-            Navigate = new Navigate(Driver, Exceptions);
+            Find = new Find(Driver);
+            Navigate = new Navigate(Driver);
+            Window = new Window(Driver);
         }
 
         /// <inheritdoc />
@@ -58,7 +59,7 @@ namespace Bromine.Core
         public string Source => Driver.Source;
 
         /// <inheritdoc />
-        public Size WindowSize => Driver.Size;
+        public string ScreenshotPath { get; private set; }
 
         /// <inheritdoc />
         public Find Find { get; }
@@ -67,26 +68,13 @@ namespace Bromine.Core
         public Navigate Navigate { get; }
 
         /// <inheritdoc />
+        public IWindow Window { get; }
+
+        /// <inheritdoc />
         public List<Exception> Exceptions { get; }
 
         /// <inheritdoc />
-        public string LastScreenshotPath { get; private set; }
-
-        /// <inheritdoc />
         public BrowserConfiguration BrowserConfiguration { get; }
-
-        /// <inheritdoc />
-        public string ScreenshotPath { get; private set; }
-
-        public void Maximize()
-        {
-            Driver.Maximize();
-        }
-
-        public void Minimize()
-        {
-            Driver.Minimize();
-        }
 
         /// <inheritdoc />
         public Image LastImage
@@ -95,7 +83,7 @@ namespace Bromine.Core
             {
                 try
                 {
-                    return Image.FromFile(LastScreenshotPath);
+                    return Image.FromFile(ScreenshotPath);
                 }
                 catch (Exception e)
                 {
@@ -162,12 +150,12 @@ namespace Bromine.Core
 
             TakeVisibleScreenshot(name);
 
-            using (var image = new Bitmap(LastScreenshotPath))
+            using (var image = new Bitmap(ScreenshotPath))
             {
                 croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
             }
 
-            using (var writer = new FileStream(LastScreenshotPath, FileMode.OpenOrCreate))
+            using (var writer = new FileStream(ScreenshotPath, FileMode.OpenOrCreate))
             {
                 croppedImage.Save(writer, ImageFormat.Png);
             }
@@ -176,12 +164,12 @@ namespace Bromine.Core
         /// <inheritdoc />
         public void TakeVisibleScreenshot(string name)
         {
-            LastScreenshotPath = $@"{ScreenshotPath}\{name}.png";
+            ScreenshotPath = $@"{ScreenshotPath}\{name}.png";
 
             try
             {
                 Screenshot = Driver.Screenshot;
-                Screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Png);
+                Screenshot.SaveAsFile(ScreenshotPath, ScreenshotImageFormat.Png);
             }
             catch (Exception ex)
             {

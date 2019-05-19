@@ -5,6 +5,8 @@ using System.Drawing;
 using Bromine.Core;
 using Bromine.Models;
 
+using OpenQA.Selenium;
+
 namespace Bromine
 {
     /// <summary>
@@ -28,9 +30,9 @@ namespace Bromine
         string Source { get; }
 
         /// <summary>
-        /// Size of the browser window.
+        /// Directory where screenshots are saved.
         /// </summary>
-        Size WindowSize { get; }
+        string ScreenshotPath { get; }
 
         /// <summary>
         /// Helpers to find elements.
@@ -43,14 +45,14 @@ namespace Bromine
         Navigate Navigate { get; }
 
         /// <summary>
+        /// Helpers to interact with the browser window.
+        /// </summary>
+        IWindow Window { get; }
+
+        /// <summary>
         /// List of exceptions.
         /// </summary>
         List<Exception> Exceptions { get; }
-
-        /// <summary>
-        /// Path where the last screenshot was saved;
-        /// </summary>
-        string LastScreenshotPath { get; }
 
         /// <summary>
         /// Browser configuration used to initialize the web driver.
@@ -58,29 +60,14 @@ namespace Bromine
         BrowserConfiguration BrowserConfiguration { get; }
 
         /// <summary>
-        /// Directory where screenshots are saved.
-        /// </summary>
-        string ScreenshotPath { get; }
-
-        /// <summary>
-        /// Last image saved at the <see cref="LastScreenshotPath"/>.
+        /// Last image saved at the <see cref="ScreenshotPath"/>.
         /// </summary>
         Image LastImage { get; }
 
         /// <summary>
-        /// Size of the last image saved at the <see cref="LastScreenshotPath"/>.
+        /// Size of the last image saved at the <see cref="ScreenshotPath"/>.
         /// </summary>
         Size LastImageSize { get; }
-
-        /// <summary>
-        /// Maximize the browser window.
-        /// </summary>
-        void Maximize();
-
-        /// <summary>
-        /// Minimize the browser window.
-        /// </summary>
-        void Minimize();
 
         /// <summary>
         /// Wait for a given condition to be true.

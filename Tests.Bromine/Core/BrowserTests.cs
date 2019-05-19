@@ -35,8 +35,8 @@ namespace Tests.Bromine.Core
         /// Dispose of the default browser and create a new Browser in the test to verify A browser can be created with a reference to another image save path.
         /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
         /// Take a screenshot of the visible page.
-        /// Verify the file <see cref="Browser.LastScreenshotPath"/> exists.
-        /// Delete the file located <see cref="Browser.LastScreenshotPath"/>.
+        /// Verify the file <see cref="Browser.ScreenshotPath"/> exists.
+        /// Delete the file located <see cref="Browser.ScreenshotPath"/>.
         /// </summary>
         [Fact]
         public void VerifyScreenshot()
@@ -55,7 +55,7 @@ namespace Tests.Bromine.Core
             browser.Navigate.ToUrl(AmazonUrl);
             browser.TakeVisibleScreenshot(name);
 
-            True(File.Exists(browser.LastScreenshotPath), $"Unable to find the expected screenshot at {browser.LastScreenshotPath}");
+            True(File.Exists(browser.ScreenshotPath), $"Unable to find the expected screenshot at {browser.ScreenshotPath}");
 
             browser.Dispose(); // Manually dispose since this test changed the default configuration.
         }
@@ -123,7 +123,7 @@ namespace Tests.Bromine.Core
 
             Browser.Navigate.ToUrl(AmazonUrl);
 
-            Browser.Maximize();
+            Browser.Window.Maximize();
 
             Browser.TakeElementScreenshot(name, CartButton);
 
@@ -131,20 +131,44 @@ namespace Tests.Bromine.Core
         }
 
         /// <summary>
-        /// Verify the Browser can be resized and the <see cref="Browser.WindowSize"/> can be retrieved.
+        /// Verify the behavior of <see cref="Browser.Window"/>.
+        /// <see cref="Window.Maximize"/>
+        /// <see cref="Window.Minimize"/>
+        /// <see cref="Window.FullScreen"/>
+        /// <see cref="Window.Size"/>
+        /// <see cref="Window.Position"/>
         /// </summary>
         [Fact]
-        public void VerifyBrowserSizeChanges()
+        public void VerifyBrowserResize()
         {
-            var windowSize = Browser.WindowSize;
+            var windowSize = Browser.Window.Size;
+            var position = Browser.Window.Position;
 
-            Browser.Maximize();
+            Browser.Window.Maximize();
 
-            NotEqual(windowSize, windowSize = Browser.WindowSize);
+            NotEqual(windowSize, windowSize = Browser.Window.Size);
+            NotEqual(position, position = Browser.Window.Position);
 
-            Browser.Minimize();
+            Browser.Window.Minimize();
 
-            NotEqual(windowSize, Browser.WindowSize);
+            NotEqual(windowSize, windowSize = Browser.Window.Size);
+            NotEqual(position, position = Browser.Window.Position);
+
+            Browser.Window.FullScreen();
+
+            NotEqual(windowSize, Browser.Window.Size);
+            NotEqual(position, Browser.Window.Position);
+
+            windowSize = new Size(100, 100);
+            Browser.Window.Size = windowSize;
+
+            InRange(windowSize.Width, windowSize.Width, 600);
+            InRange(windowSize.Height, windowSize.Height, 150);
+
+            position = new Point(25, 75);
+            Browser.Window.Position = position;
+
+            Equal(position, Browser.Window.Position);
         }
 
         /// <summary>

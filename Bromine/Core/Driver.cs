@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Drawing;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 using Bromine.Constants;
 
@@ -12,7 +13,7 @@ using OpenQA.Selenium.Support.Extensions;
 namespace Bromine.Core
 {
     /// <summary>
-    /// Provide access to browser drivers.
+    /// Provide access to interact with browser specific drivers.
     /// </summary>
     // ReSharper disable once InheritdocConsiderUsage
     public class Driver: IDisposable
@@ -21,8 +22,11 @@ namespace Bromine.Core
         /// Initialize an IWebDriver for the given browser and desired configuration.
         /// </summary>
         /// <param name="options">Object to bass desired browser driver configuration.</param>
-        public Driver(Models.BrowserConfiguration options)
+        /// <param name="exceptions">Exception list to track unexpected results during execution.</param>
+        public Driver(Models.BrowserConfiguration options, List<Exception> exceptions)
         {
+            Exceptions = exceptions;
+
             switch (options.Browser)
             {
                 case BrowserType.Chrome:
@@ -39,6 +43,11 @@ namespace Bromine.Core
                 case BrowserType.Firefox:
                 {
                     WebDriver = InitializeFirefoxDriver(options.IsHeadless, options.HideDriverWindow);
+                    break;
+                }
+                default:
+                {
+                    Exceptions.Add(new InvalidEnumArgumentException($"{options.Browser} is not a supported Browser type"));
                     break;
                 }
             }
@@ -78,14 +87,11 @@ namespace Bromine.Core
         public string Title => WebDriver.Title;
 
         /// <summary>
-        /// Get the driver logs.
+        /// Take a screenshot for the given visible page.
         /// </summary>
-        public ILogs Logs => WebDriver.Manage().Logs;
+        public Screenshot Screenshot => WebDriver.TakeScreenshot();
 
-        /// <summary>
-        /// Manipulate cookies.
-        /// </summary>
-        public ICookieJar Cookies => WebDriver.Manage().Cookies;
+        internal IWebDriver WebDriver { get; }
 
         /// <summary>
         /// Manipulate currently focused window.
@@ -93,82 +99,9 @@ namespace Bromine.Core
         public IWindow Window => WebDriver.Manage().Window;
 
         /// <summary>
-        /// Position of the browser window.
+        /// List of un expected runtime behavior.
         /// </summary>
-        public Point Position => WebDriver.Manage().Window.Position;
-
-        /// <summary>
-        /// Size of the browser window.
-        /// </summary>
-        public Size Size => WebDriver.Manage().Window.Size;
-
-        /// <summary>
-        /// Take a screenshot for the given visible page.
-        /// </summary>
-        public Screenshot Screenshot => WebDriver.TakeScreenshot();
-
-        internal IWebDriver WebDriver { get; }
-
-        #region Navigate
-        /// <summary>
-        /// Navigate to the given URL.
-        /// </summary>
-        /// <param name="url">URL to navigate to.</param>
-        public void NavigateToUrl(string url)
-        {
-            WebDriver.Navigate().GoToUrl(url);
-        }
-
-        /// <summary>
-        /// Navigate back to the previous page.
-        /// </summary>
-        public void NavigateBack()
-        {
-            WebDriver.Navigate().Back();
-        }
-
-        /// <summary>
-        /// Navigate forward.
-        /// </summary>
-        public void NavigateForward()
-        {
-            WebDriver.Navigate().Forward();
-        }
-
-        /// <summary>
-        /// Refresh the current page.
-        /// </summary>
-        public void Refresh()
-        {
-            WebDriver.Navigate().Refresh();
-        }
-        #endregion
-
-        #region Window
-        /// <summary>
-        /// Maximize the window.
-        /// </summary>
-        public void Maximize()
-        {
-            WebDriver.Manage().Window.Maximize();
-        }
-
-        /// <summary>
-        /// Minimize the window.
-        /// </summary>
-        public void Minimize()
-        {
-            WebDriver.Manage().Window.Minimize();
-        }
-
-        /// <summary>
-        /// Maximize the size of the browser window.
-        /// </summary>
-        public void FullScreen()
-        {
-            WebDriver.Manage().Window.FullScreen();
-        }
-        #endregion
+        public List<Exception> Exceptions { get; }
 
         /// <summary>
         /// Close the Browser and WebDriver.
@@ -212,8 +145,9 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Exceptions.Add(e);
                 Dispose();
+
                 throw;
             }
         }
@@ -245,8 +179,9 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Exceptions.Add(e);
                 Dispose();
+
                 throw;
             }
         }
@@ -272,8 +207,9 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Exceptions.Add(e);
                 Dispose();
+
                 throw;
             }
         }
