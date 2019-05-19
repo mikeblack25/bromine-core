@@ -1,5 +1,7 @@
 ﻿using Xunit;
 
+using static Xunit.Assert;
+
 namespace Tests.Bromine.Core
 {
     /// <inheritdoc />
@@ -40,7 +42,7 @@ namespace Tests.Bromine.Core
         {
             Browser?.Dispose();
 
-            Assert.True(ErrorList.Count == 0, string.Join(",", ErrorList));
+            True(ErrorList.Count == 0, string.Join(",", ErrorList));
         }
 
         private void TryId(string id)

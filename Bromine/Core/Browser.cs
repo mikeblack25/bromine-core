@@ -33,7 +33,6 @@ namespace Bromine.Core
         /// <param name="configuration">Provides advanced browser and driver configuration.</param>
         public Browser(BrowserConfiguration configuration)
         {
-            CalledElements = new List<Element>();
             Exceptions = new List<Exception>();
 
             BrowserConfiguration = configuration;
@@ -59,13 +58,13 @@ namespace Bromine.Core
         public string Source => Driver.Source;
 
         /// <inheritdoc />
+        public Size WindowSize => Driver.Size;
+
+        /// <inheritdoc />
         public Find Find { get; }
 
         /// <inheritdoc />
         public Navigate Navigate { get; }
-
-        /// <inheritdoc />
-        public List<Element> CalledElements { get; }
 
         /// <inheritdoc />
         public List<Exception> Exceptions { get; }
@@ -94,12 +93,15 @@ namespace Bromine.Core
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(LastScreenshotPath))
+                try
                 {
                     return Image.FromFile(LastScreenshotPath);
                 }
-
-                return null;
+                catch (Exception e)
+                {
+                    Exceptions.Add(e);
+                    return null;
+                }
             }
         }
 
@@ -118,6 +120,8 @@ namespace Bromine.Core
                 return size;
             }
         }
+
+        public static string DefaultImagePath => $@"{AppDomain.CurrentDomain.BaseDirectory}\{ScreenshotsDirectory}";
 
         /// <inheritdoc />
         public bool Wait(Func<bool> condition, int timeToWait = 1)

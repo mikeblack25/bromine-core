@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -28,6 +28,11 @@ namespace Bromine
         string Source { get; }
 
         /// <summary>
+        /// Size of the browser window.
+        /// </summary>
+        Size WindowSize { get; }
+
+        /// <summary>
         /// Helpers to find elements.
         /// </summary>
         Find Find { get; }
@@ -36,11 +41,6 @@ namespace Bromine
         /// Helpers to navigate to pages and files.
         /// </summary>
         Navigate Navigate { get; }
-
-        /// <summary>
-        /// List of element that were called.
-        /// </summary>
-        List<Element> CalledElements { get; }
 
         /// <summary>
         /// List of exceptions.

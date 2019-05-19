@@ -98,7 +98,7 @@ namespace Bromine.Core
         public Point Position => WebDriver.Manage().Window.Position;
 
         /// <summary>
-        /// Size ofthe browser window.
+        /// Size of the browser window.
         /// </summary>
         public Size Size => WebDriver.Manage().Window.Size;
 
