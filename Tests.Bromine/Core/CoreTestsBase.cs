@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -19,14 +19,14 @@ namespace Tests.Bromine.Core
         /// </summary>
         protected CoreTestsBase()
         {
-            Browser = new Browser(BrowserType.Chrome);
+            Browser = new Browser();
             ErrorList = new List<string>();
         }
 
         /// <summary>
         /// Main entry point to interact with a web browser.
         /// </summary>
-        public IBrowser Browser { get; }
+        public IBrowser Browser { get; set; }
 
         /// <summary>
         /// List of errors generated during a test.

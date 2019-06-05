@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
+using Bromine.Constants;
 using Bromine.Models;
 
 using OpenQA.Selenium;
@@ -14,49 +15,58 @@ namespace Bromine.Core
     /// <inheritdoc cref="IBrowser" />
     public class Browser : IBrowser
     {
-        /// <summary>
-        /// Create a simple Browser object to interact with Elements.
-        /// The driver will be configured based on the browser value selected.
-        /// For advanced Browser configuration use Browser(BrowserOptions options) to construct a Browser object.
-        /// </summary>
-        /// <param name="browser">Type of browser to use.</param>
-        /// <param name="enableImplicitWait">When true, the driver will automatically wait the secondsToImplicitWait for a condition before stopping execution.</param>
-        /// <param name="secondsToImplicitWait">Seconds to wait for a given condition. This is only applicable when enableImplicitWait is true.</param>
-        /// <param name="stringShotDirectory">Location to store screenshots. If this is not provided screenshots will be put in a Screenshots directory in the output path.</param>
-        public Browser(BrowserType browser, bool enableImplicitWait = true, int secondsToImplicitWait = 5, string stringShotDirectory = "")
-            : this(new BrowserOptions(browser, enableImplicitWait, secondsToImplicitWait))
+        public Browser(BrowserType browser = BrowserType.Chrome, int secondsToImplicitWait = 0)
+            : this(new BrowserOptions(browser, secondsToImplicitWait))
         {
-            InitializeScreenshotDirectory(stringShotDirectory);
         }
 
         /// <summary>
         /// Provides methods of interacting with the web browser.
         /// </summary>
-        /// <param name="options">Provides advanced browser and driver configuration.</param>
+        /// <param name="options">Provides advanced browser and driver options.</param>
         public Browser(BrowserOptions options)
         {
-            CalledElements = new List<Element>();
             Exceptions = new List<Exception>();
 
-            Driver = new Driver(options.Driver);
+            BrowserOptions = options;
 
-            if (options.EnableImplicitWait)
+            Driver = new Driver(BrowserOptions.Driver, Exceptions);
+
+            if (options.ImplicitWaitEnabled)
             {
-                EnableImplicitWait(options.SecondsToImplicitWait);
+                EnableImplicitWait(options.SecondsToWait);
             }
 
-            Find = new Find(Driver.WebDriver);
-            Navigate = new Navigate(Driver, Exceptions);
+            Find = new Find(Driver);
+            Navigate = new Navigate(Driver);
+            Window = new Window(Driver);
+
+            InitializeScreenshotDirectory(options.ScreenShotPath);
         }
 
         /// <inheritdoc />
-        public string Url => Driver.Url;
+        public string Url => Driver.WebDriver.Url;
 
         /// <inheritdoc />
-        public string Title => Driver.Title;
+        public string Title => Driver.WebDriver.Title;
 
         /// <inheritdoc />
-        public string Source => Driver.Source;
+        public string Source => Driver.WebDriver.PageSource;
+
+        /// <inheritdoc />
+        public ILogs Logs => Driver.WebDriver.Manage().Logs;
+
+        /// <inheritdoc />
+        public ICookieJar Cookies => Driver.WebDriver.Manage().Cookies;
+
+        /// <inheritdoc />
+        public IWindow Window { get; }
+
+        /// <inheritdoc />
+        public Point Position => Driver.WebDriver.Manage().Window.Position;
+
+        /// <inheritdoc />
+        public Size Size => Driver.WebDriver.Manage().Window.Size;
 
         /// <inheritdoc />
         public Find Find { get; }
@@ -65,43 +75,36 @@ namespace Bromine.Core
         public Navigate Navigate { get; }
 
         /// <inheritdoc />
-        public List<Element> CalledElements { get; }
-
-        /// <inheritdoc />
         public List<Exception> Exceptions { get; }
 
         /// <inheritdoc />
-        public string LastScreenshotPath { get; private set; }
+        public BrowserOptions BrowserOptions { get; }
 
         /// <inheritdoc />
-        public string ScreenshotPath { get; private set; }
-
-        public void Maximize()
+        public string ScreenshotPath
         {
-            Driver.Maximize();
+            get => _screenshotPath;
+            set => InitializeScreenshotDirectory(value);
         }
 
-        public void Minimize()
-        {
-            Driver.Minimize();
-        }
-
-        /// <summary>
         /// <inheritdoc />
-        /// </summary>
         public Image LastImage
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(LastScreenshotPath))
+                try
                 {
-                    return Image.FromFile(LastScreenshotPath);
+                    return Image.FromFile(ScreenshotPath);
                 }
-
-                return null;
+                catch (Exception e)
+                {
+                    Exceptions.Add(e);
+                    return null;
+                }
             }
         }
 
+        /// <inheritdoc />
         public Size LastImageSize
         {
             get
@@ -116,6 +119,11 @@ namespace Bromine.Core
                 return size;
             }
         }
+
+        public static string DefaultImagePath => $@"{AppDomain.CurrentDomain.BaseDirectory}\{ScreenshotsDirectory}";
+
+        /// <inheritdoc />
+        public string Information => Driver.WebDriver.GetType().ToString();
 
         /// <inheritdoc />
         public bool Wait(Func<bool> condition, int timeToWait = 1)
@@ -145,7 +153,6 @@ namespace Bromine.Core
         /// <inheritdoc />
         public void TakeElementScreenshot(string name, Element element)
         {
-            
             TakeRegionScreenshot(name, new Rectangle(element.Location, element.Size));
         }
 
@@ -156,15 +163,12 @@ namespace Bromine.Core
 
             TakeVisibleScreenshot(name);
 
-            //using (var fileImage = Image.FromFile(LastScreenshotPath))
+            using (var image = new Bitmap(ScreenshotPath))
             {
-                using (var image = new Bitmap(LastScreenshotPath))
-                {
-                    croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
-                }
+                croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
             }
 
-            using (var writer = new FileStream(LastScreenshotPath, FileMode.OpenOrCreate))
+            using (var writer = new FileStream(ScreenshotPath, FileMode.OpenOrCreate))
             {
                 croppedImage.Save(writer, ImageFormat.Png);
             }
@@ -173,12 +177,12 @@ namespace Bromine.Core
         /// <inheritdoc />
         public void TakeVisibleScreenshot(string name)
         {
-            LastScreenshotPath = $@"{ScreenshotPath}\{name}.png";
+            ScreenshotPath = $@"{ScreenshotPath}\{name}.png";
 
             try
             {
                 Screenshot = Driver.Screenshot;
-                Screenshot.SaveAsFile(LastScreenshotPath, ScreenshotImageFormat.Png);
+                Screenshot.SaveAsFile(ScreenshotPath, ScreenshotImageFormat.Png);
             }
             catch (Exception ex)
             {
@@ -197,24 +201,25 @@ namespace Bromine.Core
             Driver.WebDriver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, secondsToWait);
         }
 
-        private void InitializeScreenshotDirectory(string path)
+        private void InitializeScreenshotDirectory(string path = "")
         {
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrWhiteSpace(path)) // Create the logs where the app is running.
             {
-                path = $@"{AppDomain.CurrentDomain.BaseDirectory}\{_screenshotsDirectory}";
+                path = $@"{AppDomain.CurrentDomain.BaseDirectory}\{ScreenshotsDirectory}";
             }
 
-            if (!Directory.Exists(path))
+            if (!Directory.Exists(path) && !path.Contains("."))
             {
                 Directory.CreateDirectory(path);
             }
 
-            ScreenshotPath = path;
+            _screenshotPath = path;
         }
 
         private Driver Driver { get; }
         private Screenshot Screenshot { get; set; }
 
-        private string _screenshotsDirectory => "Screenshots";
+        private static string ScreenshotsDirectory => "Screenshots";
+        private string _screenshotPath;
     }
 }
