@@ -4,6 +4,7 @@ using System.IO;
 
 using Bromine.Constants;
 using Bromine.Core;
+using Bromine.Models;
 
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace Tests.Bromine.Core
 {
     /// <inheritdoc />
     /// <summary>
-    /// Test Browser behavior.
+    /// Tests to verify the functionality of the Browser class is working as expected.
     /// </summary>
     public class BrowserTests : CoreTestsBase
     {
@@ -44,11 +45,12 @@ namespace Tests.Bromine.Core
             var path = global::Bromine.Core.Browser.DefaultImagePath;
             var testDirectory = $@"{path}\Directory Test";
             var name = "Amazon Visible Page Screenshot";
+            var browserOptions = new BrowserOptions(BrowserType.Chrome, 0, testDirectory);
 
             Dispose(); // Close the default driver created on startup.
             DeleteDirectory(testDirectory); // Clear the initial directory to create one during the Browser init.
 
-            var browser = new Browser(BrowserType.Chrome, testDirectory);
+            var browser = new Browser(browserOptions);
 
             DeleteInitialImage(name);
 
@@ -57,29 +59,7 @@ namespace Tests.Bromine.Core
 
             True(File.Exists(browser.ScreenshotPath), $"Unable to find the expected screenshot at {browser.ScreenshotPath}");
 
-            browser.Dispose(); // Manually dispose since this test changed the default configuration.
-        }
-
-        /// <summary>
-        /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
-        /// Try to save a screenshot to an invalid name.
-        /// Verify <see cref="Browser.Exceptions"/> is not empty trying to save an invalid file name.>
-        /// Verify <see cref="Browser.LastImage"/> returns null and an exception is logged when an invalid path is selected.
-        /// </summary>
-        [Fact]
-        public void VerifyTakeVisibleScreenshotError()
-        {
-            Empty(Browser.Exceptions);
-
-            Browser.Navigate.ToUrl(AmazonUrl);
-            Browser.TakeVisibleScreenshot(@"-\\\\--");
-
-            NotEmpty(Browser.Exceptions);
-
-            var exceptionCount = Browser.Exceptions.Count;
-
-            Null(Browser.LastImage);   
-            Equal(++exceptionCount, Browser.Exceptions.Count);
+            browser.Dispose();
         }
 
         /// <summary>
@@ -96,7 +76,7 @@ namespace Tests.Bromine.Core
             var regionSize = new Size(50, 50);
             var region = new Rectangle(initialPosition, regionSize);
 
-            var name = "Amazon Region Screenshot";
+            const string name = "Amazon Region Screenshot";
             DeleteInitialImage(name);
 
             Browser.Navigate.ToUrl(AmazonUrl);
@@ -118,7 +98,7 @@ namespace Tests.Bromine.Core
         {
             var regionSize = new Size(98, 44);
 
-            var name = "Amazon Element Screenshot";
+            const string name = "Amazon Element Screenshot";
             DeleteInitialImage(name);
 
             Browser.Navigate.ToUrl(AmazonUrl);
@@ -128,6 +108,28 @@ namespace Tests.Bromine.Core
             Browser.TakeElementScreenshot(name, CartButton);
 
             Equal(regionSize, Browser.LastImageSize);
+        }
+
+        /// <summary>
+        /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
+        /// Try to save a screenshot to an invalid name.
+        /// Verify <see cref="Browser.Exceptions"/> is not empty trying to save an invalid file name.>
+        /// Verify <see cref="Browser.LastImage"/> returns null and an exception is logged when an invalid path is selected.
+        /// </summary>
+        [Fact]
+        public void VerifyTakeVisibleScreenshotError()
+        {
+            Empty(Browser.Exceptions);
+
+            Browser.Navigate.ToUrl(AmazonUrl);
+            Browser.TakeVisibleScreenshot(@"-\\\\--");
+
+            NotEmpty(Browser.Exceptions);
+
+            var exceptionCount = Browser.Exceptions.Count;
+
+            Null(Browser.LastImage);
+            Equal(++exceptionCount, Browser.Exceptions.Count);
         }
 
         /// <summary>

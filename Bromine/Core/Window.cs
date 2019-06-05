@@ -109,6 +109,6 @@ namespace Bromine.Core
         }
 
         private readonly Driver _driver;     
-        private IWindow BrowserWindow => _driver.Window;
+        private IWindow BrowserWindow => _driver.WebDriver.Manage().Window;
     }
 }

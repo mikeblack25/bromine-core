@@ -35,6 +35,31 @@ namespace Bromine
         string ScreenshotPath { get; }
 
         /// <summary>
+        /// Get the driver logs.
+        /// </summary>
+        ILogs Logs { get; }
+
+        /// <summary>
+        /// Manipulate cookies.
+        /// </summary>
+        ICookieJar Cookies { get; }
+
+        /// <summary>
+        /// Manipulate currently focused window.
+        /// </summary>
+        IWindow Window { get; }
+
+        /// <summary>
+        /// Position of the browser window.
+        /// </summary>
+        Point Position { get; }
+
+        /// <summary>
+        /// Size of the browser window.
+        /// </summary>
+        Size Size { get; }
+
+        /// <summary>
         /// Helpers to find elements.
         /// </summary>
         Find Find { get; }
@@ -45,11 +70,6 @@ namespace Bromine
         Navigate Navigate { get; }
 
         /// <summary>
-        /// Helpers to interact with the browser window.
-        /// </summary>
-        IWindow Window { get; }
-
-        /// <summary>
         /// List of exceptions.
         /// </summary>
         List<Exception> Exceptions { get; }
@@ -57,7 +77,7 @@ namespace Bromine
         /// <summary>
         /// Browser configuration used to initialize the web driver.
         /// </summary>
-        BrowserConfiguration BrowserConfiguration { get; }
+        BrowserOptions BrowserOptions { get; }
 
         /// <summary>
         /// Last image saved at the <see cref="ScreenshotPath"/>.
@@ -68,6 +88,11 @@ namespace Bromine
         /// Size of the last image saved at the <see cref="ScreenshotPath"/>.
         /// </summary>
         Size LastImageSize { get; }
+
+        /// <summary>
+        /// Namespace of the Selenium driver being used by the browser.
+        /// </summary>
+        string Information { get; }
 
         /// <summary>
         /// Wait for a given condition to be true.

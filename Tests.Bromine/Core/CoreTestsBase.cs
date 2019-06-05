@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 
 using Bromine;
-using Bromine.Constants;
 using Bromine.Core;
 
 namespace Tests.Bromine.Core
@@ -20,14 +19,14 @@ namespace Tests.Bromine.Core
         /// </summary>
         protected CoreTestsBase()
         {
-            Browser = new Browser(BrowserType.Chrome);
+            Browser = new Browser();
             ErrorList = new List<string>();
         }
 
         /// <summary>
         /// Main entry point to interact with a web browser.
         /// </summary>
-        public IBrowser Browser { get; }
+        public IBrowser Browser { get; set; }
 
         /// <summary>
         /// List of errors generated during a test.
