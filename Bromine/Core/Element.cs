@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 
@@ -8,15 +7,13 @@ using OpenQA.Selenium;
 
 namespace Bromine.Core
 {
-    /// <inheritdoc />
     /// <summary>
     /// Provides ability to interact with elements.
     /// </summary>
-    public class Element : IWebElement
+    public class Element
     {
-        /// <inheritdoc />
         /// <summary>
-        /// Construct an Element object.
+        /// Create an Element which can interact with web applications.
         /// </summary>
         /// <param name="element">Requested element.</param>
         /// <param name="locatorString">Locator string used to find the requested element.</param>
@@ -34,25 +31,39 @@ namespace Bromine.Core
             _isInitialized = true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Element TagName value.
+        /// </summary>
         public string TagName => _element?.TagName;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Element Text value.
+        /// </summary>
         public string Text => _element?.Text;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Element Enabled status. This can be used to determine if an element can be interacted with.
+        /// </summary>
         public bool Enabled => _element.Enabled;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Element selected status.
+        /// </summary>
         public bool Selected => _element.Selected;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Element location in the rendered DOM.
+        /// </summary>
         public Point Location => _element.Location;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Element size.
+        /// </summary>
         public Size Size => _element.Size;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Element displayed status. This is helpful as some interactions require an element to be in view.
+        /// </summary>
         public bool Displayed => _element.Displayed;
 
         /// <summary>
@@ -61,39 +72,36 @@ namespace Bromine.Core
         public CallingInformation Information { get; }
 
         /// <summary>
-        /// List of exceptions for the requested element.
+        /// Clear the element content. This is usually used on a user editable field element.
         /// </summary>
-        public List<Exception> Exceptions { get; }
-
-        /// <inheritdoc />
         public void Clear()
         {
-            if (_isInitialized)
+            if (!_isInitialized) { return; }
+
+            try
             {
-                try
-                {
-                    _element.Clear();
-                }
-                catch (Exception ex)
-                {
-                    Exceptions.Add(ex);
-                }
+                _element.Clear();
+            }
+            catch (Exception ex)
+            {
+                Exceptions.Add(ex);
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Click the element. The element should be enabled to be clickable.
+        /// </summary>
         public void Click()
         {
-            if (_isInitialized)
+            if (!_isInitialized) { return; }
+
+            try
             {
-                try
-                {
-                    _element.Click();
-                }
-                catch (Exception ex)
-                {
-                    Exceptions.Add(ex);
-                }
+                _element.Click();
+            }
+            catch (Exception ex)
+            {
+                Exceptions.Add(ex);
             }
         }
 
@@ -249,26 +257,6 @@ namespace Bromine.Core
         }
 
         /// <summary>
-        /// This method is required to meet the IWebElement interface. Use <see cref="FindElement(By)"/> this method is not implemented.
-        /// </summary>
-        /// <param name="by">Locator strategy to use to find requested elements.</param>
-        /// <returns></returns>
-        IWebElement ISearchContext.FindElement(By by)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// This method is required to meet the IWebElement interface. Use <see cref="FindElements(By)"/> this method is not implemented.
-        /// </summary>
-        /// <param name="by">Locator strategy to use to find requested elements.</param>
-        /// <returns></returns>
-        ReadOnlyCollection<IWebElement> ISearchContext.FindElements(By by)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Construct the default behavior of the Element object.
         /// </summary>
         private Element()
@@ -287,6 +275,7 @@ namespace Bromine.Core
 
         private readonly IWebElement _element;
         private readonly bool _isInitialized;
+        private List<Exception> Exceptions { get; }
     }
 
 
@@ -325,6 +314,7 @@ namespace Bromine.Core
         Id = 1,
         Class,
         CssSelector,
+        Js,
         Tag,
         Text,
         PartialText,

@@ -11,12 +11,10 @@ namespace Bromine.Core
         /// <summary>
         /// Construct a Navigate object for the given driver type.
         /// </summary>
-        /// <param name="driver"></param>
-        /// <param name="exceptions"></param>
-        public Navigate(Driver driver, List<Exception> exceptions)
+        /// <param name="driver">Driver used to navigate.</param>
+        public Navigate(Driver driver)
         {
-            Driver = driver;
-            Exceptions = exceptions;
+            _driver = driver;
         }
 
         /// <summary>
@@ -27,7 +25,7 @@ namespace Bromine.Core
         {
             try
             {
-                Driver.WebDriver.Navigate().GoToUrl(url);
+                _driver.WebDriver.Navigate().GoToUrl(url);
             }
             catch (Exception ex)
             {
@@ -43,7 +41,7 @@ namespace Bromine.Core
         {
             try
             {
-                Driver.WebDriver.Navigate().GoToUrl($"file://{path}");
+                _driver.WebDriver.Navigate().GoToUrl($"file://{path}");
             }
             catch (Exception ex)
             {
@@ -56,7 +54,14 @@ namespace Bromine.Core
         /// </summary>
         public void Back()
         {
-            Driver.NavigateBack();
+            try
+            {
+                _driver.WebDriver.Navigate().Back();
+            }
+            catch (Exception ex)
+            {
+                Exceptions.Add(ex);
+            }
         }
 
         /// <summary>
@@ -64,7 +69,14 @@ namespace Bromine.Core
         /// </summary>
         public void Forward()
         {
-            Driver.NavigateForward();
+            try
+            {
+                _driver.WebDriver.Navigate().Forward();
+            }
+            catch (Exception ex)
+            {
+                Exceptions.Add(ex);
+            }
         }
 
         /// <summary>
@@ -72,11 +84,17 @@ namespace Bromine.Core
         /// </summary>
         public void Refresh()
         {
-            Driver.Refresh();
+            try
+            {
+                _driver.WebDriver.Navigate().Refresh();
+            }
+            catch (Exception ex)
+            {
+                Exceptions.Add(ex);
+            }
         }
 
-        private Driver Driver { get; }
-
-        private List<Exception> Exceptions { get; }
+        private readonly Driver _driver;
+        private List<Exception> Exceptions => _driver.Exceptions;
     }
 }

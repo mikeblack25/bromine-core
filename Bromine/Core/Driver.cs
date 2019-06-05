@@ -1,182 +1,111 @@
 ﻿using System;
-using System.Drawing;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Bromine.Constants;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Extensions;
+
+using DriverOptions = Bromine.Models.DriverOptions;
 
 namespace Bromine.Core
 {
     /// <summary>
-    /// Provide access to browser drivers.
+    /// Provide access to interact with browser specific drivers.
     /// </summary>
     // ReSharper disable once InheritdocConsiderUsage
-    public class Driver: IDisposable
+    public class Driver : IDisposable
     {
         /// <summary>
         /// Initialize an IWebDriver for the given browser and desired configuration.
         /// </summary>
         /// <param name="options">Object to bass desired browser driver configuration.</param>
-        public Driver(Models.DriverOptions options)
+        /// <param name="exceptions">Exception list to track unexpected results during execution.</param>
+        public Driver(DriverOptions options, List<Exception> exceptions)
         {
+            Options = options;
+            Exceptions = exceptions;
+
             switch (options.Browser)
             {
                 case BrowserType.Chrome:
-                {
-                    WebDriver = InitializeChromeDriver(options.IsHeadless, options.HideDriverWindow);
-                    break;
-                }
+                    {
+                        WebDriver = InitializeChromeDriver(options.IsHeadless, options.HideDriverWindow);
+                        break;
+                    }
                 case BrowserType.Edge:
-                {
-                    // TODO: If isHeadless = true Log message not supported.
-                    WebDriver = InitializeEdgeDriver(options.HideDriverWindow);
-                    break;
-                }
+                    {
+                        // TODO: If isHeadless = true Log message not supported.
+                        WebDriver = InitializeEdgeDriver(options.HideDriverWindow);
+                        break;
+                    }
                 case BrowserType.Firefox:
-                {
-                    WebDriver = InitializeFirefoxDriver(options.IsHeadless, options.HideDriverWindow);
-                    break;
-                }
+                    {
+                        WebDriver = InitializeFirefoxDriver(options.IsHeadless, options.HideDriverWindow);
+                        break;
+                    }
+                default:
+                    {
+                        Exceptions.Add(new InvalidEnumArgumentException($"{options.Browser} is not a supported Browser type"));
+                        break;
+                    }
             }
         }
+
+        /// <summary>
+        /// Advanced driver configuration options.
+        /// See the following options for more details.
+        /// <see cref="DriverOptions.Browser"/>
+        /// <see cref="DriverOptions.IsRemoteDriver"/>
+        /// <see cref="DriverOptions.IsHeadless"/>
+        /// <see cref="DriverOptions.HideDriverWindow"/>
+        /// </summary>
+        public DriverOptions Options { get; }
 
         /// <summary>
         /// Service the Chrome driver is running on provided it has been initialized at object construction.
         /// NOTE: only one DriverService is valid at a time.
         /// </summary>
-        public ChromeDriverService ChromeDriverService { get; private set; }
-
-        /// <summary>
-        /// Service the Firefox driver is running on provided it has been initialized at object construction.
-        /// NOTE: only one DriverService is valid at a time.
-        /// </summary>
-        public FirefoxDriverService FirefoxDriverService { get; private set; }
-
-        /// <summary>
-        /// Service the Edge driver is running on provided it has been initialized at object construction.
-        /// NOTE: only one DriverService is valid at a time.
-        /// </summary>
-        public EdgeDriverService EdgeDriverService { get; private set; }
-
-        /// <summary>
-        /// Get the URL of the current page.
-        /// </summary>
-        public string Url => WebDriver.Url;
-
-        /// <summary>
-        /// Get the HTML source.
-        /// </summary>
-        public string Source => WebDriver.PageSource;
-
-        /// <summary>
-        /// Get the HTML title.
-        /// </summary>
-        public string Title => WebDriver.Title;
-
-        /// <summary>
-        /// Get the driver logs.
-        /// </summary>
-        public ILogs Logs => WebDriver.Manage().Logs;
-
-        /// <summary>
-        /// Manipulate cookies.
-        /// </summary>
-        public ICookieJar Cookies => WebDriver.Manage().Cookies;
-
-        /// <summary>
-        /// Manipulate currently focused window.
-        /// </summary>
-        public IWindow Window => WebDriver.Manage().Window;
-
-        /// <summary>
-        /// Position of the browser window.
-        /// </summary>
-        public Point Position => WebDriver.Manage().Window.Position;
-
-        /// <summary>
-        /// Size ofthe browser window.
-        /// </summary>
-        public Size Size => WebDriver.Manage().Window.Size;
+        public DriverService DriverService { get; private set; }
 
         /// <summary>
         /// Take a screenshot for the given visible page.
         /// </summary>
         public Screenshot Screenshot => WebDriver.TakeScreenshot();
 
+        /// <summary>
+        /// List of un expected runtime behavior.
+        /// </summary>
+        public List<Exception> Exceptions { get; }
+
+        /// <summary>
+        /// Selenium WebDriver. <see cref="IWebDriver"/>
+        /// </summary>
         internal IWebDriver WebDriver { get; }
-
-        #region Navigate
-        /// <summary>
-        /// Navigate to the given URL.
-        /// </summary>
-        /// <param name="url">URL to navigate to.</param>
-        public void NavigateToUrl(string url)
-        {
-            WebDriver.Navigate().GoToUrl(url);
-        }
-
-        /// <summary>
-        /// Navigate back to the previous page.
-        /// </summary>
-        public void NavigateBack()
-        {
-            WebDriver.Navigate().Back();
-        }
-
-        /// <summary>
-        /// Navigate forward.
-        /// </summary>
-        public void NavigateForward()
-        {
-            WebDriver.Navigate().Forward();
-        }
-
-        /// <summary>
-        /// Refresh the current page.
-        /// </summary>
-        public void Refresh()
-        {
-            WebDriver.Navigate().Refresh();
-        }
-        #endregion
-
-        #region Window
-        /// <summary>
-        /// Maximize the window.
-        /// </summary>
-        public void Maximize()
-        {
-            WebDriver.Manage().Window.Maximize();
-        }
-
-        /// <summary>
-        /// Minimize the window.
-        /// </summary>
-        public void Minimize()
-        {
-            WebDriver.Manage().Window.Minimize();
-        }
-
-        /// <summary>
-        /// Maximize the size of the browser window.
-        /// </summary>
-        public void FullScreen()
-        {
-            WebDriver.Manage().Window.FullScreen();
-        }
-        #endregion
 
         /// <summary>
         /// Close the Browser and WebDriver.
         /// </summary>
+        // ReSharper disable once InheritdocConsiderUsage
         public void Dispose()
         {
-            WebDriver?.Quit();
-            ChromeDriverService?.Dispose();
-            FirefoxDriverService?.Dispose();
-            EdgeDriverService?.Dispose();
+            try
+            {
+                WebDriver?.Close();
+            }
+            catch (Exception e)
+            {
+                Exceptions.Add(e);
+            }
+            finally
+            {
+                WebDriver?.Quit();
+                DriverService?.Dispose();
+            }
         }
 
         /// <summary>
@@ -190,11 +119,11 @@ namespace Bromine.Core
             var options = new ChromeOptions();
             options.AddArgument("--allow-file-access-from-files");
 
-            ChromeDriverService = ChromeDriverService.CreateDefaultService();
+            DriverService = ChromeDriverService.CreateDefaultService();
 
             if (hideDriverWindow)
             {
-                ChromeDriverService.HideCommandPromptWindow = true;
+                DriverService.HideCommandPromptWindow = true;
             }
 
             if (isHeadless)
@@ -202,16 +131,17 @@ namespace Bromine.Core
                 options.AddArgument(HeadlessFlagString);
             }
 
-            ChromeDriverService.HideCommandPromptWindow = true;
+            DriverService.HideCommandPromptWindow = true;
 
             try
             {
-                return new ChromeDriver(ChromeDriverService, options);
+                return !Options.IsRemoteDriver ? new ChromeDriver((ChromeDriverService)DriverService, options) : new RemoteWebDriver(options);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Exceptions.Add(e);
                 Dispose();
+
                 throw;
             }
         }
@@ -225,11 +155,11 @@ namespace Bromine.Core
         private IWebDriver InitializeFirefoxDriver(bool isHeadless = false, bool hideDriverWindow = true)
         {
             var options = new FirefoxOptions();
-            FirefoxDriverService = FirefoxDriverService.CreateDefaultService();
+            DriverService = FirefoxDriverService.CreateDefaultService();
 
             if (hideDriverWindow)
             {
-                FirefoxDriverService.HideCommandPromptWindow = true;
+                DriverService.HideCommandPromptWindow = true;
             }
 
             if (isHeadless)
@@ -239,12 +169,13 @@ namespace Bromine.Core
 
             try
             {
-                return new FirefoxDriver(FirefoxDriverService, options);
+                return !Options.IsRemoteDriver ? new FirefoxDriver((FirefoxDriverService)DriverService, options) : new RemoteWebDriver(options);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Exceptions.Add(e);
                 Dispose();
+
                 throw;
             }
         }
@@ -257,36 +188,26 @@ namespace Bromine.Core
         private IWebDriver InitializeEdgeDriver(bool hideDriverWindow = true)
         {
             var options = new EdgeOptions();
-            EdgeDriverService = EdgeDriverService.CreateDefaultService();
+            DriverService = EdgeDriverService.CreateDefaultService();
 
             if (hideDriverWindow)
             {
-                EdgeDriverService.HideCommandPromptWindow = true;
+                DriverService.HideCommandPromptWindow = true;
             }
 
             try
             {
-                return new EdgeDriver(EdgeDriverService, options);
+                return !Options.IsRemoteDriver ? new EdgeDriver((EdgeDriverService)DriverService, options) : new RemoteWebDriver(options);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Exceptions.Add(e);
                 Dispose();
+
                 throw;
             }
         }
 
         private const string HeadlessFlagString = "--headless";
-    }
-
-
-    /// <summary>
-    /// Supported web browser types.
-    /// </summary>
-    public enum BrowserType
-    {
-        Chrome,
-        Firefox,
-        Edge
     }
 }
