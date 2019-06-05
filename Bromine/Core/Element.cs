@@ -14,7 +14,6 @@ namespace Bromine.Core
     /// </summary>
     public class Element : IWebElement
     {
-        /// <inheritdoc />
         /// <summary>
         /// Construct an Element object.
         /// </summary>
@@ -59,11 +58,6 @@ namespace Bromine.Core
         /// Details about the location strategy used for the requested element.
         /// </summary>
         public CallingInformation Information { get; }
-
-        /// <summary>
-        /// List of exceptions for the requested element.
-        /// </summary>
-        public List<Exception> Exceptions { get; }
 
         /// <inheritdoc />
         public void Clear()
@@ -287,6 +281,7 @@ namespace Bromine.Core
 
         private readonly IWebElement _element;
         private readonly bool _isInitialized;
+        private List<Exception> Exceptions { get; }
     }
 
 

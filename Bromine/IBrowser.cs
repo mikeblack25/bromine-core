@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 using Bromine.Core;
+using Bromine.Models;
+
+using OpenQA.Selenium;
 
 namespace Bromine
 {
@@ -27,6 +30,11 @@ namespace Bromine
         string Source { get; }
 
         /// <summary>
+        /// Directory where screenshots are saved.
+        /// </summary>
+        string ScreenshotPath { get; }
+
+        /// <summary>
         /// Helpers to find elements.
         /// </summary>
         Find Find { get; }
@@ -37,9 +45,9 @@ namespace Bromine
         Navigate Navigate { get; }
 
         /// <summary>
-        /// List of element that were called.
+        /// Helpers to interact with the browser window.
         /// </summary>
-        List<Element> CalledElements { get; }
+        IWindow Window { get; }
 
         /// <summary>
         /// List of exceptions.
@@ -47,34 +55,19 @@ namespace Bromine
         List<Exception> Exceptions { get; }
 
         /// <summary>
-        /// Path where the last screenshot was saved;
+        /// Browser configuration used to initialize the web driver.
         /// </summary>
-        string LastScreenshotPath { get; }
+        BrowserConfiguration BrowserConfiguration { get; }
 
         /// <summary>
-        /// Directory where screenshots are saved.
-        /// </summary>
-        string ScreenshotPath { get; }
-
-        /// <summary>
-        /// Last image saved at the <see cref="LastScreenshotPath"/>.
+        /// Last image saved at the <see cref="ScreenshotPath"/>.
         /// </summary>
         Image LastImage { get; }
 
         /// <summary>
-        /// Size of the last image saved at the <see cref="LastScreenshotPath"/>.
+        /// Size of the last image saved at the <see cref="ScreenshotPath"/>.
         /// </summary>
         Size LastImageSize { get; }
-
-        /// <summary>
-        /// Maximize the browser window.
-        /// </summary>
-        void Maximize();
-
-        /// <summary>
-        /// Minimize the browser window.
-        /// </summary>
-        void Minimize();
 
         /// <summary>
         /// Wait for a given condition to be true.

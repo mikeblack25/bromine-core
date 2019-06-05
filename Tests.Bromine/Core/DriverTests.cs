@@ -1,14 +1,15 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 
+using Bromine.Constants;
 using Bromine.Core;
+using Bromine.Models;
 
 using Tests.Bromine.Common;
 
-using OpenQA.Selenium;
-
 using Xunit;
 
-using DriverOptions = Bromine.Models.DriverOptions;
+using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
 {
@@ -24,17 +25,17 @@ namespace Tests.Bromine.Core
         /// <param name="browser">Browser to launch.</param>
         [Theory]
         [InlineData(BrowserType.Chrome), Trait(Category.Browser, Category.Chrome)]
-        [InlineData(BrowserType.Edge), Trait(Category.Browser, Category.Edge)]
         [InlineData(BrowserType.Firefox), Trait(Category.Browser, Category.Firefox)]
         public void InitializeBrowserDefaultsTest(BrowserType browser)
         {
-            var driverOptions = new DriverOptions(browser);
+            var driverOptions = new BrowserConfiguration(browser);
+            Driver = new Driver(driverOptions, new List<Exception>());
 
-            BrowserInit(driverOptions);
+            NotNull(Driver.WebDriver);         
         }
 
         /// <summary>
-        /// Test Driver constructor with headless mode.
+        /// Test _driver constructor with headless mode.
         /// </summary>
         /// <param name="browser">Browser to launch.</param>
         [Theory]
@@ -42,57 +43,21 @@ namespace Tests.Bromine.Core
         [InlineData(BrowserType.Firefox), Trait(Category.Browser, Category.Firefox)]
         public void InitializeBrowserIsHeadlessTest(BrowserType browser)
         {
-            var driverOptions = new DriverOptions(browser, true);
+            var driverOptions = new BrowserConfiguration(browser, true);
+            Driver = new Driver(driverOptions, new List<Exception>());
 
-            BrowserInit(driverOptions);
+            NotNull(Driver.WebDriver);
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Dispose of the Driver resource.
+        /// Dispose of the _driver resource.
         /// </summary>
         public void Dispose()
         {
             Driver?.Dispose();
         }
 
-        private void BrowserInit(DriverOptions driverOptions)
-        {
-            try
-            {
-                Driver = new Driver(driverOptions);
-
-                Driver.NavigateToUrl(GoogleUrl);
-
-                Assert.Equal(GoogleUrl, Driver.Url);
-            }
-            catch (WebDriverException e)
-            {
-                // The driver is not loaded on the computer.
-                if (e.Message.Contains("Cannot start the driver service on"))
-                {
-
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            catch (InvalidOperationException e)
-            {
-                // The driver is not loaded on the computer.
-                if (e.Message.Contains("Expected browser binary location, but unable to find binary in default location"))
-                {
-
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-
-        private const string GoogleUrl = "https://www.google.com/?gws_rd=ssl";
-        private Driver Driver { get; set; }
+        protected Driver Driver;
     }
 }

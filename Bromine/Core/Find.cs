@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using OpenQA.Selenium;
 
@@ -9,9 +10,13 @@ namespace Bromine.Core
     /// </summary>
     public class Find
     {
-        public Find(IWebDriver driver)
+        /// <summary>
+        /// Construct a Find object to locate elements.
+        /// </summary>
+        /// <param name="driver">Driver used to navigate.</param>
+        public Find(Driver driver)
         {
-            Driver = driver;
+            _driver = driver;
         }
 
         /// <summary>
@@ -21,7 +26,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementById(string id)
         {
-            return new Element(Driver.FindElement(By.Id(id)), id, LocatorType.Id);
+            return new Element(_driver.WebDriver.FindElement(By.Id(id)), id, LocatorType.Id);
         }
 
         /// <summary>
@@ -33,7 +38,7 @@ namespace Bromine.Core
         {
             var list = new List<Element>();
 
-            var elements = Driver.FindElements(By.Id(id));
+            var elements = _driver.WebDriver.FindElements(By.Id(id));
 
             foreach (var element in elements)
             {
@@ -50,7 +55,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementByClass(string className)
         {
-            return new Element(Driver.FindElement(By.ClassName(className)), className, LocatorType.Class);
+            return new Element(_driver.WebDriver.FindElement(By.ClassName(className)), className, LocatorType.Class);
         }
 
         /// <summary>
@@ -61,7 +66,7 @@ namespace Bromine.Core
         public List<Element> ElementsByClass(string className)
         {
             var list = new List<Element>();
-            var elements = Driver.FindElements(By.ClassName(className));
+            var elements = _driver.WebDriver.FindElements(By.ClassName(className));
 
             foreach (var element in elements)
             {
@@ -78,7 +83,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementByCssSelector(string cssSelector)
         {
-            return new Element(Driver.FindElement(By.CssSelector(cssSelector)), cssSelector, LocatorType.CssSelector);
+            return new Element(_driver.WebDriver.FindElement(By.CssSelector(cssSelector)), cssSelector, LocatorType.CssSelector);
         }
 
         /// <summary>
@@ -89,7 +94,7 @@ namespace Bromine.Core
         public List<Element> ElementsByCssSelector(string cssSelector)
         {
             var list = new List<Element>();
-            var elements = Driver.FindElements(By.CssSelector(cssSelector));
+            var elements = _driver.WebDriver.FindElements(By.CssSelector(cssSelector));
 
             foreach (var element in elements)
             {
@@ -106,7 +111,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementByText(string elementText)
         {
-            return new Element(Driver.FindElement(By.LinkText(elementText)), elementText, LocatorType.Text);
+            return new Element(_driver.WebDriver.FindElement(By.LinkText(elementText)), elementText, LocatorType.Text);
         }
 
         /// <summary>
@@ -118,7 +123,7 @@ namespace Bromine.Core
         {
             var list = new List<Element>();
 
-            var elements = Driver.FindElements(By.LinkText(elementText));
+            var elements = _driver.WebDriver.FindElements(By.LinkText(elementText));
 
             foreach (var element in elements)
             {
@@ -135,7 +140,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element ElementByPartialText(string partialElementText)
         {
-            return new Element(Driver.FindElement(By.PartialLinkText(partialElementText)), partialElementText, LocatorType.PartialText);
+            return new Element(_driver.WebDriver.FindElement(By.PartialLinkText(partialElementText)), partialElementText, LocatorType.PartialText);
         }
 
         /// <summary>
@@ -146,7 +151,7 @@ namespace Bromine.Core
         public List<Element> ElementByTag(string tag)
         {
             var elementsList = new List<Element>();
-            var elements = Driver.FindElements(By.TagName(tag));
+            var elements = _driver.WebDriver.FindElements(By.TagName(tag));
 
             foreach (var element in elements)
             {
@@ -156,6 +161,7 @@ namespace Bromine.Core
             return elementsList;
         }
 
-        private IWebDriver Driver { get; }
+        private readonly Driver _driver;
+        private List<Exception> Exceptions => _driver.Exceptions;
     }
 }
