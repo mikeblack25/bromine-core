@@ -32,6 +32,16 @@ namespace Bromine
         /// <summary>
         /// Directory where screenshots are saved.
         /// </summary>
+        string ScreenshotDirectory { get; }
+
+        /// <summary>
+        /// Name of the last screenshot file.
+        /// </summary>
+        string ScreenshotName { get; set; }
+
+        /// <summary>
+        /// String combining the ScreenshotDirectory and the ScreenshotName.
+        /// </summary>
         string ScreenshotPath { get; }
 
         /// <summary>
@@ -80,12 +90,12 @@ namespace Bromine
         BrowserOptions BrowserOptions { get; }
 
         /// <summary>
-        /// Last image saved at the <see cref="ScreenshotPath"/>.
+        /// Last image saved at the <see cref="ScreenshotDirectory"/>.
         /// </summary>
         Image LastImage { get; }
 
         /// <summary>
-        /// Size of the last image saved at the <see cref="ScreenshotPath"/>.
+        /// Size of the last image saved at the <see cref="ScreenshotDirectory"/>.
         /// </summary>
         Size LastImageSize { get; }
 

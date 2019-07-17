@@ -36,8 +36,8 @@ namespace Tests.Bromine.Core
         /// Dispose of the default browser and create a new Browser in the test to verify A browser can be created with a reference to another image save path.
         /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
         /// Take a screenshot of the visible page.
-        /// Verify the file <see cref="Browser.ScreenshotPath"/> exists.
-        /// Delete the file located <see cref="Browser.ScreenshotPath"/>.
+        /// Verify the file <see cref="Browser.ScreenshotDirectory"/> exists.
+        /// Delete the file located <see cref="Browser.ScreenshotDirectory"/>.
         /// </summary>
         [Fact]
         public void VerifyScreenshot()
@@ -198,7 +198,7 @@ namespace Tests.Bromine.Core
 
         private void DeleteInitialImage(string name)
         {
-            var path = $@"{Browser.ScreenshotPath}\{name}.png";
+            var path = $@"{Browser.ScreenshotDirectory}\{name}.png";
 
             if (File.Exists(path))
             {

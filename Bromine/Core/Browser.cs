@@ -81,11 +81,13 @@ namespace Bromine.Core
         public BrowserOptions BrowserOptions { get; }
 
         /// <inheritdoc />
-        public string ScreenshotPath
-        {
-            get => _screenshotPath;
-            set => InitializeScreenshotDirectory(value);
-        }
+        public string ScreenshotDirectory => _screenshotDirectory;
+
+        /// <inheritdoc />
+        public string ScreenshotName { get; set; }
+
+        /// <inheritdoc />
+        public string ScreenshotPath => $@"{ScreenshotDirectory}\{ScreenshotName}";
 
         /// <inheritdoc />
         public Image LastImage
@@ -177,7 +179,7 @@ namespace Bromine.Core
         /// <inheritdoc />
         public void TakeVisibleScreenshot(string name)
         {
-            ScreenshotPath = $@"{ScreenshotPath}\{name}.png";
+            ScreenshotName = $"{name}.png";
 
             try
             {
@@ -208,18 +210,18 @@ namespace Bromine.Core
                 path = $@"{AppDomain.CurrentDomain.BaseDirectory}\{ScreenshotsDirectory}";
             }
 
-            if (!Directory.Exists(path) && !path.Contains("."))
+            if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
 
-            _screenshotPath = path;
+            _screenshotDirectory = path;
         }
 
         private Driver Driver { get; }
         private Screenshot Screenshot { get; set; }
 
         private static string ScreenshotsDirectory => "Screenshots";
-        private string _screenshotPath;
+        private string _screenshotDirectory;
     }
 }
