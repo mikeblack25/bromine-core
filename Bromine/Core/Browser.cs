@@ -193,6 +193,15 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
+        public object ExecuteJs(string script)
+        {
+            var js = Driver as IJavaScriptExecutor;
+
+            return js.ExecuteAsyncScript(script);
+        }
+
+
+        /// <inheritdoc />
         public void Dispose()
         {
             Driver?.Dispose();

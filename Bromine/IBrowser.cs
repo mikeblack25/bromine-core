@@ -131,5 +131,12 @@ namespace Bromine
         /// </summary>
         /// <param name="name">Name of the file of the screenshot.</param>
         void TakeVisibleScreenshot(string name);
+
+        /// <summary>
+        /// Execute the jS script.
+        /// </summary>
+        /// <param name="script">JavaScript to run on the given page context.</param>
+        /// <returns>Response from the JS request.</returns>
+        object ExecuteJs(string script);
     }
 }
