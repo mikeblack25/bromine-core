@@ -44,6 +44,13 @@ namespace Bromine.Core
             InitializeScreenshotDirectory(options.ScreenShotPath);
         }
 
+        /// <summary>
+        /// Initialize a Chrome browser using the default driver path.
+        /// </summary>
+        public Browser() : this (new BrowserOptions(BrowserType.Chrome, false, "", 0, ""))
+        {
+        }
+
         /// <inheritdoc />
         public string Url => Driver.WebDriver.Url;
 

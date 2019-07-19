@@ -29,16 +29,29 @@ namespace Bromine.Models
         /// <param name="options">Advanced browser driver configuration options.</param>
         /// <param name="secondsToWait">Number of seconds to wait for a condition to be satisfied. Sets ImplicitWaitEnabled = true when greater than 0.</param>
         /// <param name="screenShotPath">Path to save screenshots. Default is a Screenshots folder where the app is launched.</param>
-        public BrowserOptions(DriverOptions options, int secondsToWait = 0, string screenShotPath = "", bool hideDriverWindow = true)
+        public BrowserOptions(DriverOptions options, int secondsToWait = 0, string screenShotPath = "")
         {
             Driver = options;
+            ScreenShotPath = screenShotPath;
 
             if (secondsToWait <= 0) { return; }
 
             ImplicitWaitEnabled = true;
             SecondsToWait = secondsToWait;
-            ScreenShotPath = screenShotPath;
-            HideDriverWindow = hideDriverWindow;
+        }
+
+        /// <summary>
+        /// Create a BrowserOptions object to configure how the browser behaves.
+        /// This constructor can be used for .NET Core applications as it sets the default driver path by default.
+        /// </summary>
+        /// <param name="browser"><see cref="DriverOptions.Browser"/></param>
+        /// <param name="isHeadless"><see cref="DriverOptions.IsHeadless"/></param>
+        /// <param name="remoteHostPath"><see cref="DriverOptions.RemoteHost"/></param>
+        /// <param name="secondsToWait"><see cref="SecondsToWait"/></param>
+        /// <param name="screenshotPath"><see cref="ScreenShotPath"/></param>
+        public BrowserOptions(BrowserType browser = BrowserType.Chrome, bool isHeadless = false, string remoteHostPath = "", int secondsToWait = 0, string screenshotPath = "") :
+            this(new DriverOptions(browser, isHeadless, remoteHostPath, true, true), secondsToWait, screenshotPath)
+        {
         }
 
         /// <summary>
@@ -60,10 +73,5 @@ namespace Bromine.Models
         /// Path to store screenshots.
         /// </summary>
         public string ScreenShotPath { get; set; }
-
-        /// <summary>
-        /// When true the command window will not show when the browser driver is active.
-        /// </summary>
-        public bool HideDriverWindow { get; set; }
     }
 }
