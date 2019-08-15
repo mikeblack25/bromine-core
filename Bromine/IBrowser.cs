@@ -30,9 +30,19 @@ namespace Bromine
         string Source { get; }
 
         /// <summary>
-        /// Directory where screenshots are saved.
+        /// Directory where ScreenShots are saved.
         /// </summary>
-        string ScreenshotPath { get; }
+        string ScreenShotDirectory { get; }
+
+        /// <summary>
+        /// Name of the last ScreenShot file.
+        /// </summary>
+        string ScreenShotName { get; set; }
+
+        /// <summary>
+        /// String combining the ScreenShotDirectory and the ScreenShotName.
+        /// </summary>
+        string ScreenShotPath { get; }
 
         /// <summary>
         /// Get the driver logs.
@@ -80,12 +90,12 @@ namespace Bromine
         BrowserOptions BrowserOptions { get; }
 
         /// <summary>
-        /// Last image saved at the <see cref="ScreenshotPath"/>.
+        /// Last image saved at the <see cref="ScreenShotDirectory"/>.
         /// </summary>
         Image LastImage { get; }
 
         /// <summary>
-        /// Size of the last image saved at the <see cref="ScreenshotPath"/>.
+        /// Size of the last image saved at the <see cref="ScreenShotDirectory"/>.
         /// </summary>
         Size LastImageSize { get; }
 
@@ -103,23 +113,30 @@ namespace Bromine
         bool Wait(Func<bool> condition, int timeToWait = 1);
 
         /// <summary>
-        /// Take a screenshot of requested element.
+        /// Take a ScreenShot of requested element.
         /// </summary>
-        /// <param name="name">Name of the file of the screenshot.</param>
-        /// <param name="element">Element to take a screenshot of.</param>
-        void TakeElementScreenshot(string name, Element element);
+        /// <param name="name">Name of the file of the ScreenShot.</param>
+        /// <param name="element">Element to take a ScreenShot of.</param>
+        void TakeElementScreenShot(string name, Element element);
 
         /// <summary>
-        /// Take a screenshot of requested region on the screen.
+        /// Take a ScreenShot of requested region on the screen.
         /// </summary>
-        /// <param name="name">Name of the file of the screenshot.</param>
-        /// <param name="screenShotRegion">Region to take a screenshot of.</param>
-        void TakeRegionScreenshot(string name, Rectangle screenShotRegion);
+        /// <param name="name">Name of the file of the ScreenShot.</param>
+        /// <param name="screenShotRegion">Region to take a ScreenShot of.</param>
+        void TakeRegionScreenShot(string name, Rectangle screenShotRegion);
 
         /// <summary>
-        /// Take a screenshot of the visible page.
+        /// Take a ScreenShot of the visible page.
         /// </summary>
-        /// <param name="name">Name of the file of the screenshot.</param>
-        void TakeVisibleScreenshot(string name);
+        /// <param name="name">Name of the file of the ScreenShot.</param>
+        void TakeVisibleScreenShot(string name);
+
+        /// <summary>
+        /// Execute the jS script.
+        /// </summary>
+        /// <param name="script">JavaScript to run on the given page context.</param>
+        /// <returns>Response from the JS request.</returns>
+        object ExecuteJs(string script);
     }
 }

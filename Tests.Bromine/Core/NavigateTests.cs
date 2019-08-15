@@ -13,7 +13,7 @@ namespace Tests.Bromine.Core
     public class NavigateTests : CoreTestsBase
     {
         /// <summary>
-        /// Verify behavior in < see cref="Navigate"/> for the following.
+        /// Verify behavior in <see cref="Navigate"/> for the following.
         /// <see cref="Navigate.ToFile"/>
         /// <see cref="Navigate.Back"/>
         /// <see cref="Navigate.Forward"/>

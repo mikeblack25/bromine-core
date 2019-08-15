@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-using Bromine.Constants;
 using Bromine.Models;
 
 using OpenQA.Selenium;
@@ -15,8 +14,10 @@ namespace Bromine.Core
     /// <inheritdoc cref="IBrowser" />
     public class Browser : IBrowser
     {
-        public Browser(BrowserType browser = BrowserType.Chrome, int secondsToImplicitWait = 0)
-            : this(new BrowserOptions(browser, secondsToImplicitWait))
+        /// <summary>
+        /// Launch a Chrome browser with the default configuration.
+        /// </summary>
+        public Browser() : this(new BrowserOptions())
         {
         }
 
@@ -32,16 +33,16 @@ namespace Bromine.Core
 
             Driver = new Driver(BrowserOptions.Driver, Exceptions);
 
-            if (options.ImplicitWaitEnabled)
+            if (options.Driver.ImplicitWaitEnabled)
             {
-                EnableImplicitWait(options.SecondsToWait);
+                EnableImplicitWait(options.Driver.SecondsToWait);
             }
 
             Find = new Find(Driver);
             Navigate = new Navigate(Driver);
             Window = new Window(Driver);
 
-            InitializeScreenshotDirectory(options.ScreenShotPath);
+            InitializeScreenShotDirectory(options.Driver.ScreenShotPath);
         }
 
         /// <inheritdoc />
@@ -81,11 +82,13 @@ namespace Bromine.Core
         public BrowserOptions BrowserOptions { get; }
 
         /// <inheritdoc />
-        public string ScreenshotPath
-        {
-            get => _screenshotPath;
-            set => InitializeScreenshotDirectory(value);
-        }
+        public string ScreenShotDirectory => _screenShotDirectory;
+
+        /// <inheritdoc />
+        public string ScreenShotName { get; set; }
+
+        /// <inheritdoc />
+        public string ScreenShotPath => $@"{ScreenShotDirectory}\{ScreenShotName}";
 
         /// <inheritdoc />
         public Image LastImage
@@ -94,7 +97,7 @@ namespace Bromine.Core
             {
                 try
                 {
-                    return Image.FromFile(ScreenshotPath);
+                    return Image.FromFile(ScreenShotPath);
                 }
                 catch (Exception e)
                 {
@@ -120,7 +123,10 @@ namespace Bromine.Core
             }
         }
 
-        public static string DefaultImagePath => $@"{AppDomain.CurrentDomain.BaseDirectory}\{ScreenshotsDirectory}";
+        /// <summary>
+        /// The path where images will be stored.
+        /// </summary>
+        public static string DefaultImagePath => $@"{AppDomain.CurrentDomain.BaseDirectory}\{ScreenShotsDirectory}";
 
         /// <inheritdoc />
         public string Information => Driver.WebDriver.GetType().ToString();
@@ -151,44 +157,54 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
-        public void TakeElementScreenshot(string name, Element element)
+        public void TakeElementScreenShot(string name, Element element)
         {
-            TakeRegionScreenshot(name, new Rectangle(element.Location, element.Size));
+            TakeRegionScreenShot(name, new Rectangle(element.Location, element.Size));
         }
 
         /// <inheritdoc />
-        public void TakeRegionScreenshot(string name, Rectangle screenShotRegion)
+        public void TakeRegionScreenShot(string name, Rectangle screenShotRegion)
         {
             Bitmap croppedImage;
 
-            TakeVisibleScreenshot(name);
+            TakeVisibleScreenShot(name);
 
-            using (var image = new Bitmap(ScreenshotPath))
+            using (var image = new Bitmap(ScreenShotPath))
             {
                 croppedImage = image.Clone(screenShotRegion, image.PixelFormat);
             }
 
-            using (var writer = new FileStream(ScreenshotPath, FileMode.OpenOrCreate))
+            using (var writer = new FileStream(ScreenShotPath, FileMode.OpenOrCreate))
             {
                 croppedImage.Save(writer, ImageFormat.Png);
             }
         }
 
         /// <inheritdoc />
-        public void TakeVisibleScreenshot(string name)
+        public void TakeVisibleScreenShot(string name)
         {
-            ScreenshotPath = $@"{ScreenshotPath}\{name}.png";
+            ScreenShotName = $"{name}.png";
 
             try
             {
-                Screenshot = Driver.Screenshot;
-                Screenshot.SaveAsFile(ScreenshotPath, ScreenshotImageFormat.Png);
+                ScreenShot = Driver.ScreenShot;
+                ScreenShot.SaveAsFile(ScreenShotPath, ScreenshotImageFormat.Png);
             }
             catch (Exception ex)
             {
                 Exceptions.Add(ex);
             }
         }
+
+        /// <inheritdoc />
+        public object ExecuteJs(string script)
+        {
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            var js = Driver as IJavaScriptExecutor;
+
+            return js?.ExecuteAsyncScript(script);
+        }
+
 
         /// <inheritdoc />
         public void Dispose()
@@ -201,25 +217,25 @@ namespace Bromine.Core
             Driver.WebDriver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, secondsToWait);
         }
 
-        private void InitializeScreenshotDirectory(string path = "")
+        private void InitializeScreenShotDirectory(string path = "")
         {
             if (string.IsNullOrWhiteSpace(path)) // Create the logs where the app is running.
             {
-                path = $@"{AppDomain.CurrentDomain.BaseDirectory}\{ScreenshotsDirectory}";
+                path = $@"{AppDomain.CurrentDomain.BaseDirectory}\{ScreenShotsDirectory}";
             }
 
-            if (!Directory.Exists(path) && !path.Contains("."))
+            if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
 
-            _screenshotPath = path;
+            _screenShotDirectory = path;
         }
 
         private Driver Driver { get; }
-        private Screenshot Screenshot { get; set; }
+        private Screenshot ScreenShot { get; set; }
 
-        private static string ScreenshotsDirectory => "Screenshots";
-        private string _screenshotPath;
+        private static string ScreenShotsDirectory => "ScreenShots";
+        private string _screenShotDirectory;
     }
 }

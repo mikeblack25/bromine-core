@@ -4,66 +4,52 @@ namespace Bromine.Models
 {
     /// <summary>
     /// Driver configuration options for browser setup.
-    /// <see cref="DriverOptions"/> for advanced driver setup.
-    /// <see cref="ImplicitWaitEnabled" /> to determine if implicit waits are enabled.
-    /// <see cref="SecondsToWait"/> Amount of time to wait for Selenium actions.
     /// </summary>
     public class BrowserOptions
     {
-        /// <inheritdoc />
         /// <summary>
-        /// Create default BrowserOptions:
-        /// Browser: Chrome
-        /// Implicit Wait: False
-        /// Screenshot Path: Default
-        /// These are the only settings that can be changed for advanced options use a different constructor."/>
+        /// Launch a Chrome browser with the default configuration.
+        /// <see cref="DriverOptions.Browser"/> Chrome will be launched.
+        /// <see cref="DriverOptions.IsHeadless"/> false (the UI will show).
+        /// <see cref="DriverOptions.SecondsToWait"/> 0 (no implicit wait).
+        /// <see cref="DriverOptions.RemoteAddress"/> Browsers will be launched locally.
+        /// <see cref="DriverOptions.ScreenShotPath"/> ScreenShots are stored in in a ScreenShots folder in the executing directory.
+        /// <see cref="DriverOptions.UseDefaultDriverPath"/> false.
+        /// <see cref="DriverOptions.HideDriverWindow"/> true (drivers may have to be closed manually if not disposed properly).
         /// </summary>
-        public BrowserOptions(BrowserType browser = BrowserType.Chrome, int secondsToWait = 0, string screenShotPath = "")
-            : this(new DriverOptions(browser), secondsToWait, screenShotPath)
+        public BrowserOptions()
+            : this(new DriverOptions())
         {
         }
 
         /// <summary>
-        /// Create a BrowserOptions object to configure how the browser will behave.
+        /// Configure all DriverOptions properties as needed for the driver.
         /// </summary>
-        /// <param name="options">Advanced browser driver configuration options.</param>
-        /// <param name="secondsToWait">Number of seconds to wait for a condition to be satisfied. Sets ImplicitWaitEnabled = true when greater than 0.</param>
-        /// <param name="screenShotPath">Path to save screenshots. Default is a Screenshots folder where the app is launched.</param>
-        public BrowserOptions(DriverOptions options, int secondsToWait = 0, string screenShotPath = "", bool hideDriverWindow = true)
+        /// <param name="browser"><see cref="DriverOptions.Browser"/></param>
+        /// <param name="isHeadless"><see cref="DriverOptions.IsHeadless"/></param>
+        /// <param name="secondsToWait"><see cref="DriverOptions.SecondsToWait"/></param>
+        /// <param name="remoteAddress"><see cref="DriverOptions.RemoteAddress"/></param>
+        /// <param name="ScreenShotPath"><see cref="DriverOptions.ScreenShotPath"/></param>
+        /// <param name="useDefaultDriverPath"><see cref="DriverOptions.UseDefaultDriverPath"/></param>
+        /// <param name="hideDriverWindow"><see cref="DriverOptions.HideDriverWindow"/></param>
+        public BrowserOptions(BrowserType browser, bool isHeadless, int secondsToWait = 0, string remoteAddress = "", string ScreenShotPath = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true)
+        : this(new DriverOptions(browser, isHeadless, secondsToWait, remoteAddress, ScreenShotPath, useDefaultDriverPath, hideDriverWindow))
+        {
+        }
+
+        /// <summary>
+        /// Provide a DriverOptions to configure the driver.
+        /// NOTE: This options is best for creating reusable configurations as needed for advanced setup.
+        /// </summary>
+        /// <param name="options"><see cref="DriverOptions"/></param>
+        public BrowserOptions(DriverOptions options)
         {
             Driver = options;
-
-            if (secondsToWait <= 0) { return; }
-
-            ImplicitWaitEnabled = true;
-            SecondsToWait = secondsToWait;
-            ScreenShotPath = screenShotPath;
-            HideDriverWindow = hideDriverWindow;
         }
 
         /// <summary>
         /// Type of browser to use.
         /// </summary>
-        public DriverOptions Driver { get; set; }
-
-        /// <summary>
-        /// The amount of time for a Selenium action to be satisfied before failing.
-        /// </summary>
-        public bool ImplicitWaitEnabled { get; }
-
-        /// <summary>
-        /// When ImplicitWaitEnabled is true, the condition will periodically checked until the amount of seconds specified here.
-        /// </summary>
-        public int SecondsToWait { get; set; }
-
-        /// <summary>
-        /// Path to store screenshots.
-        /// </summary>
-        public string ScreenShotPath { get; set; }
-
-        /// <summary>
-        /// When true the command window will not show when the browser driver is active.
-        /// </summary>
-        public bool HideDriverWindow { get; set; }
+        public DriverOptions Driver { get; }
     }
 }
