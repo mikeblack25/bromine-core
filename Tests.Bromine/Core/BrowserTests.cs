@@ -35,17 +35,17 @@ namespace Tests.Bromine.Core
         /// <summary>
         /// Dispose of the default browser and create a new Browser in the test to verify A browser can be created with a reference to another image save path.
         /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
-        /// Take a screenshot of the visible page.
-        /// Verify the file <see cref="Browser.ScreenshotDirectory"/> exists.
-        /// Delete the file located <see cref="Browser.ScreenshotDirectory"/>.
+        /// Take a ScreenShot of the visible page.
+        /// Verify the file <see cref="Browser.ScreenShotDirectory"/> exists.
+        /// Delete the file located <see cref="Browser.ScreenShotDirectory"/>.
         /// </summary>
         [Fact]
-        public void VerifyScreenshot()
+        public void VerifyScreenShot()
         {
             var path = global::Bromine.Core.Browser.DefaultImagePath;
             var testDirectory = $@"{path}\Directory Test";
-            var name = "Amazon Visible Page Screenshot";
-            var browserOptions = new BrowserOptions(BrowserType.Chrome, 0, testDirectory);
+            var name = "Amazon Visible Page ScreenShot";
+            var browserOptions = new BrowserOptions(BrowserType.Chrome, false, 0, string.Empty, testDirectory);
 
             Dispose(); // Close the default driver created on startup.
             DeleteDirectory(testDirectory); // Clear the initial directory to create one during the Browser init.
@@ -55,33 +55,33 @@ namespace Tests.Bromine.Core
             DeleteInitialImage(name);
 
             browser.Navigate.ToUrl(AmazonUrl);
-            browser.TakeVisibleScreenshot(name);
+            browser.TakeVisibleScreenShot(name);
 
-            True(File.Exists(browser.ScreenshotPath), $"Unable to find the expected screenshot at {browser.ScreenshotPath}");
+            True(File.Exists(browser.ScreenShotPath), $"Unable to find the expected ScreenShot at {browser.ScreenShotPath}");
 
             browser.Dispose();
         }
 
         /// <summary>
         /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
-        /// Take a screenshot of the visible page.
-        /// Take a screenshot of a region of the screen with a width and height of 50 pixels.
+        /// Take a ScreenShot of the visible page.
+        /// Take a ScreenShot of a region of the screen with a width and height of 50 pixels.
         /// Verify the saved image <see cref="Browser.LastImageSize"/> is the expected size.
         /// TODO: Investigate why Browser.LastImage is locked and can't be deleted.
         /// </summary>
         [Fact]
-        public void VerifyRegionScreenshot()
+        public void VerifyRegionScreenShot()
         {
             var initialPosition = new Point(0, 0);
             var regionSize = new Size(50, 50);
             var region = new Rectangle(initialPosition, regionSize);
 
-            const string name = "Amazon Region Screenshot";
+            const string name = "Amazon Region ScreenShot";
             DeleteInitialImage(name);
 
             Browser.Navigate.ToUrl(AmazonUrl);
 
-            Browser.TakeRegionScreenshot(name, region);
+            Browser.TakeRegionScreenShot(name, region);
 
             Equal(regionSize, Browser.LastImageSize);
         }
@@ -89,40 +89,40 @@ namespace Tests.Bromine.Core
         /// <summary>
         /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
         /// Maximize window to find the element in question.
-        /// Take a screenshot of the element on the page.
+        /// Take a ScreenShot of the element on the page.
         /// Verify the saved image <see cref="Browser.LastImageSize"/> is the expected size.
         /// TODO: Investigate why Browser.LastImage is locked and can't be deleted.
         /// </summary>
         [Fact]
-        public void VerifyElementScreenshot()
+        public void VerifyElementScreenShot()
         {
             var regionSize = new Size(98, 44);
 
-            const string name = "Amazon Element Screenshot";
+            const string name = "Amazon Element ScreenShot";
             DeleteInitialImage(name);
 
             Browser.Navigate.ToUrl(AmazonUrl);
 
             Browser.Window.Maximize();
 
-            Browser.TakeElementScreenshot(name, CartButton);
+            Browser.TakeElementScreenShot(name, CartButton);
 
             Equal(regionSize, Browser.LastImageSize);
         }
 
         /// <summary>
         /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
-        /// Try to save a screenshot to an invalid name.
+        /// Try to save a ScreenShot to an invalid name.
         /// Verify <see cref="Browser.Exceptions"/> is not empty trying to save an invalid file name.>
         /// Verify <see cref="Browser.LastImage"/> returns null and an exception is logged when an invalid path is selected.
         /// </summary>
         [Fact]
-        public void VerifyTakeVisibleScreenshotError()
+        public void VerifyTakeVisibleScreenShotError()
         {
             Empty(Browser.Exceptions);
 
             Browser.Navigate.ToUrl(AmazonUrl);
-            Browser.TakeVisibleScreenshot(@"-\\\\--");
+            Browser.TakeVisibleScreenShot(@"-\\\\--");
 
             NotEmpty(Browser.Exceptions);
 
@@ -198,7 +198,7 @@ namespace Tests.Bromine.Core
 
         private void DeleteInitialImage(string name)
         {
-            var path = $@"{Browser.ScreenshotDirectory}\{name}.png";
+            var path = $@"{Browser.ScreenShotDirectory}\{name}.png";
 
             if (File.Exists(path))
             {

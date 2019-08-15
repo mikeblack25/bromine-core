@@ -76,9 +76,9 @@ namespace Bromine.Core
         public DriverService DriverService { get; private set; }
 
         /// <summary>
-        /// Take a screenshot for the given visible page.
+        /// Take a ScreenShot for the given visible page.
         /// </summary>
-        public Screenshot Screenshot => WebDriver.TakeScreenshot();
+        public Screenshot ScreenShot => WebDriver.TakeScreenshot();
 
         /// <summary>
         /// List of un expected runtime behavior.
@@ -114,8 +114,7 @@ namespace Bromine.Core
         /// <summary>
         /// Get a Chrome browser driver.
         /// </summary>
-        /// <param name="hideDriverWindow">If true do not display the webdriver dialog.</param>
-        /// <param name="isHeadless">If true do not render the browser UI. This is faster and takes less resources.</param>
+        /// <param name="driverOptions">Provide driver configuration options.</param>
         /// <returns></returns>
         private IWebDriver InitializeChromeDriver(DriverOptions driverOptions)
         {
@@ -162,7 +161,7 @@ namespace Bromine.Core
         /// <summary>
         /// Get a Firefox browser driver.
         /// </summary>
-        /// <param name="hideDriverWindow">If true do not display the webdriver dialog.</param>
+        /// <param name="hideDriverWindow">If true do not display the Web Driver dialog.</param>
         /// <param name="isHeadless">If true do not render the browser UI. This is faster and takes less resources.</param>
         /// <returns></returns>
         private IWebDriver InitializeFirefoxDriver(bool isHeadless = false, bool hideDriverWindow = true)
@@ -196,7 +195,7 @@ namespace Bromine.Core
         /// <summary>
         /// Get a Edge browser driver.
         /// </summary>
-        /// <param name="hideDriverWindow">If true do not display the webdriver dialog.</param>
+        /// <param name="hideDriverWindow">If true do not display the Web Driver dialog.</param>
         /// <returns></returns>
         private IWebDriver InitializeEdgeDriver(bool hideDriverWindow = true)
         {

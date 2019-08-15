@@ -311,6 +311,7 @@ namespace Bromine.Core
     /// </summary>
     public enum LocatorType
     {
+#pragma warning disable 1591
         Id = 1,
         Class,
         CssSelector,
@@ -319,5 +320,6 @@ namespace Bromine.Core
         Text,
         PartialText,
         XPath
+#pragma warning restore 1591
     }
 }
