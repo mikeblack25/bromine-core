@@ -1,4 +1,4 @@
-﻿using Bromine.Core;
+using Bromine.Core;
 
 using OpenQA.Selenium;
 
@@ -8,7 +8,7 @@ namespace Tests.Bromine.Core
 {
     /// <inheritdoc />
     /// <summary>
-    /// Verify the functionality of the Navigate class.
+    /// Tests to verify the Navigate class is working as expected.
     /// </summary>
     public class NavigateTests : CoreTestsBase
     {

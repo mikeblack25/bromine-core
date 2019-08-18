@@ -6,37 +6,76 @@ namespace Tests.Bromine.Core
 {
     /// <inheritdoc />
     /// <summary>
-    /// Test the behavior of the Find class.
+    /// Test to verify the Find class is working as expected.
     /// </summary>
     public class FindTests : CoreTestsBase
     {
+        /// <inheritdoc />
         /// <summary>
-        /// Tests the supported Find.ElementBy methods to ensure elements can be located properly.
+        /// Navigate to the Amazon home page.
         /// </summary>
-        [Fact]
-        public void FindElementsByTest()
+        public FindTests()
         {
             Browser.Navigate.ToFile($@"{BasePath}\{AmazonHome}");
+        }
 
-            TryId(IdString);
-            TryIds(IdString);
+        /// <summary>
+        /// Find element by id.
+        /// </summary>
+        [Fact]
+        public void FindElementsByIdTest()
+        {
+            Browser.Find.ElementById(IdString);
+        }
 
-            TryClass(ClassString);
-            TryClasses(ClassString);
+        /// <summary>
+        /// Find element by class.
+        /// </summary>
+        [Fact]
+        public void FindElementsByClassTest()
+        {
+            Browser.Find.ElementByClass(ClassString);
+        }
 
-            TryCss(CssSelectorString);
-            TryCsses(CssSelectorString);
+        /// <summary>
+        /// Find element by CSS.
+        /// </summary>
+        [Fact]
+        public void FindElementsByCssTest()
+        {
+            Browser.Find.ElementByCssSelector(CssSelectorString);
+        }
 
-            TryText(TextString);
-            TryTexts(TextString);
+        /// <summary>
+        /// Find element by tag.
+        /// </summary>
+        [Fact]
+        public void FindElementsByTagTest()
+        {
+            Browser.Find.ElementByTag(TagString);
+        }
 
-            TryPartialText(TextString.Substring(2));
+        /// <summary>
+        /// Find element by text.
+        /// </summary>
+        [Fact]
+        public void FindElementsByTextTest()
+        {
+            Browser.Find.ElementByText(TextString);
+        }
 
-            TryTag("div");
+        /// <summary>
+        /// Find element by partial text.
+        /// </summary>
+        [Fact]
+        public void FindElementsByPartialTextTest()
+        {
+            Browser.Find.ElementByPartialText(TextString.Substring(2));
         }
 
         /// <summary>
         /// Dispose of the browser when the test is done.
+        /// All tests will ensure there are no errors finding elements.
         /// </summary>
         public override void Dispose()
         {
@@ -45,129 +84,10 @@ namespace Tests.Bromine.Core
             True(ErrorList.Count == 0, string.Join(",", ErrorList));
         }
 
-        private void TryId(string id)
-        {
-            try
-            {
-                Browser.Find.ElementById(id);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find element by id: {id}");
-            }
-        }
-
-        private void TryIds(string id)
-        {
-            try
-            {
-                Browser.Find.ElementsById(id);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find elements by id: {id}");
-            }
-        }
-
-        private void TryClass(string className)
-        {
-            try
-            {
-                Browser.Find.ElementByClass(className);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find element by className: {className}");
-            }
-        }
-
-        private void TryClasses(string className)
-        {
-            try
-            {
-                Browser.Find.ElementsByClass(className);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find elements by className: {className}");
-            }
-        }
-
-        private void TryCss(string css)
-        {
-            try
-            {
-                Browser.Find.ElementByCssSelector(css);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find element by CSS: {css}");
-            }
-        }
-
-        private void TryCsses(string css)
-        {
-            try
-            {
-                Browser.Find.ElementsByCssSelector(css);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find elements by CSS: {css}");
-            }
-        }
-
-        private void TryText(string text)
-        {
-            try
-            {
-                Browser.Find.ElementByText(text);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find element by text: {text}");
-            }
-        }
-
-        private void TryTexts(string text)
-        {
-            try
-            {
-                Browser.Find.ElementsByText(text);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find elements by text: {text}");
-            }
-        }
-
-        private void TryPartialText(string text)
-        {
-            try
-            {
-                Browser.Find.ElementByPartialText(text);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find element by partial text: {text}");
-            }
-        }
-
-        private void TryTag(string text)
-        {
-            try
-            {
-                Browser.Find.ElementByTag(text);
-            }
-            catch
-            {
-                ErrorList.Add($"Unable to find elements by tag: {text}");
-            }
-        }
-
-        private string IdString => "s-suggestion";
-        private string ClassString => "a-link-normal";
-        private string CssSelectorString => $"#{IdString}";
-        private string TextString => "Careers";
+        private static string IdString => "s-suggestion";
+        private static string ClassString => "a-link-normal";
+        private static string CssSelectorString => $"#{IdString}";
+        private static string TagString => "div";
+        private static string TextString => "Careers";
     }
 }

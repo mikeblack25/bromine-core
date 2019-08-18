@@ -20,7 +20,7 @@ namespace Bromine.Core
         /// <param name="locatorType">Type of locator used to find the requested element.</param>
         internal Element(IWebElement element, string locatorString = "", LocatorType locatorType = 0) : this()
         {
-            _element = element;
+            WebElement = element;
 
             if (!string.IsNullOrEmpty(locatorString) && locatorType != 0)
             {
@@ -34,37 +34,37 @@ namespace Bromine.Core
         /// <summary>
         /// Element TagName value.
         /// </summary>
-        public string TagName => _element?.TagName;
+        public string TagName => WebElement?.TagName;
 
         /// <summary>
         /// Element Text value.
         /// </summary>
-        public string Text => _element?.Text;
+        public string Text => WebElement?.Text;
 
         /// <summary>
         /// Element Enabled status. This can be used to determine if an element can be interacted with.
         /// </summary>
-        public bool Enabled => _element.Enabled;
+        public bool Enabled => WebElement.Enabled;
 
         /// <summary>
         /// Element selected status.
         /// </summary>
-        public bool Selected => _element.Selected;
+        public bool Selected => WebElement.Selected;
 
         /// <summary>
         /// Element location in the rendered DOM.
         /// </summary>
-        public Point Location => _element.Location;
+        public Point Location => WebElement.Location;
 
         /// <summary>
         /// Element size.
         /// </summary>
-        public Size Size => _element.Size;
+        public Size Size => WebElement.Size;
 
         /// <summary>
         /// Element displayed status. This is helpful as some interactions require an element to be in view.
         /// </summary>
-        public bool Displayed => _element.Displayed;
+        public bool Displayed => WebElement.Displayed;
 
         /// <summary>
         /// Details about the location strategy used for the requested element.
@@ -80,7 +80,7 @@ namespace Bromine.Core
 
             try
             {
-                _element.Clear();
+                WebElement.Clear();
             }
             catch (Exception ex)
             {
@@ -97,41 +97,12 @@ namespace Bromine.Core
 
             try
             {
-                _element.Click();
+                WebElement.Click();
             }
             catch (Exception ex)
             {
                 Exceptions.Add(ex);
             }
-        }
-
-        /// <summary>
-        /// Find an element by the requested locator strategy.
-        /// </summary>
-        /// <param name="by">Locator strategy to use to find a requested element.</param>
-        /// <returns></returns>
-        public Element FindElement(By by)
-        {
-            return new Element(_element.FindElement(by));
-        }
-
-        /// <summary>
-        /// Find elements by the requested locator strategy.
-        /// </summary>
-        /// <param name="by">Locator strategy to use to find requested elements.</param>
-        /// <returns></returns>
-        public List<Element> FindElements(By by)
-        {
-            var list = new List<Element>();
-
-            var elements = _element.FindElements(by);
-
-            foreach (var element in elements)
-            {
-                list.Add(new Element(element));
-            }
-
-            return list;
         }
 
         /// <summary>
@@ -145,7 +116,7 @@ namespace Bromine.Core
             {
                 try
                 {
-                    return new Element(_element.FindElement(By.XPath("..")), "..", LocatorType.XPath);
+                    return new Element(WebElement.FindElement(By.XPath("..")), "..", LocatorType.XPath);
                 }
                 catch (Exception ex)
                 {
@@ -170,7 +141,7 @@ namespace Bromine.Core
             {
                 try
                 {
-                    attribute = _element.GetAttribute(attributeName);
+                    attribute = WebElement.GetAttribute(attributeName);
                 }
                 catch (Exception ex)
                 {
@@ -195,7 +166,7 @@ namespace Bromine.Core
             {
                 try
                 {
-                    cssValue = _element.GetCssValue(propertyName);
+                    cssValue = WebElement.GetCssValue(propertyName);
                 }
                 catch (Exception ex)
                 {
@@ -218,7 +189,7 @@ namespace Bromine.Core
             {
                 try
                 {
-                    return _element.GetProperty(propertyName);
+                    return WebElement.GetProperty(propertyName);
                 }
                 catch (Exception ex)
                 {
@@ -239,7 +210,7 @@ namespace Bromine.Core
             {
                 try
                 {
-                    _element.SendKeys(text);
+                    WebElement.SendKeys(text);
                 }
                 catch (Exception ex)
                 {
@@ -253,7 +224,33 @@ namespace Bromine.Core
         /// </summary>
         public void Submit()
         {
-            _element.Submit();
+            WebElement.Submit();
+        }
+
+        /// <summary>
+        /// Find an element by the requested locator strategy.
+        /// </summary>
+        /// <param name="by">Locator strategy to use to find a requested element.</param>
+        /// <returns></returns>
+        internal Element FindElement(By by) => new Element(WebElement.FindElement(by));
+
+        /// <summary>
+        /// Find elements by the requested locator strategy.
+        /// </summary>
+        /// <param name="by">Locator strategy to use to find requested elements.</param>
+        /// <returns></returns>
+        internal List<Element> FindElements(By by)
+        {
+            var list = new List<Element>();
+
+            var elements = WebElement.FindElements(by);
+
+            foreach (var element in elements)
+            {
+                list.Add(new Element(element));
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -273,8 +270,9 @@ namespace Bromine.Core
             _isInitialized = false;
         }
 
-        private readonly IWebElement _element;
+        internal readonly IWebElement WebElement;
         private readonly bool _isInitialized;
+        // ReSharper disable once CollectionNeverQueried.Local
         private List<Exception> Exceptions { get; }
     }
 
@@ -314,12 +312,37 @@ namespace Bromine.Core
 #pragma warning disable 1591
         Id = 1,
         Class,
-        CssSelector,
+        Css,
         Js,
         Tag,
         Text,
         PartialText,
         XPath
 #pragma warning restore 1591
+    }
+
+
+    /// <summary>
+    /// Extension methods to provide additional capabilities to Elements.
+    /// </summary>
+    public static class ElementExtensions
+    {
+        /// <summary>
+        /// Find child elements with the given locatorStrategy and locator string.
+        /// </summary>
+        /// <param name="element">Parent element to find children of.</param>
+        /// <param name="locatorStrategy">How will the element be found?</param>
+        /// <param name="locator">String to locate child elements.</param>
+        /// <returns></returns>
+        public static List<Element> FindElements(this Element element, LocatorType locatorStrategy, string locator) => element.FindElements(Find.Element(locatorStrategy, locator));
+
+        /// <summary>
+        /// Find child element with the given locatorStrategy and locator string.
+        /// </summary>
+        /// <param name="element">Parent element to find a child of.</param>
+        /// <param name="locatorStrategy">How will the element be found.</param>
+        /// <param name="locator">String to locate child elements.</param>
+        /// <returns></returns>
+        public static Element FindElement(this Element element, LocatorType locatorStrategy, string locator) => FindElements(element, locatorStrategy, locator)[0];
     }
 }

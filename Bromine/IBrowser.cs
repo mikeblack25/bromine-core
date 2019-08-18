@@ -90,6 +90,11 @@ namespace Bromine
         BrowserOptions BrowserOptions { get; }
 
         /// <summary>
+        /// Provide ability change the style of Elements.
+        /// </summary>
+        ElementStyle ElementStyle { get; }
+
+        /// <summary>
         /// Last image saved at the <see cref="ScreenShotDirectory"/>.
         /// </summary>
         Image LastImage { get; }
@@ -136,7 +141,8 @@ namespace Bromine
         /// Execute the jS script.
         /// </summary>
         /// <param name="script">JavaScript to run on the given page context.</param>
+        /// <param name="arguments">Optional arguments to pass to the call.</param>
         /// <returns>Response from the JS request.</returns>
-        object ExecuteJs(string script);
+        object ExecuteJs(string script, object[] arguments);
     }
 }

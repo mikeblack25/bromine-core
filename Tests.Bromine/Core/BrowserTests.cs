@@ -14,7 +14,7 @@ namespace Tests.Bromine.Core
 {
     /// <inheritdoc />
     /// <summary>
-    /// Tests to verify the functionality of the Browser class is working as expected.
+    /// Tests to verify the Browser class is working as expected.
     /// </summary>
     public class BrowserTests : CoreTestsBase
     {
