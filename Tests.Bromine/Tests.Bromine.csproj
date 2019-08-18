@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\packages\xunit.runner.console.2.4.1\build\xunit.runner.console.props" Condition="Exists('..\packages\xunit.runner.console.2.4.1\build\xunit.runner.console.props')" />
   <PropertyGroup>
@@ -28,6 +28,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Debug\Tests.Bromine.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -70,6 +72,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Category.cs" />
+    <Compile Include="Core\ElementExtensionTests.cs" />
+    <Compile Include="Core\ElementStyleTests.cs" />
     <Compile Include="Core\BrowserTypeTests.cs" />
     <Compile Include="Core\CoreTestsBase.cs" />
     <Compile Include="Core\FindTests.cs" />

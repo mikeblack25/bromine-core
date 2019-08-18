@@ -16,7 +16,7 @@ using DriverOptions = Bromine.Models.DriverOptions;
 namespace Tests.Bromine.Core
 {
     /// <summary>
-    /// Test browser types and advanced browser configurations.
+    /// Tests to verify browser types and advanced browser configurations.
     /// </summary>
     public class BrowserTypeTests
     {

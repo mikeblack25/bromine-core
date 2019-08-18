@@ -28,7 +28,6 @@ namespace Bromine.Core
         public Browser(BrowserOptions options)
         {
             Exceptions = new List<Exception>();
-
             BrowserOptions = options;
 
             Driver = new Driver(BrowserOptions.Driver, Exceptions);
@@ -41,6 +40,7 @@ namespace Bromine.Core
             Find = new Find(Driver);
             Navigate = new Navigate(Driver);
             Window = new Window(Driver);
+            ElementStyle = new ElementStyle(this);
 
             InitializeScreenShotDirectory(options.Driver.ScreenShotPath);
         }
@@ -80,6 +80,9 @@ namespace Bromine.Core
 
         /// <inheritdoc />
         public BrowserOptions BrowserOptions { get; }
+
+        /// <inheritdoc />
+        public ElementStyle ElementStyle { get; }
 
         /// <inheritdoc />
         public string ScreenShotDirectory => _screenShotDirectory;
@@ -130,6 +133,8 @@ namespace Bromine.Core
 
         /// <inheritdoc />
         public string Information => Driver.WebDriver.GetType().ToString();
+
+        internal Driver Driver { get; }
 
         /// <inheritdoc />
         public bool Wait(Func<bool> condition, int timeToWait = 1)
@@ -197,14 +202,13 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
-        public object ExecuteJs(string script)
+        public object ExecuteJs(string script, object[] arguments)
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
             var js = Driver as IJavaScriptExecutor;
 
-            return js?.ExecuteAsyncScript(script);
+            return js?.ExecuteAsyncScript(script, arguments);
         }
-
 
         /// <inheritdoc />
         public void Dispose()
@@ -232,7 +236,6 @@ namespace Bromine.Core
             _screenShotDirectory = path;
         }
 
-        private Driver Driver { get; }
         private Screenshot ScreenShot { get; set; }
 
         private static string ScreenShotsDirectory => "ScreenShots";
