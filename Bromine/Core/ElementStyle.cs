@@ -28,9 +28,24 @@ namespace Bromine.Core
         {
             try
             {
-                var script = $"document.{GetLocatorStrategy(locatorStrategy)}(\"{locator}\").style.borderColor = \"{color}\"";
+                Driver.ExecuteJavaScript(ElementBorderScript(locatorStrategy, locator, color));
+            }
+            catch (Exception e)
+            {
+                _browser.Exceptions.Add(e);
+            }
+        }
 
-                Driver.ExecuteJavaScript(script);
+        /// <summary>
+        /// Add a border to an element located by the given locatorStrategy and locator string.
+        /// </summary>
+        /// <param name="element">Element to add a border around.</param>
+        /// <param name="color">Element border color.</param>
+        public void AddBorder(Element element, string color)
+        {
+            try
+            {
+                Driver.ExecuteJavaScript(ElementBorderScript(element.Information.LocatorType, element.Information.LocatorString, color));
             }
             catch (Exception e)
             {
@@ -48,9 +63,24 @@ namespace Bromine.Core
         {
             try
             {
-                var script = "{\n  var x = document." + $"{GetLocatorStrategy(locatorStrategy)}" + "(\"" + $"{locator}\");\n  var i;\n  for (i = 0; i < x.length; i++) " + "{\n    " + "x[i].style.borderColor = \"" + $"{color}" + "\";\n  }\n}";
+                Driver.ExecuteJavaScript(ElementsBorderScript(locatorStrategy, locator, color));
+            }
+            catch (Exception e)
+            {
+                _browser.Exceptions.Add(e);
+            }
+        }
 
-                Driver.ExecuteJavaScript(script);
+        /// <summary>
+        /// Add Borders to elements located by the given locatorStrategy and locator string.
+        /// </summary>
+        /// <param name="element">Element to add a border around.</param>
+        /// <param name="color">Element border color.</param>
+        public void AddBorders(Element element, string color)
+        {
+            try
+            {
+                Driver.ExecuteJavaScript(ElementsBorderScript(element.Information.LocatorType, element.Information.LocatorString, color));
             }
             catch (Exception e)
             {
@@ -61,7 +91,7 @@ namespace Bromine.Core
         /// <summary>
         /// Get the style attribute for the given element.
         /// </summary>
-        /// <param name="element"></param>
+        /// <param name="element">Element to get style attribute of.</param>
         /// <returns></returns>
         public string GetStyleAttribute(Element element) => element.GetAttribute("style");
 
@@ -98,6 +128,9 @@ namespace Bromine.Core
 
             return locatorString;
         }
+
+        private string ElementBorderScript(LocatorType locatorStrategy, string locator, string color) => $"document.{GetLocatorStrategy(locatorStrategy)}(\"{locator}\").style.borderColor = \"{color}\"";
+        private string ElementsBorderScript(LocatorType locatorStrategy, string locator, string color) => "{\n  var x = document." + $"{GetLocatorStrategy(locatorStrategy)}" + "(\"" + $"{locator}\");\n  var i;\n  for (i = 0; i < x.length; i++) " + "{\n    " + "x[i].style.borderColor = \"" + $"{color}" + "\";\n  }\n}";
 
         private readonly Browser _browser;
         private IWebDriver Driver => _browser.Driver.WebDriver;
