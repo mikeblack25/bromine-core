@@ -173,29 +173,6 @@ namespace Tests.Bromine.Core
             Equal(position, Browser.Window.Position);
         }
 
-        /// <summary>
-        /// Verify the browser can wait for conditions for the time specified and that Exceptions are logged when the expected conditions are not met.
-        /// </summary>
-        [Fact]
-        public void VerifyBrowserWait()
-        {
-            Empty(Browser.Exceptions);
-            False(Browser.Wait(() => false));
-            NotEmpty(Browser.Exceptions);
-
-            var startTime = DateTime.Now;
-            const int timeToWait = 5;
-
-            Browser.Wait(() => false, timeToWait);
-
-            InRange(DateTime.Now, startTime.AddSeconds(timeToWait - 1), startTime.AddSeconds(timeToWait + 1));
-
-            var exceptionCount = Browser.Exceptions.Count;
-
-            True(Browser.Wait(() => true));
-            Equal(exceptionCount, Browser.Exceptions.Count);
-        }
-
         private void DeleteInitialImage(string name)
         {
             var path = $@"{Browser.ScreenShotDirectory}\{name}.png";

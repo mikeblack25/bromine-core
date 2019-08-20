@@ -7,7 +7,6 @@ using System.IO;
 using Bromine.Models;
 
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
 
 namespace Bromine.Core
 {
@@ -41,6 +40,7 @@ namespace Bromine.Core
             Navigate = new Navigate(Driver);
             Window = new Window(Driver);
             ElementStyle = new ElementStyle(this);
+            Wait = new Wait(this);
 
             InitializeScreenShotDirectory(options.Driver.ScreenShotPath);
         }
@@ -83,6 +83,9 @@ namespace Bromine.Core
 
         /// <inheritdoc />
         public ElementStyle ElementStyle { get; }
+
+        /// <inheritdoc />
+        public Wait Wait { get; }
 
         /// <inheritdoc />
         public string ScreenShotDirectory => _screenShotDirectory;
@@ -135,31 +138,6 @@ namespace Bromine.Core
         public string Information => Driver.WebDriver.GetType().ToString();
 
         internal Driver Driver { get; }
-
-        /// <inheritdoc />
-        public bool Wait(Func<bool> condition, int timeToWait = 1)
-        {
-            var result = false;
-
-            try
-            {
-                var wait = new DefaultWait<IWebDriver>(Driver.WebDriver)
-                {
-                    Timeout = TimeSpan.FromSeconds(timeToWait),
-                    PollingInterval = TimeSpan.FromMilliseconds(250)
-                };
-
-                wait.Until(x => condition());
-
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                Exceptions.Add(ex);
-            }
-
-            return result;
-        }
 
         /// <inheritdoc />
         public void TakeElementScreenShot(string name, Element element)
