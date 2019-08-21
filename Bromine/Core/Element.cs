@@ -337,6 +337,14 @@ namespace Bromine.Core
         public static List<Element> FindElements(this Element element, LocatorType locatorStrategy, string locator) => element.FindElements(Find.Element(locatorStrategy, locator));
 
         /// <summary>
+        /// Find child elements by CSS and locator string.
+        /// </summary>
+        /// <param name="element">Parent element to find children of.</param>
+        /// <param name="locator">String to locate child elements.</param>
+        /// <returns></returns>
+        public static List<Element> FindElements(this Element element, string locator) => element.FindElements(Find.Element(LocatorType.Css, locator));
+
+        /// <summary>
         /// Find child element with the given locatorStrategy and locator string.
         /// </summary>
         /// <param name="element">Parent element to find a child of.</param>
@@ -344,5 +352,13 @@ namespace Bromine.Core
         /// <param name="locator">String to locate child elements.</param>
         /// <returns></returns>
         public static Element FindElement(this Element element, LocatorType locatorStrategy, string locator) => FindElements(element, locatorStrategy, locator)[0];
+
+        /// <summary>
+        /// Find child element by CSS and locator string.
+        /// </summary>
+        /// <param name="element">Parent element to find a child of.</param>
+        /// <param name="locator">String to locate child elements.</param>
+        /// <returns></returns>
+        public static Element FindElement(this Element element, string locator) => FindElements(element, LocatorType.Css, locator)[0];
     }
 }

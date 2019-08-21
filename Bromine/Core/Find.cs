@@ -47,18 +47,18 @@ namespace Bromine.Core
         public List<Element> ElementsByClass(string className) => Elements(LocatorType.Class, className);
 
         /// <summary>
-        /// Find Element by CSS Selector.
+        /// Find Element by CSS selector.
         /// </summary>
-        /// <param name="css">CSS Selector to locate an element.</param>
+        /// <param name="cssSelector">CSS Selector to locate an element.</param>
         /// <returns></returns>
-        public Element ElementByCssSelector(string css) => ElementsByCssSelector(css)[0];
+        public Element ElementByCssSelector(string cssSelector) => ElementsByCssSelector(cssSelector)[0];
 
         /// <summary>
-        /// Find all Elements by CSS Selector.
+        /// Find all Elements by CSS selector.
         /// </summary>
-        /// <param name="css"></param>
+        /// <param name="cssSelector">Locate element by CSS selector.</param>
         /// <returns></returns>
-        public List<Element> ElementsByCssSelector(string css) => Elements(LocatorType.Css, css);
+        public List<Element> ElementsByCssSelector(string cssSelector) => Elements(LocatorType.Css, cssSelector);
 
         /// <summary>
         /// Find Element by text.
@@ -101,6 +101,52 @@ namespace Bromine.Core
         /// <param name="tag">HTML tag of the element to find.</param>
         /// <returns></returns>
         public List<Element> ElementsByTag(string tag) => Elements(LocatorType.Tag, tag);
+
+        /// <summary>
+        /// Find Element by CSS selector.
+        /// </summary>
+        /// <param name="locator">Locate element by CSS selector.</param>
+        /// <returns></returns>
+        public Element Element(string locator) => ElementsByCssSelector(locator)[0];
+
+        /// <summary>
+        /// Find child Element by CSS selector based on a parent element found by CSS selector.
+        /// </summary>
+        /// <param name="parentLocator">Locate element by CSS selector.</param>
+        /// <param name="childLocator">Locate element by CSS selector.</param>
+        /// <returns></returns>
+        public Element ChildElement(string parentLocator, string childLocator) => ElementsByCssSelector(parentLocator)[0].FindElement(childLocator);
+
+        /// <summary>
+        /// Find child Element by CSS selector based on a parent element found by CSS selector.
+        /// </summary>
+        /// <param name="parentElement">Locate element by CSS selector.</param>
+        /// <param name="childLocator">Locate element by CSS selector.</param>
+        /// <returns></returns>
+        public Element ChildElement(Element parentElement, string childLocator) => parentElement.FindElement(childLocator);
+
+        /// <summary>
+        /// Find Elements by CSS selector.
+        /// </summary>
+        /// <param name="locator"></param>
+        /// <returns></returns>
+        public List<Element> Elements(string locator) => ElementsByCssSelector(locator);
+
+        /// <summary>
+        /// Find child Elements by CSS selector based on a parent element found by CSS selector.
+        /// </summary>
+        /// <param name="parentLocator">Locate element by CSS selector.</param>
+        /// <param name="childLocator">Locate element by CSS selector.</param>
+        /// <returns></returns>
+        public List<Element> ChildElements(string parentLocator, string childLocator) => ElementsByCssSelector(parentLocator)[0].FindElements(childLocator);
+
+        /// <summary>
+        /// Find child Elements by CSS selector based on a parent element found by CSS selector.
+        /// </summary>
+        /// <param name="parentElement">Locate element by CSS selector.</param>
+        /// <param name="childLocator">Locate element by CSS selector.</param>
+        /// <returns></returns>
+        public List<Element> ChildElements(Element parentElement, string childLocator) => parentElement.FindElements(childLocator);
 
         /// <summary>
         /// Locate elements by locatorStrategy and locator string.
