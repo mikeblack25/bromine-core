@@ -64,6 +64,11 @@ namespace Bromine.Core
         public void Navigation(string expectedUrl, int timeToWait) => Condition(() => _browser.Url == expectedUrl, timeToWait);
 
         /// <summary>
+        /// Wait for the document to be in a "complete" state.
+        /// </summary>
+        public void PageLoaded() => _browser.ExecuteJs(PageLoadedScript);
+
+        /// <summary>
         /// Wait for the given condition to be true.
         /// </summary>
         /// <param name="condition">Condition to wait for.</param>
@@ -92,6 +97,8 @@ namespace Bromine.Core
 
             return result;
         }
+
+        private const string PageLoadedScript = "\"return document.readyState\").Equals(\"complete\")";
 
         private readonly Browser _browser;
         private Driver _driver => _browser.Driver;

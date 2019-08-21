@@ -180,7 +180,7 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
-        public object ExecuteJs(string script, object[] arguments)
+        public object ExecuteJs(string script, params object[] arguments)
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
             var js = Driver as IJavaScriptExecutor;
