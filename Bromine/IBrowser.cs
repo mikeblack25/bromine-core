@@ -75,6 +75,11 @@ namespace Bromine
         Find Find { get; }
 
         /// <summary>
+        /// Helpers to find elements using Selenium location strategies.
+        /// </summary>
+        SeleniumFind SeleniumFind { get; }
+
+        /// <summary>
         /// Helpers to navigate to pages and files.
         /// </summary>
         Navigate Navigate { get; }

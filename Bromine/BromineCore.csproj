@@ -61,6 +61,7 @@
     <Compile Include="Core\ElementStyle.cs" />
     <Compile Include="Core\Find.cs" />
     <Compile Include="Core\Navigate.cs" />
+    <Compile Include="Core\SeleniumFind.cs" />
     <Compile Include="Core\Wait.cs" />
     <Compile Include="Core\Window.cs" />
     <Compile Include="IBrowser.cs" />

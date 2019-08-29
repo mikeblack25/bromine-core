@@ -30,7 +30,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyFindElementsOfElement()
         {
-            _elementsOfElement = _element.FindElements(LocatorType.Tag, "div");
+            _elementsOfElement = _element.FindElements(LocatorStrategy.Tag, "div");
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyFindElementOfElement()
         {
-            _elementsOfElement = new List<Element> {_element.FindElement(LocatorType.Tag, "div")};
+            _elementsOfElement = new List<Element> {_element.FindElement(LocatorStrategy.Tag, "div")};
         }
 
         /// <summary>

@@ -29,11 +29,11 @@ namespace Tests.Bromine.Core
         [Theory]
         public void AddBorder(string locator, string color)
         {
-            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorType.Id).ToLower());
+            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
 
-            Browser.ElementStyle.AddBorder(LocatorType.Id, locator, color);
+            Browser.ElementStyle.AddBorder(LocatorStrategy.Id, locator, color);
 
-            Contains(color.ToLower(), GetStyle(locator, LocatorType.Id).ToLower());
+            Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
         }
 
         /// <summary>
@@ -45,13 +45,13 @@ namespace Tests.Bromine.Core
         [Theory]
         public void AddBorderToElement(string locator, string color)
         {
-            var element = Browser.Find.ElementById(locator);
+            var element = Browser.SeleniumFind.ElementById(locator);
 
-            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorType.Id).ToLower());
+            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
 
             Browser.ElementStyle.AddBorder(element, color);
 
-            Contains(color.ToLower(), GetStyle(locator, LocatorType.Id).ToLower());
+            Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
         }
 
         /// <summary>
@@ -63,11 +63,11 @@ namespace Tests.Bromine.Core
         [Theory]
         public void AddBorders(string locator, string color)
         {
-            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorType.Class).ToLower());
+            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
 
-            Browser.ElementStyle.AddBorders(LocatorType.Class, locator, color);
+            Browser.ElementStyle.AddBorders(LocatorStrategy.Class, locator, color);
 
-            Contains(color.ToLower(), GetStyle(locator, LocatorType.Class).ToLower());
+            Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
         }
 
         /// <summary>
@@ -79,26 +79,26 @@ namespace Tests.Bromine.Core
         [Theory]
         public void AddBordersToElement(string locator, string color)
         {
-            var element = Browser.Find.ElementByClass(locator);
+            var element = Browser.SeleniumFind.ElementByClass(locator);
 
-            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorType.Class).ToLower());
+            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
 
             Browser.ElementStyle.AddBorders(element, color);
 
-            Contains(color.ToLower(), GetStyle(locator, LocatorType.Class).ToLower());
+            Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
         }
 
-        private string GetStyle(string locator, LocatorType locatorStrategy)
+        private string GetStyle(string locator, LocatorStrategy locatorStrategy)
         {
             Element element = null;
 
-            if (locatorStrategy == LocatorType.Class)
+            if (locatorStrategy == LocatorStrategy.Class)
             {
                 element = Browser.Find.ElementByClass(locator);
             }
-            else if (locatorStrategy == LocatorType.Id)
+            else if (locatorStrategy == LocatorStrategy.Id)
             {
-                element = Browser.Find.ElementById(locator);
+                element = Browser.SeleniumFind.ElementById(locator);
             }
 
             return Browser.ElementStyle.GetStyleAttribute(element);

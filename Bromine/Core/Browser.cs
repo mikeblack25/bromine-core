@@ -37,6 +37,7 @@ namespace Bromine.Core
             }
 
             Find = new Find(Driver);
+            SeleniumFind = new SeleniumFind(Driver);
             Navigate = new Navigate(Driver);
             Window = new Window(Driver);
             ElementStyle = new ElementStyle(this);
@@ -71,6 +72,9 @@ namespace Bromine.Core
 
         /// <inheritdoc />
         public Find Find { get; }
+
+        /// <inheritdoc />
+        public SeleniumFind SeleniumFind { get; }
 
         /// <inheritdoc />
         public Navigate Navigate { get; }

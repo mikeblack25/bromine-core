@@ -48,7 +48,7 @@ namespace Tests.Bromine.Core
         /// </summary>
         internal string Amazon => "Amazon";
 
-        internal Element CartButton => Browser.Find.ElementById("nav-cart");
+        internal Element CartButton => Browser.SeleniumFind.ElementById("nav-cart");
 
         /// <summary>
         /// https://www.amazon.com/

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-
-using OpenQA.Selenium;
+using System.Text;
 
 namespace Bromine.Core
 {
     /// <summary>
     /// Find elements on the current page / screen.
+    /// NOTE: All Find methods use the CSS selector locator strategy.
     /// </summary>
     public class Find
     {
@@ -15,99 +15,81 @@ namespace Bromine.Core
         /// <param name="driver">Driver used to navigate.</param>
         public Find(Driver driver)
         {
-            _driver = driver;
+            Driver = driver;
+            SeleniumFind = new SeleniumFind(Driver);
         }
 
         /// <summary>
-        /// Find Element by ID.
+        /// Find element by className or classNames.
+        /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
-        /// <param name="id">ID to locate an element.</param>
+        /// <param name="className"></param>
         /// <returns></returns>
-        public Element ElementById(string id) => ElementsById(id)[0];
+        public Element ElementByClass(params string[] className)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var item in className)
+            {
+                builder.Append($".{item}");
+            }
+
+            return Element(builder.ToString());
+        }
 
         /// <summary>
-        /// Find Elements by ID.
+        /// Find elements by className or classNames.
+        /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
-        /// <param name="id">ID to locate an element.</param>
+        /// <param name="className"></param>
         /// <returns></returns>
-        public List<Element> ElementsById(string id) => Elements(LocatorType.Id, id);
+        public List<Element> ElementsByClass(params string[] className)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var item in className)
+            {
+                builder.Append($".{item}");
+            }
+
+            return Elements(builder.ToString());
+        }
 
         /// <summary>
-        /// Find Element by Class identifier.
+        /// Find element by decendent className.
+        /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
         /// </summary>
-        /// <param name="className">Class name to locate an element.</param>
+        /// <param name="className"></param>
         /// <returns></returns>
-        public Element ElementByClass(string className) => ElementsByClass(className)[0];
+        public Element ElementByDecendentClass(params string[] className)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var item in className)
+            {
+                builder.Append($".{item} ");
+            }
+
+            return Element(builder.ToString().TrimEnd());
+        }
 
         /// <summary>
-        /// Find Elements by Class identifier.
+        /// Find element by decendent className.
+        /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
         /// </summary>
-        /// <param name="className">Class name to locate elements.</param>
+        /// <param name="className"></param>
         /// <returns></returns>
-        public List<Element> ElementsByClass(string className) => Elements(LocatorType.Class, className);
+        public List<Element> ElementsByDecendentClass(params string[] className)
+        {
+            var builder = new StringBuilder();
 
-        /// <summary>
-        /// Find Element by CSS selector.
-        /// </summary>
-        /// <param name="cssSelector">CSS Selector to locate an element.</param>
-        /// <returns></returns>
-        public Element ElementByCssSelector(string cssSelector) => ElementsByCssSelector(cssSelector)[0];
+            foreach (var item in className)
+            {
+                builder.Append($".{item} ");
+            }
 
-        /// <summary>
-        /// Find all Elements by CSS selector.
-        /// </summary>
-        /// <param name="cssSelector">Locate element by CSS selector.</param>
-        /// <returns></returns>
-        public List<Element> ElementsByCssSelector(string cssSelector) => Elements(LocatorType.Css, cssSelector);
-
-        /// <summary>
-        /// Find Element by text.
-        /// </summary>
-        /// <param name="text">Element text of the HTML element to find.</param>
-        /// <returns></returns>
-        public Element ElementByText(string text) => ElementsByText(text)[0];
-
-        /// <summary>
-        /// Find Elements by text.
-        /// </summary>
-        /// <param name="text">Element text of the HTML element to find.</param>
-        /// <returns></returns>
-        public List<Element> ElementsByText(string text) => Elements(LocatorType.Text, text);
-
-        /// <summary>
-        /// Find Element by partial text.
-        /// </summary>
-        /// <param name="partialText">Partial text of the HTML element to find.</param>
-        /// <returns></returns>
-        public Element ElementByPartialText(string partialText) => ElementsByPartialText(partialText)[0];
-
-        /// <summary>
-        /// Find Element by partial text.
-        /// </summary>
-        /// <param name="partialText">Partial text of the HTML element to find.</param>
-        /// <returns></returns>
-        public List<Element> ElementsByPartialText(string partialText) => Elements(LocatorType.PartialText, partialText);
-
-        /// <summary>
-        /// Find Element by tag name.
-        /// </summary>
-        /// <param name="tag">HTML tag of the element to find.</param>
-        /// <returns></returns>
-        public Element ElementByTag(string tag) => ElementsByTag(tag)[0];
-
-        /// <summary>
-        /// Find Elements by tag name.
-        /// </summary>
-        /// <param name="tag">HTML tag of the element to find.</param>
-        /// <returns></returns>
-        public List<Element> ElementsByTag(string tag) => Elements(LocatorType.Tag, tag);
-
-        /// <summary>
-        /// Find Element by CSS selector.
-        /// </summary>
-        /// <param name="locator">Locate element by CSS selector.</param>
-        /// <returns></returns>
-        public Element Element(string locator) => ElementsByCssSelector(locator)[0];
+            return Elements(builder.ToString().TrimEnd());
+        }
 
         /// <summary>
         /// Find child Element by CSS selector based on a parent element found by CSS selector.
@@ -115,7 +97,7 @@ namespace Bromine.Core
         /// <param name="parentLocator">Locate element by CSS selector.</param>
         /// <param name="childLocator">Locate element by CSS selector.</param>
         /// <returns></returns>
-        public Element ChildElement(string parentLocator, string childLocator) => ElementsByCssSelector(parentLocator)[0].FindElement(childLocator);
+        public Element ChildElement(string parentLocator, string childLocator) => Element(parentLocator).FindElement(childLocator);
 
         /// <summary>
         /// Find child Element by CSS selector based on a parent element found by CSS selector.
@@ -126,19 +108,12 @@ namespace Bromine.Core
         public Element ChildElement(Element parentElement, string childLocator) => parentElement.FindElement(childLocator);
 
         /// <summary>
-        /// Find Elements by CSS selector.
-        /// </summary>
-        /// <param name="locator"></param>
-        /// <returns></returns>
-        public List<Element> Elements(string locator) => ElementsByCssSelector(locator);
-
-        /// <summary>
         /// Find child Elements by CSS selector based on a parent element found by CSS selector.
         /// </summary>
         /// <param name="parentLocator">Locate element by CSS selector.</param>
         /// <param name="childLocator">Locate element by CSS selector.</param>
         /// <returns></returns>
-        public List<Element> ChildElements(string parentLocator, string childLocator) => ElementsByCssSelector(parentLocator)[0].FindElements(childLocator);
+        public List<Element> ChildElements(string parentLocator, string childLocator) => Elements(parentLocator)[0].FindElements(childLocator);
 
         /// <summary>
         /// Find child Elements by CSS selector based on a parent element found by CSS selector.
@@ -149,81 +124,20 @@ namespace Bromine.Core
         public List<Element> ChildElements(Element parentElement, string childLocator) => parentElement.FindElements(childLocator);
 
         /// <summary>
-        /// Locate elements by locatorStrategy and locator string.
+        /// Find Element by CSS selector.
         /// </summary>
-        /// <param name="locatorStrategy">How will elements be found?</param>
-        /// <param name="locator">String to locate elements.</param>
+        /// <param name="cssSelector"></param>
         /// <returns></returns>
-        public List<Element> Elements(LocatorType locatorStrategy, string locator)
-        {
-            var elementsList = new List<Element>();
-            var elements = _driver.WebDriver.FindElements(Element(locatorStrategy, locator));
-
-            foreach (var element in elements)
-            {
-                elementsList.Add(new Element(element, locator, locatorStrategy));
-            }
-
-            return elementsList;
-        }
+        public Element Element(string cssSelector) => SeleniumFind.Elements(LocatorStrategy.Css, cssSelector)[0];
 
         /// <summary>
-        /// Get By object based on the locatorStrategy and locator string.
+        /// Find Elements by CSS selector.
         /// </summary>
-        /// <param name="locatorStrategy">How will the element be located?</param>
-        /// <param name="locator">String used to find the element.</param>
+        /// <param name="cssSelector"></param>
         /// <returns></returns>
-        internal static By Element(LocatorType locatorStrategy, string locator)
-        {
-            By byObj = null;
+        public List<Element> Elements(string cssSelector) => SeleniumFind.Elements(LocatorStrategy.Css, cssSelector);
 
-            switch (locatorStrategy)
-            {
-                case LocatorType.Class:
-                {
-                    byObj = By.ClassName(locator);
-
-                    break;
-                }
-                case LocatorType.Css:
-                {
-                    byObj = By.CssSelector(locator);
-
-                    break;
-                }
-                case LocatorType.Id:
-                {
-                    byObj = By.Id(locator);
-
-                    break;
-                }
-                case LocatorType.PartialText:
-                {
-                    byObj = By.PartialLinkText(locator);
-                    break;
-                }
-                case LocatorType.Tag:
-                {
-                    byObj = By.TagName(locator);
-
-                    break;
-                }
-                case LocatorType.Text:
-                {
-                    byObj = By.LinkText(locator);
-
-                    break;
-                }
-                case LocatorType.Js:
-                case LocatorType.XPath:
-                {
-                    break;
-                }
-            }
-
-            return byObj;
-        }
-
-        private readonly Driver _driver;
+        private SeleniumFind SeleniumFind { get; }
+        private readonly Driver Driver;
     }
 }

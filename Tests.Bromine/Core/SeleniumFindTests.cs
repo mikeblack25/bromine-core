@@ -8,13 +8,13 @@ namespace Tests.Bromine.Core
     /// <summary>
     /// Test to verify the Find class is working as expected.
     /// </summary>
-    public class FindTests : CoreTestsBase
+    public class SeleniumFindTests : CoreTestsBase
     {
         /// <inheritdoc />
         /// <summary>
         /// Navigate to the Amazon home page.
         /// </summary>
-        public FindTests()
+        public SeleniumFindTests()
         {
             Browser.Navigate.ToFile($@"{BasePath}\{AmazonHome}");
         }
@@ -25,7 +25,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByIdTest()
         {
-            Browser.Find.ElementById(IdString);
+            Browser.SeleniumFind.ElementById(IdString);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByCssTest()
         {
-            Browser.Find.ElementByCssSelector(CssSelectorString);
+            Browser.SeleniumFind.ElementByCssSelector(CssSelectorString);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByTagTest()
         {
-            Browser.Find.ElementByTag(TagString);
+            Browser.SeleniumFind.ElementByTag(TagString);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByTextTest()
         {
-            Browser.Find.ElementByText(TextString);
+            Browser.SeleniumFind.ElementByText(TextString);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByPartialTextTest()
         {
-            Browser.Find.ElementByPartialText(TextString.Substring(2));
+            Browser.SeleniumFind.ElementByPartialText(TextString.Substring(2));
         }
 
         /// <summary>
