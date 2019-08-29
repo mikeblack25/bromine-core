@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Web.UI;
 
 using Bromine.Models;
 
@@ -87,6 +88,9 @@ namespace Bromine.Core
 
         /// <inheritdoc />
         public ElementStyle ElementStyle { get; }
+
+        /// <inheritdoc />
+        public HtmlTextWriterTag HtmlTag(HtmlTextWriterTag tag) => tag;
 
         /// <inheritdoc />
         public Wait Wait { get; }

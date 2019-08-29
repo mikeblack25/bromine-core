@@ -76,8 +76,8 @@
     <Compile Include="Core\ElementStyleTests.cs" />
     <Compile Include="Core\BrowserTypeTests.cs" />
     <Compile Include="Core\CoreTestsBase.cs" />
-    <Compile Include="Core\FindTests.cs" />
     <Compile Include="Core\NavigateTests.cs" />
+    <Compile Include="Core\SeleniumFindTests.cs" />
     <Compile Include="Core\WaitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\BrowserTests.cs" />
