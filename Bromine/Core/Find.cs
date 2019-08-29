@@ -23,7 +23,7 @@ namespace Bromine.Core
         /// Find element by className or classNames.
         /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
-        /// <param name="className"></param>
+        /// <param name="className">Class name(s) of decendent class elements.</param>
         /// <returns></returns>
         public Element ElementByClass(params string[] className)
         {
@@ -41,7 +41,7 @@ namespace Bromine.Core
         /// Find elements by className or classNames.
         /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
-        /// <param name="className"></param>
+        /// <param name="className">Class name(s) of decendent class elements.</param>
         /// <returns></returns>
         public List<Element> ElementsByClass(params string[] className)
         {
@@ -59,7 +59,7 @@ namespace Bromine.Core
         /// Find element by decendent className.
         /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
         /// </summary>
-        /// <param name="className"></param>
+        /// <param name="className">Class name(s) of decendent class elements.</param>
         /// <returns></returns>
         public Element ElementByDecendentClass(params string[] className)
         {
@@ -77,7 +77,7 @@ namespace Bromine.Core
         /// Find element by decendent className.
         /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
         /// </summary>
-        /// <param name="className"></param>
+        /// <param name="className">Class name(s) of decendent class elements.</param>
         /// <returns></returns>
         public List<Element> ElementsByDecendentClass(params string[] className)
         {
@@ -102,38 +102,38 @@ namespace Bromine.Core
         /// <summary>
         /// Find child Element by CSS selector based on a parent element found by CSS selector.
         /// </summary>
-        /// <param name="parentElement">Locate element by CSS selector.</param>
-        /// <param name="childLocator">Locate element by CSS selector.</param>
+        /// <param name="parentElement">Parent element to find child elements of.</param>
+        /// <param name="childLocator">Locate child element by CSS selector.</param>
         /// <returns></returns>
         public Element ChildElement(Element parentElement, string childLocator) => parentElement.FindElement(childLocator);
 
         /// <summary>
         /// Find child Elements by CSS selector based on a parent element found by CSS selector.
         /// </summary>
-        /// <param name="parentLocator">Locate element by CSS selector.</param>
-        /// <param name="childLocator">Locate element by CSS selector.</param>
+        /// <param name="parentLocator">Locate the parent element by CSS selector.</param>
+        /// <param name="childLocator">Locate child element by CSS selector.</param>
         /// <returns></returns>
         public List<Element> ChildElements(string parentLocator, string childLocator) => Elements(parentLocator)[0].FindElements(childLocator);
 
         /// <summary>
         /// Find child Elements by CSS selector based on a parent element found by CSS selector.
         /// </summary>
-        /// <param name="parentElement">Locate element by CSS selector.</param>
-        /// <param name="childLocator">Locate element by CSS selector.</param>
+        /// <param name="parentElement">Parent element to find child elements of.</param>
+        /// <param name="childLocator">Locate child elements by CSS selector.</param>
         /// <returns></returns>
         public List<Element> ChildElements(Element parentElement, string childLocator) => parentElement.FindElements(childLocator);
 
         /// <summary>
         /// Find Element by CSS selector.
         /// </summary>
-        /// <param name="cssSelector"></param>
+        /// <param name="cssSelector">Locate element by CSS selector.</param>
         /// <returns></returns>
         public Element Element(string cssSelector) => SeleniumFind.Elements(LocatorStrategy.Css, cssSelector)[0];
 
         /// <summary>
         /// Find Elements by CSS selector.
         /// </summary>
-        /// <param name="cssSelector"></param>
+        /// <param name="cssSelector">Locate elements by CSS selector.</param>
         /// <returns></returns>
         public List<Element> Elements(string cssSelector) => SeleniumFind.Elements(LocatorStrategy.Css, cssSelector);
 
