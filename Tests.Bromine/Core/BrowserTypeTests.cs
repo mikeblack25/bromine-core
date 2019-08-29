@@ -63,9 +63,9 @@ namespace Tests.Bromine.Core
             {
                 Browser = new Browser(browserOptions);
 
-                Browser.Navigate.ToUrl(GoogleUrl);
+                Browser.Navigate.ToUrl(TestSites.GoogleUrl);
 
-                Equal(GoogleUrl, Browser.Url);
+                Equal(TestSites.GoogleUrl, Browser.Url);
             }
             catch (WebDriverException e)
             {
@@ -105,7 +105,5 @@ namespace Tests.Bromine.Core
         }
 
         private Browser Browser { get; set; }
-
-        private const string GoogleUrl = "https://www.google.com/?gws_rd=ssl";
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Xunit;
-
 using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
@@ -34,7 +33,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByClassTest()
         {
-            Browser.Find.ElementByClass(ClassString);
+            Browser.SeleniumFind.ElementsById(ClassString);
         }
 
         /// <summary>

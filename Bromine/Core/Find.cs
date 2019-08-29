@@ -24,7 +24,7 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="className">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
-        public Element ElementByClass(params string[] className)
+        public Element ElementByClasses(params string[] className)
         {
             var builder = new StringBuilder();
 
@@ -42,7 +42,7 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="className">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
-        public List<Element> ElementsByClass(params string[] className)
+        public List<Element> ElementsByClasses(params string[] className)
         {
             var builder = new StringBuilder();
 

@@ -51,11 +51,6 @@ namespace Tests.Bromine.Core
         internal Element CartButton => Browser.SeleniumFind.ElementById("nav-cart");
 
         /// <summary>
-        /// https://www.amazon.com/
-        /// </summary>
-        internal string AmazonUrl => "https://www.amazon.com/";
-
-        /// <summary>
         /// Dispose of the Browser.
         /// </summary>
         // ReSharper disable once InheritdocConsiderUsage

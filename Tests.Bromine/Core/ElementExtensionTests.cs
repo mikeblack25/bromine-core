@@ -2,8 +2,9 @@
 
 using Bromine.Core;
 
-using Xunit;
+using Tests.Bromine.Common;
 
+using Xunit;
 using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
@@ -20,8 +21,8 @@ namespace Tests.Bromine.Core
         /// </summary>
         public ElementExtensionTests()
         {
-            Browser.Navigate.ToUrl(AmazonUrl);
-            _element = Browser.Find.ElementByClass("nav-fill");
+            Browser.Navigate.ToUrl(TestSites.AmazonUrl);
+            _element = Browser.Find.Element("nav-fill");
         }
 
         /// <summary>

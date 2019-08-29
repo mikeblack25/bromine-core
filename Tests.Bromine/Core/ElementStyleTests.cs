@@ -1,7 +1,9 @@
 ﻿using Bromine.Core;
+using Bromine.Extensions;
+
+using Tests.Bromine.Common;
 
 using Xunit;
-
 using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
@@ -12,12 +14,10 @@ namespace Tests.Bromine.Core
     /// </summary>
     public class ElementStyleTests : CoreTestsBase
     {
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc />
         public ElementStyleTests()
         {
-            Browser.Navigate.ToUrl("https://www.google.com");
+            Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Tests.Bromine.Core
         [Theory]
         public void AddBorderToElement(string locator, string color)
         {
-            var element = Browser.SeleniumFind.ElementById(locator);
+            var element = Browser.Find.Element(locator.Id());
 
             DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
 
@@ -79,7 +79,7 @@ namespace Tests.Bromine.Core
         [Theory]
         public void AddBordersToElement(string locator, string color)
         {
-            var element = Browser.SeleniumFind.ElementByClass(locator);
+            var element = Browser.Find.Element(locator.Class());
 
             DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
 
@@ -94,11 +94,11 @@ namespace Tests.Bromine.Core
 
             if (locatorStrategy == LocatorStrategy.Class)
             {
-                element = Browser.Find.ElementByClass(locator);
+                element = Browser.Find.Element(locator.Class());
             }
             else if (locatorStrategy == LocatorStrategy.Id)
             {
-                element = Browser.SeleniumFind.ElementById(locator);
+                element = Browser.Find.Element(locator.Id());
             }
 
             return Browser.ElementStyle.GetStyleAttribute(element);

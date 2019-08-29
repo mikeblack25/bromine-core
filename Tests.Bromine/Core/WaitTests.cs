@@ -1,7 +1,6 @@
 ﻿using System;
 
 using Xunit;
-
 using static Xunit.Assert;
 
 namespace Tests.Bromine.Core

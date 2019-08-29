@@ -65,6 +65,7 @@
     <Compile Include="Core\SeleniumFind.cs" />
     <Compile Include="Core\Wait.cs" />
     <Compile Include="Core\Window.cs" />
+    <Compile Include="Extensions\CssFormat.cs" />
     <Compile Include="IBrowser.cs" />
     <Compile Include="Models\BrowserOptions.cs" />
     <Compile Include="Models\DriverOptions.cs" />

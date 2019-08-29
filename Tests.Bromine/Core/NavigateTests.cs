@@ -2,6 +2,8 @@ using Bromine.Core;
 
 using OpenQA.Selenium;
 
+using Tests.Bromine.Common;
+
 using Xunit;
 
 namespace Tests.Bromine.Core
@@ -54,9 +56,9 @@ namespace Tests.Bromine.Core
         [Fact]
         public void NavigateToUrlTest()
         {
-            Browser.Navigate.ToUrl(AmazonUrl);
+            Browser.Navigate.ToUrl(TestSites.AmazonUrl);
 
-            Assert.Equal(AmazonUrl, Browser.Url);
+            Assert.Equal(TestSites.AmazonUrl, Browser.Url);
         }
     }
 }
