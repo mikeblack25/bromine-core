@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Bromine", "Tests.Bromine\Tests.Bromine.csproj", "{16B33D44-E1C0-4A0F-896D-7FEF56A3C7CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BromineCore", "Bromine\BromineCore.csproj", "{BB346A0F-1DD9-49EF-8D1F-DA87B91963CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bromine Core", "Bromine\Bromine Core.csproj", "{BB346A0F-1DD9-49EF-8D1F-DA87B91963CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

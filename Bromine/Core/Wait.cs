@@ -7,7 +7,7 @@ using OpenQA.Selenium.Support.UI;
 namespace Bromine.Core
 {
     /// <summary>
-    /// Prvides ability to wait for conditions using Selenium's DefaultWait class.
+    /// Provides ability to wait for conditions using Selenium's DefaultWait class.
     /// </summary>
     public class Wait
     {
@@ -16,7 +16,6 @@ namespace Bromine.Core
         /// </summary>
         public Wait(Browser browser)
         {
-            _browser = browser;
             For = new For(browser);
         }
 
@@ -24,8 +23,6 @@ namespace Bromine.Core
         /// <see cref="For"/>
         /// </summary>
         public For For { get; }
-
-        private readonly Browser _browser;
     }
 
 
@@ -39,7 +36,7 @@ namespace Bromine.Core
         /// </summary>
         public For(Browser browser)
         {
-            _browser = browser;
+            Browser = browser;
         }
 
         /// <summary>
@@ -61,12 +58,12 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="expectedUrl">Expected URL to wait for.</param>
         /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
-        public void Navigation(string expectedUrl, int timeToWait) => Condition(() => _browser.Url == expectedUrl, timeToWait);
+        public void Navigation(string expectedUrl, int timeToWait) => Condition(() => Browser.Url == expectedUrl, timeToWait);
 
         /// <summary>
         /// Wait for the document to be in a "complete" state.
         /// </summary>
-        public void PageLoaded() => _browser.ExecuteJs(PageLoadedScript);
+        public void PageLoaded() => Browser.ExecuteJs(PageLoadedScript);
 
         /// <summary>
         /// Wait for the given condition to be true.
@@ -80,7 +77,7 @@ namespace Bromine.Core
 
             try
             {
-                var wait = new DefaultWait<IWebDriver>(_driver.WebDriver)
+                var wait = new DefaultWait<IWebDriver>(Driver.WebDriver)
                 {
                     Timeout = TimeSpan.FromSeconds(timeToWait),
                     PollingInterval = TimeSpan.FromMilliseconds(250)
@@ -92,7 +89,7 @@ namespace Bromine.Core
             }
             catch (Exception ex)
             {
-                _exceptions.Add(ex);
+                Exceptions.Add(ex);
             }
 
             return result;
@@ -100,8 +97,8 @@ namespace Bromine.Core
 
         private const string PageLoadedScript = "\"return document.readyState\").Equals(\"complete\")";
 
-        private readonly Browser _browser;
-        private Driver _driver => _browser.Driver;
-        private List<Exception> _exceptions => _browser.Exceptions;
+        private Browser Browser { get; }
+        private Driver Driver => Browser.Driver;
+        private List<Exception> Exceptions => Browser.Exceptions;
     }
 }

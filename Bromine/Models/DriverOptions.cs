@@ -17,14 +17,15 @@ namespace Bromine.Models
         /// <param name="isHeadless">When true the UI will not be rendered. This will execute faster.</param>
         /// <param name="secondsToWait">When > 0, Selenium actions will wait up to the specified amount of time in seconds (Implicit Wait).</param>
         /// <param name="remoteAddress">Host address of the Selenium Grid.</param>
-        /// <param name="ScreenShotPath">Location where ScreenShots will be saved. The default is ScreenShots in the directory execution directory.</param>
+        /// <param name="screenShotPath">Location where ScreenShots will be saved. The default is ScreenShots in the directory execution directory.</param>
         /// <param name="useDefaultDriverPath">When true, the driver will be located in the default path. This is required if used with .NET Core.</param>
         /// <param name="hideDriverWindow">Hide the window of the web driver during execution. Drivers may have to be manually closed if not disposed properly.</param>
-        public DriverOptions(BrowserType browser = BrowserType.Chrome, bool isHeadless = false, int secondsToWait = 0, string remoteAddress = "", string ScreenShotPath = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true)
+        public DriverOptions(BrowserType browser = BrowserType.Chrome, bool isHeadless = false, int secondsToWait = 0, string remoteAddress = "", string screenShotPath = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true)
         {
             Browser = browser;
             IsHeadless = isHeadless;
             SecondsToWait = secondsToWait;
+            ScreenShotPath = screenShotPath;
 
             if (!string.IsNullOrWhiteSpace(remoteAddress))
             {

@@ -179,7 +179,6 @@ namespace Bromine.Core
             return byObj;
         }
 
-        private Find Find { get; }
-        private readonly Driver Driver;
+        private Driver Driver { get; }
     }
 }

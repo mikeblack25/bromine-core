@@ -15,15 +15,14 @@ namespace Bromine.Core
         /// <param name="driver">Driver used to navigate.</param>
         public Find(Driver driver)
         {
-            Driver = driver;
-            SeleniumFind = new SeleniumFind(Driver);
+            SeleniumFind = new SeleniumFind(driver);
         }
 
         /// <summary>
         /// Find element by className or classNames.
         /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
-        /// <param name="className">Class name(s) of decendent class elements.</param>
+        /// <param name="className">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
         public Element ElementByClass(params string[] className)
         {
@@ -41,7 +40,7 @@ namespace Bromine.Core
         /// Find elements by className or classNames.
         /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
-        /// <param name="className">Class name(s) of decendent class elements.</param>
+        /// <param name="className">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
         public List<Element> ElementsByClass(params string[] className)
         {
@@ -56,12 +55,12 @@ namespace Bromine.Core
         }
 
         /// <summary>
-        /// Find element by decendent className.
+        /// Find element by descendent className.
         /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
         /// </summary>
-        /// <param name="className">Class name(s) of decendent class elements.</param>
+        /// <param name="className">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
-        public Element ElementByDecendentClass(params string[] className)
+        public Element ElementByDescendentClass(params string[] className)
         {
             var builder = new StringBuilder();
 
@@ -74,12 +73,12 @@ namespace Bromine.Core
         }
 
         /// <summary>
-        /// Find element by decendent className.
+        /// Find element by descendent className.
         /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
         /// </summary>
-        /// <param name="className">Class name(s) of decendent class elements.</param>
+        /// <param name="className">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
-        public List<Element> ElementsByDecendentClass(params string[] className)
+        public List<Element> ElementsByDescendentClass(params string[] className)
         {
             var builder = new StringBuilder();
 
@@ -138,6 +137,5 @@ namespace Bromine.Core
         public List<Element> Elements(string cssSelector) => SeleniumFind.Elements(LocatorStrategy.Css, cssSelector);
 
         private SeleniumFind SeleniumFind { get; }
-        private readonly Driver Driver;
     }
 }
