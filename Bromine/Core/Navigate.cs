@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Bromine.Core
@@ -12,9 +12,11 @@ namespace Bromine.Core
         /// Construct a Navigate object for the given driver type.
         /// </summary>
         /// <param name="driver">Driver used to navigate.</param>
-        public Navigate(Driver driver)
+        /// <param name="log">Log for output messages.</param>
+        public Navigate(Driver driver, Log log)
         {
             _driver = driver;
+            Log = log;
         }
 
         /// <summary>
@@ -26,6 +28,8 @@ namespace Bromine.Core
             try
             {
                 _driver.WebDriver.Navigate().GoToUrl(url);
+                Log.Message($"Navigate to {url}");
+
             }
             catch (Exception ex)
             {
@@ -95,6 +99,7 @@ namespace Bromine.Core
         }
 
         private readonly Driver _driver;
+        private Log Log { get; }
         private List<Exception> Exceptions => _driver.Exceptions;
     }
 }

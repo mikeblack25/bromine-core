@@ -16,6 +16,11 @@ namespace Bromine
     public interface IBrowser : IDisposable
     {
         /// <summary>
+        /// Logging support for uniform reporting.
+        /// </summary>
+        Log Log { get; }
+
+        /// <summary>
         /// Url of the current page.
         /// </summary>
         string Url { get; }
@@ -48,7 +53,7 @@ namespace Bromine
         /// <summary>
         /// Get the driver logs.
         /// </summary>
-        ILogs Logs { get; }
+        ILogs SeleniumLogs { get; }
 
         /// <summary>
         /// Manipulate cookies.

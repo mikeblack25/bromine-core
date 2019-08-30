@@ -25,11 +25,13 @@ namespace Bromine.Core
         /// Provides methods of interacting with the web browser.
         /// </summary>
         /// <param name="options">Provides advanced browser and driver options.</param>
-        public Browser(BrowserOptions options)
+        /// <param name="logLevel">Level of information to log.</param>
+        public Browser(BrowserOptions options, string logLevel = "All")
         {
             Exceptions = new List<Exception>();
             BrowserOptions = options;
 
+            Log = new Log(logLevel);
             Driver = new Driver(BrowserOptions.Driver, Exceptions);
 
             if (options.Driver.ImplicitWaitEnabled)
@@ -39,13 +41,16 @@ namespace Bromine.Core
 
             Find = new Find(Driver);
             SeleniumFind = new SeleniumFind(Driver);
-            Navigate = new Navigate(Driver);
+            Navigate = new Navigate(Driver, Log);
             Window = new Window(Driver);
             ElementStyle = new ElementStyle(this);
             Wait = new Wait(this);
 
             InitializeScreenShotDirectory(options.Driver.ScreenShotPath);
         }
+
+        /// <inheritdoc />
+        public Log Log { get; }
 
         /// <inheritdoc />
         public string Url => Driver.WebDriver.Url;
@@ -57,7 +62,7 @@ namespace Bromine.Core
         public string Source => Driver.WebDriver.PageSource;
 
         /// <inheritdoc />
-        public ILogs Logs => Driver.WebDriver.Manage().Logs;
+        public ILogs SeleniumLogs => Driver.WebDriver.Manage().Logs;
 
         /// <inheritdoc />
         public ICookieJar Cookies => Driver.WebDriver.Manage().Cookies;
