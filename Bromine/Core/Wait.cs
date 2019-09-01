@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Bromine.Core.ElementInteraction;
+
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 

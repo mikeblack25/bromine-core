@@ -5,6 +5,7 @@ using System.Reflection;
 
 using Bromine;
 using Bromine.Core;
+using Bromine.Core.ElementInteraction;
 
 namespace Tests.Bromine.Core
 {

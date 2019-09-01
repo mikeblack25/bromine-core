@@ -1,6 +1,5 @@
-﻿using Bromine.Core;
-using Bromine.Extensions;
-
+﻿using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
 using Tests.Bromine.Common;
 
 using Xunit;

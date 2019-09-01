@@ -1,9 +1,11 @@
 ﻿using System;
 
+using Bromine.Core.ElementLocator;
+
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 
-namespace Bromine.Core
+namespace Bromine.Core.ElementInteraction
 {
     /// <summary>
     /// Add style to WebElements.

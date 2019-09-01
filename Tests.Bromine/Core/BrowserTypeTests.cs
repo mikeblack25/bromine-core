@@ -7,7 +7,6 @@ using Bromine.Models;
 using OpenQA.Selenium;
 
 using Tests.Bromine.Common;
-
 using Xunit;
 using static Xunit.Assert;
 

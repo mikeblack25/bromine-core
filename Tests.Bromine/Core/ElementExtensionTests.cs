@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-using Bromine.Core;
+using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
 
 using Tests.Bromine.Common;
 

@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Web.UI;
 
 using Bromine.Core;
+using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
 using Bromine.Models;
 
 using OpenQA.Selenium;

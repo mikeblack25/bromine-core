@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace Bromine.Core
+using Bromine.Core.ElementInteraction;
+
+namespace Bromine.Core.ElementLocator
 {
     /// <summary>
     /// Find elements on the current page / screen.

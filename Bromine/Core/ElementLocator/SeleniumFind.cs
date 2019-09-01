@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 
+using Bromine.Core.ElementInteraction;
+
 using OpenQA.Selenium;
 
-namespace Bromine.Core
+namespace Bromine.Core.ElementLocator
 {
     /// <summary>
     /// Find elements using Selenium location strategies.
