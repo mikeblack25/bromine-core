@@ -23,7 +23,7 @@ namespace Tests.Bromine.Core
         public ElementExtensionTests()
         {
             Browser.Navigate.ToUrl(TestSites.AmazonUrl);
-            _element = Browser.Find.Element("nav-fill");
+            _element = Browser.Find.Element(".nav-fill");
         }
 
         /// <summary>

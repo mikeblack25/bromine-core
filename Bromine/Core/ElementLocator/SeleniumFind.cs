@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Bromine.Core.ElementInteraction;
 
@@ -114,11 +115,19 @@ namespace Bromine.Core.ElementLocator
         public List<Element> Elements(LocatorStrategy locatorStrategy, string locator)
         {
             var elementsList = new List<Element>();
-            var elements = Driver.WebDriver.FindElements(Element(locatorStrategy, locator));
 
-            foreach (var element in elements)
+            try
             {
-                elementsList.Add(new Element(element, locator, locatorStrategy));
+                var elements = Driver.WebDriver.FindElements(Element(locatorStrategy, locator));
+
+                foreach (var element in elements)
+                {
+                    elementsList.Add(new Element(element, locator, locatorStrategy));
+                }
+            }
+            catch (Exception e)
+            {
+                Driver.Exceptions.Add(e);
             }
 
             return elementsList;
