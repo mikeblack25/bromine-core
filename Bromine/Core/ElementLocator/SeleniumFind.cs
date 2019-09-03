@@ -23,6 +23,11 @@ namespace Bromine.Core.ElementLocator
         }
 
         /// <summary>
+        /// Exceptions.
+        /// </summary>
+        public List<Exception> Exceptions => Driver.Exceptions;
+
+        /// <summary>
         /// Find Element by ID.
         /// </summary>
         /// <param name="id">ID to locate an element.</param>
@@ -41,7 +46,19 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="className">Class name to locate an element.</param>
         /// <returns></returns>
-        public Element ElementByClass(string className) => ElementsByClass(className)[0];
+        public Element ElementByClass(string className)
+        {
+            try
+            {
+                return ElementsByClass(className)[0];
+            }
+            catch (Exception e)
+            {
+                Exceptions.Add(e);
+
+                return new Element();
+            }
+        }
 
         /// <summary>
         /// Find Elements by Class identifier.
@@ -55,7 +72,19 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="cssSelector">CSS Selector to locate an element.</param>
         /// <returns></returns>
-        public Element ElementByCssSelector(string cssSelector) => ElementsByCssSelector(cssSelector)[0];
+        public Element ElementByCssSelector(string cssSelector)
+        {
+            try
+            {
+                return ElementsByCssSelector(cssSelector)[0];
+            }
+            catch (Exception e)
+            {
+                Exceptions.Add(e);
+
+                return new Element();
+            }
+        }
 
         /// <summary>
         /// Find all Elements by CSS selector.
@@ -69,7 +98,19 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="text">Element text of the HTML element to find.</param>
         /// <returns></returns>
-        public Element ElementByText(string text) => ElementsByText(text)[0];
+        public Element ElementByText(string text)
+        {
+            try
+            {
+                return ElementsByText(text)[0];
+            }
+            catch (Exception e)
+            {
+                Exceptions.Add(e);
+
+                return new Element();
+            }
+        }
 
         /// <summary>
         /// Find Elements by text.
@@ -83,7 +124,19 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="partialText">Partial text of the HTML element to find.</param>
         /// <returns></returns>
-        public Element ElementByPartialText(string partialText) => ElementsByPartialText(partialText)[0];
+        public Element ElementByPartialText(string partialText)
+        {
+            try
+            {
+                return ElementsByPartialText(partialText)[0];
+            }
+            catch (Exception e)
+            {
+                Exceptions.Add(e);
+
+                return new Element();
+            }
+        }
 
         /// <summary>
         /// Find Element by partial text.
@@ -97,7 +150,19 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="tag">HTML tag of the element to find.</param>
         /// <returns></returns>
-        public Element ElementByTag(string tag) => ElementsByTag(tag)[0];
+        public Element ElementByTag(string tag)
+        {
+            try
+            {
+                return ElementsByTag(tag)[0];
+            }
+            catch (Exception e)
+            {
+                Exceptions.Add(e);
+
+                return new Element();
+            }
+        }
 
         /// <summary>
         /// Find Elements by tag name.
@@ -110,24 +175,25 @@ namespace Bromine.Core.ElementLocator
         /// Locate elements by locatorStrategy and locator string.
         /// </summary>
         /// <param name="locatorStrategy">How will elements be found?</param>
-        /// <param name="locator">String to locate elements.</param>
+        /// <param name="cssLocator">String to locate elements.</param>
         /// <returns></returns>
-        public List<Element> Elements(LocatorStrategy locatorStrategy, string locator)
+        public List<Element> Elements(LocatorStrategy locatorStrategy, string cssLocator)
         {
             var elementsList = new List<Element>();
 
             try
             {
-                var elements = Driver.WebDriver.FindElements(Element(locatorStrategy, locator));
+                var elements = Driver.WebDriver.FindElements(Element(locatorStrategy, cssLocator));
 
                 foreach (var element in elements)
                 {
-                    elementsList.Add(new Element(element, locator, locatorStrategy));
+                    elementsList.Add(new Element(element, cssLocator, locatorStrategy));
                 }
             }
             catch (Exception e)
             {
                 Driver.Exceptions.Add(e);
+                throw;
             }
 
             return elementsList;

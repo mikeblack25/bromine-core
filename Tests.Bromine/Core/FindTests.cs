@@ -19,7 +19,53 @@ namespace Tests.Bromine.Core
         {
             Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
-        
+
+        /// <summary>
+        /// Find the child element of an element. Both the parent and child elements are located by CSS selector.
+        /// </summary>
+        [Fact]
+        public void FindChildElementTest()
+        {
+            var element = Browser.Find.ChildElement(ParentClassString, InputTagString);
+
+            True(element.Displayed);
+        }
+
+        /// <summary>
+        /// Find the child element of an element. The parent element is passed as an element, and the child element is located by CSS selector.
+        /// </summary>
+        [Fact]
+        public void FindChildElementByElementTest()
+        {
+            var ele = Browser.Find.Element(ParentClassString);
+            var element = Browser.Find.ChildElement(ele, InputTagString);
+
+            True(element.Displayed);
+        }
+
+        /// <summary>
+        /// Find the child elements of an element. Both the parent and child elements are located by CSS selector.
+        /// </summary>
+        [Fact]
+        public void FindChildElementsTest()
+        {
+            var elements = Browser.Find.ChildElements(ParentClassString, InputTagString);
+
+            Equal(2, elements.Count);
+        }
+
+        /// <summary>
+        /// Find the child elements of an element. The parent element is passed as an element, and the child element is located by CSS selector.
+        /// </summary>
+        [Fact]
+        public void FindChildElementsByElementTest()
+        {
+            var ele = Browser.Find.Element(ParentClassString);
+            var elements = Browser.Find.ChildElements(ele, InputTagString);
+
+            Equal(2, elements.Count);
+        }
+
         /// <summary>
         /// Find element with all the following classes.
         /// "gb_ee" "gb_g" "gb_Dg" "gb_ug"
@@ -90,5 +136,7 @@ namespace Tests.Bromine.Core
         private static string CssSelectorString => $"#{IdString}";
         private static string TagString => "div";
         private static string TextString => "Careers";
+        private static string ParentClassString => ".FPdoLc";
+        private static string InputTagString => "input";
     }
 }

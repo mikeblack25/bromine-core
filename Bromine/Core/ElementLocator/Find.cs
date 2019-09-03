@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 using Bromine.Core.ElementInteraction;
@@ -129,7 +130,19 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="cssSelector">Locate element by CSS selector.</param>
         /// <returns></returns>
-        public Element Element(string cssSelector) => SeleniumFind.Elements(LocatorStrategy.Css, cssSelector)[0];
+        public Element Element(string cssSelector)
+        {
+            try
+            {
+                return Elements(cssSelector)[0];
+            }
+            catch (Exception e)
+            {
+                SeleniumFind.Exceptions.Add(e);
+
+                return new Element();
+            }
+        }
 
         /// <summary>
         /// Find Elements by CSS selector.

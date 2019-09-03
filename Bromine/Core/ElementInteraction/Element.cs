@@ -259,7 +259,7 @@ namespace Bromine.Core.ElementInteraction
         /// <summary>
         /// Construct the default behavior of the Element object.
         /// </summary>
-        private Element()
+        internal Element()
         {
             Exceptions = new List<Exception>();
             var stackTrace = new StackTrace();

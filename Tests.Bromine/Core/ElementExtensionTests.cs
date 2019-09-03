@@ -49,9 +49,14 @@ namespace Tests.Bromine.Core
         /// </summary>
         public override void Dispose()
         {
-            InRange(_elementsOfElement.Count, 1, int.MaxValue);
-
-            base.Dispose();
+            try
+            {
+                InRange(_elementsOfElement.Count, 1, int.MaxValue);
+            }
+            finally
+            {
+                base.Dispose();
+            }
         }
 
         private readonly Element _element;
