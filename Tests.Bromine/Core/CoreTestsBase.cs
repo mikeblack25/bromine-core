@@ -5,6 +5,7 @@ using System.Reflection;
 
 using Bromine;
 using Bromine.Core;
+using Bromine.Core.ElementInteraction;
 
 namespace Tests.Bromine.Core
 {
@@ -48,12 +49,7 @@ namespace Tests.Bromine.Core
         /// </summary>
         internal string Amazon => "Amazon";
 
-        internal Element CartButton => Browser.Find.ElementById("nav-cart");
-
-        /// <summary>
-        /// https://www.amazon.com/
-        /// </summary>
-        internal string AmazonUrl => "https://www.amazon.com/";
+        internal Element CartButton => Browser.SeleniumFind.ElementById("nav-cart");
 
         /// <summary>
         /// Dispose of the Browser.

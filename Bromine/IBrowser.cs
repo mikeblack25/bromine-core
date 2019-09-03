@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Web.UI;
 
 using Bromine.Core;
+using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
 using Bromine.Models;
 
 using OpenQA.Selenium;
@@ -75,6 +78,11 @@ namespace Bromine
         Find Find { get; }
 
         /// <summary>
+        /// Helpers to find elements using Selenium location strategies.
+        /// </summary>
+        SeleniumFind SeleniumFind { get; }
+
+        /// <summary>
         /// Helpers to navigate to pages and files.
         /// </summary>
         Navigate Navigate { get; }
@@ -95,6 +103,16 @@ namespace Bromine
         ElementStyle ElementStyle { get; }
 
         /// <summary>
+        /// Tags supported by the HTML standard.
+        /// </summary>
+        HtmlTextWriterTag HtmlTag(HtmlTextWriterTag tag);
+
+        /// <summary>
+        /// Provides Wait behavior using Selenium's DefaultWait class.
+        /// </summary>
+        Wait Wait { get; }
+
+        /// <summary>
         /// Last image saved at the <see cref="ScreenShotDirectory"/>.
         /// </summary>
         Image LastImage { get; }
@@ -108,14 +126,6 @@ namespace Bromine
         /// Namespace of the Selenium driver being used by the browser.
         /// </summary>
         string Information { get; }
-
-        /// <summary>
-        /// Wait for a given condition to be true.
-        /// </summary>
-        /// <param name="condition">Condition to check every 250 ms for the specified wait time.</param>
-        /// <param name="timeToWait">Time in seconds to wait for the condition to be satisfied.</param>
-        /// <returns></returns>
-        bool Wait(Func<bool> condition, int timeToWait = 1);
 
         /// <summary>
         /// Take a ScreenShot of requested element.

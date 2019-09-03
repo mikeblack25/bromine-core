@@ -1,7 +1,8 @@
-﻿using Bromine.Core;
+﻿using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
+using Tests.Bromine.Common;
 
 using Xunit;
-
 using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
@@ -12,55 +13,99 @@ namespace Tests.Bromine.Core
     /// </summary>
     public class ElementStyleTests : CoreTestsBase
     {
-        /// <summary>
-        /// Verify borders can be added to elements.
-        /// </summary>
-        [InlineData("gNO89b", "Red", LocatorType.Class)]
-        [Theory]
-        public void AddBorders(string locator, string color, LocatorType locatorStrategy)
+        /// <inheritdoc />
+        public ElementStyleTests()
         {
-            Browser.Navigate.ToUrl("https://www.google.com");
-
-            DoesNotContain(color.ToLower(), GetStyle(locator, locatorStrategy).ToLower());
-
-            Browser.ElementStyle.AddBorders(locatorStrategy, locator, color);
-
-            Contains(color.ToLower(), GetStyle(locator, locatorStrategy).ToLower());
+            Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
 
         /// <summary>
         /// Verify a border can be added t oan element.
         /// </summary>
-        /// <param name="locator"></param>
-        /// <param name="color"></param>
-        /// <param name="locatorStrategy"></param>
-        [InlineData("gbqfbb", "Black", LocatorType.Id)]
+        /// <param name="locator">String used to locate the element.</param>
+        /// <param name="color">Element border color.</param>
+        [InlineData(IdLocatorString, BlackString)]
         [Theory]
-        public void AddBorder(string locator, string color, LocatorType locatorStrategy)
+        public void AddBorder(string locator, string color)
         {
-            Browser.Navigate.ToUrl("https://www.google.com");
+            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
 
-            DoesNotContain(color.ToLower(), GetStyle(locator, locatorStrategy).ToLower());
+            Browser.ElementStyle.AddBorder(LocatorStrategy.Id, locator, color);
 
-            Browser.ElementStyle.AddBorder(locatorStrategy, locator, color);
-
-            Contains(color.ToLower(), GetStyle(locator, locatorStrategy).ToLower());
+            Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
         }
 
-        private string GetStyle(string locator, LocatorType locatorStrategy)
+        /// <summary>
+        /// Verify a border can be added to an element.
+        /// </summary>
+        /// <param name="locator">String used to locate the element.</param>
+        /// <param name="color">Element border color.</param>
+        [InlineData(IdLocatorString, BlackString)]
+        [Theory]
+        public void AddBorderToElement(string locator, string color)
+        {
+            var element = Browser.Find.Element(locator.Id());
+
+            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
+
+            Browser.ElementStyle.AddBorder(element, color);
+
+            Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
+        }
+
+        /// <summary>
+        /// Verify borders can be added to elements.
+        /// </summary>
+        /// <param name="locator">String used to locate the element.</param>
+        /// <param name="color">Element border color.</param>
+        [InlineData(ClassLocatorString, RedString)]
+        [Theory]
+        public void AddBorders(string locator, string color)
+        {
+            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
+
+            Browser.ElementStyle.AddBorders(LocatorStrategy.Class, locator, color);
+
+            Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
+        }
+
+        /// <summary>
+        /// Verify borders can be added to elements.
+        /// </summary>
+        /// <param name="locator">String used to locate the element.</param>
+        /// <param name="color">Element border color.</param>
+        [InlineData(ClassLocatorString, RedString)]
+        [Theory]
+        public void AddBordersToElement(string locator, string color)
+        {
+            var element = Browser.Find.Element(locator.Class());
+
+            DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
+
+            Browser.ElementStyle.AddBorders(element, color);
+
+            Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
+        }
+
+        private string GetStyle(string locator, LocatorStrategy locatorStrategy)
         {
             Element element = null;
 
-            if (locatorStrategy == LocatorType.Class)
+            if (locatorStrategy == LocatorStrategy.Class)
             {
-                element = Browser.Find.ElementByClass(locator);
+                element = Browser.Find.Element(locator.Class());
             }
-            else if (locatorStrategy == LocatorType.Id)
+            else if (locatorStrategy == LocatorStrategy.Id)
             {
-                element = Browser.Find.ElementById(locator);
+                element = Browser.Find.Element(locator.Id());
             }
 
             return Browser.ElementStyle.GetStyleAttribute(element);
         }
+
+        private const string RedString = "Red";
+        private const string BlackString = "Black";
+        private const string ClassLocatorString = "gNO89b";
+        private const string IdLocatorString = "gbqfbb";
     }
 }

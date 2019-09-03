@@ -1,13 +1,13 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 
 using Bromine.Constants;
 using Bromine.Core;
 using Bromine.Models;
 
-using Xunit;
+using Tests.Bromine.Common;
 
+using Xunit;
 using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
@@ -19,14 +19,14 @@ namespace Tests.Bromine.Core
     public class BrowserTests : CoreTestsBase
     {
         /// <summary>
-        /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
+        /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Verify Browser.Source contains <see cref="CoreTestsBase.Amazon" />.
         /// Verify Browser.Title contains <see cref="CoreTestsBase.Amazon" />.
         /// </summary>
         [Fact]
         public void VerifySourceAndTitle()
         {
-            Browser.Navigate.ToUrl(AmazonUrl);
+            Browser.Navigate.ToUrl(TestSites.AmazonUrl);
 
             Contains(Amazon, Browser.Source);
             Contains(Amazon, Browser.Title);
@@ -34,7 +34,7 @@ namespace Tests.Bromine.Core
 
         /// <summary>
         /// Dispose of the default browser and create a new Browser in the test to verify A browser can be created with a reference to another image save path.
-        /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
+        /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Take a ScreenShot of the visible page.
         /// Verify the file <see cref="Browser.ScreenShotDirectory"/> exists.
         /// Delete the file located <see cref="Browser.ScreenShotDirectory"/>.
@@ -54,7 +54,7 @@ namespace Tests.Bromine.Core
 
             DeleteInitialImage(name);
 
-            browser.Navigate.ToUrl(AmazonUrl);
+            browser.Navigate.ToUrl(TestSites.AmazonUrl);
             browser.TakeVisibleScreenShot(name);
 
             True(File.Exists(browser.ScreenShotPath), $"Unable to find the expected ScreenShot at {browser.ScreenShotPath}");
@@ -63,7 +63,7 @@ namespace Tests.Bromine.Core
         }
 
         /// <summary>
-        /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
+        /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Take a ScreenShot of the visible page.
         /// Take a ScreenShot of a region of the screen with a width and height of 50 pixels.
         /// Verify the saved image <see cref="Browser.LastImageSize"/> is the expected size.
@@ -79,7 +79,7 @@ namespace Tests.Bromine.Core
             const string name = "Amazon Region ScreenShot";
             DeleteInitialImage(name);
 
-            Browser.Navigate.ToUrl(AmazonUrl);
+            Browser.Navigate.ToUrl(TestSites.AmazonUrl);
 
             Browser.TakeRegionScreenShot(name, region);
 
@@ -87,7 +87,7 @@ namespace Tests.Bromine.Core
         }
 
         /// <summary>
-        /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
+        /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Maximize window to find the element in question.
         /// Take a ScreenShot of the element on the page.
         /// Verify the saved image <see cref="Browser.LastImageSize"/> is the expected size.
@@ -101,7 +101,7 @@ namespace Tests.Bromine.Core
             const string name = "Amazon Element ScreenShot";
             DeleteInitialImage(name);
 
-            Browser.Navigate.ToUrl(AmazonUrl);
+            Browser.Navigate.ToUrl(TestSites.AmazonUrl);
 
             Browser.Window.Maximize();
 
@@ -111,7 +111,7 @@ namespace Tests.Bromine.Core
         }
 
         /// <summary>
-        /// Navigate to <see cref="CoreTestsBase.AmazonUrl"/>.
+        /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Try to save a ScreenShot to an invalid name.
         /// Verify <see cref="Browser.Exceptions"/> is not empty trying to save an invalid file name.>
         /// Verify <see cref="Browser.LastImage"/> returns null and an exception is logged when an invalid path is selected.
@@ -121,7 +121,7 @@ namespace Tests.Bromine.Core
         {
             Empty(Browser.Exceptions);
 
-            Browser.Navigate.ToUrl(AmazonUrl);
+            Browser.Navigate.ToUrl(TestSites.AmazonUrl);
             Browser.TakeVisibleScreenShot(@"-\\\\--");
 
             NotEmpty(Browser.Exceptions);
@@ -171,29 +171,6 @@ namespace Tests.Bromine.Core
             Browser.Window.Position = position;
 
             Equal(position, Browser.Window.Position);
-        }
-
-        /// <summary>
-        /// Verify the browser can wait for conditions for the time specified and that Exceptions are logged when the expected conditions are not met.
-        /// </summary>
-        [Fact]
-        public void VerifyBrowserWait()
-        {
-            Empty(Browser.Exceptions);
-            False(Browser.Wait(() => false));
-            NotEmpty(Browser.Exceptions);
-
-            var startTime = DateTime.Now;
-            const int timeToWait = 5;
-
-            Browser.Wait(() => false, timeToWait);
-
-            InRange(DateTime.Now, startTime.AddSeconds(timeToWait - 1), startTime.AddSeconds(timeToWait + 1));
-
-            var exceptionCount = Browser.Exceptions.Count;
-
-            True(Browser.Wait(() => true));
-            Equal(exceptionCount, Browser.Exceptions.Count);
         }
 
         private void DeleteInitialImage(string name)

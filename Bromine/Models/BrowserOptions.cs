@@ -29,11 +29,11 @@ namespace Bromine.Models
         /// <param name="isHeadless"><see cref="DriverOptions.IsHeadless"/></param>
         /// <param name="secondsToWait"><see cref="DriverOptions.SecondsToWait"/></param>
         /// <param name="remoteAddress"><see cref="DriverOptions.RemoteAddress"/></param>
-        /// <param name="ScreenShotPath"><see cref="DriverOptions.ScreenShotPath"/></param>
+        /// <param name="screenShotPath"><see cref="DriverOptions.ScreenShotPath"/></param>
         /// <param name="useDefaultDriverPath"><see cref="DriverOptions.UseDefaultDriverPath"/></param>
         /// <param name="hideDriverWindow"><see cref="DriverOptions.HideDriverWindow"/></param>
-        public BrowserOptions(BrowserType browser, bool isHeadless, int secondsToWait = 0, string remoteAddress = "", string ScreenShotPath = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true)
-        : this(new DriverOptions(browser, isHeadless, secondsToWait, remoteAddress, ScreenShotPath, useDefaultDriverPath, hideDriverWindow))
+        public BrowserOptions(BrowserType browser, bool isHeadless, int secondsToWait = 0, string remoteAddress = "", string screenShotPath = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true)
+        : this(new DriverOptions(browser, isHeadless, secondsToWait, remoteAddress, screenShotPath, useDefaultDriverPath, hideDriverWindow))
         {
         }
 

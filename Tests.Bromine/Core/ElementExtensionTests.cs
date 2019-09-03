@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 
-using Bromine.Core;
+using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
+
+using Tests.Bromine.Common;
 
 using Xunit;
-
 using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
@@ -20,8 +22,8 @@ namespace Tests.Bromine.Core
         /// </summary>
         public ElementExtensionTests()
         {
-            Browser.Navigate.ToUrl(AmazonUrl);
-            _element = Browser.Find.ElementByClass("nav-fill");
+            Browser.Navigate.ToUrl(TestSites.AmazonUrl);
+            _element = Browser.Find.Element(".nav-fill");
         }
 
         /// <summary>
@@ -30,7 +32,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyFindElementsOfElement()
         {
-            _elementsOfElement = _element.FindElements(LocatorType.Tag, "div");
+            _elementsOfElement = _element.FindElements(LocatorStrategy.Tag, "div");
         }
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyFindElementOfElement()
         {
-            _elementsOfElement = new List<Element> {_element.FindElement(LocatorType.Tag, "div")};
+            _elementsOfElement = new List<Element> {_element.FindElement(LocatorStrategy.Tag, "div")};
         }
 
         /// <summary>
@@ -47,9 +49,14 @@ namespace Tests.Bromine.Core
         /// </summary>
         public override void Dispose()
         {
-            InRange(_elementsOfElement.Count, 1, int.MaxValue);
-
-            base.Dispose();
+            try
+            {
+                InRange(_elementsOfElement.Count, 1, int.MaxValue);
+            }
+            finally
+            {
+                base.Dispose();
+            }
         }
 
         private readonly Element _element;

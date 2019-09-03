@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Web.UI;
 
+using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
 using Bromine.Models;
 
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
 
 namespace Bromine.Core
 {
@@ -38,9 +40,11 @@ namespace Bromine.Core
             }
 
             Find = new Find(Driver);
+            SeleniumFind = new SeleniumFind(Driver);
             Navigate = new Navigate(Driver);
             Window = new Window(Driver);
             ElementStyle = new ElementStyle(this);
+            Wait = new Wait(this);
 
             InitializeScreenShotDirectory(options.Driver.ScreenShotPath);
         }
@@ -73,6 +77,9 @@ namespace Bromine.Core
         public Find Find { get; }
 
         /// <inheritdoc />
+        public SeleniumFind SeleniumFind { get; }
+
+        /// <inheritdoc />
         public Navigate Navigate { get; }
 
         /// <inheritdoc />
@@ -83,6 +90,12 @@ namespace Bromine.Core
 
         /// <inheritdoc />
         public ElementStyle ElementStyle { get; }
+
+        /// <inheritdoc />
+        public HtmlTextWriterTag HtmlTag(HtmlTextWriterTag tag) => tag;
+
+        /// <inheritdoc />
+        public Wait Wait { get; }
 
         /// <inheritdoc />
         public string ScreenShotDirectory => _screenShotDirectory;
@@ -137,31 +150,6 @@ namespace Bromine.Core
         internal Driver Driver { get; }
 
         /// <inheritdoc />
-        public bool Wait(Func<bool> condition, int timeToWait = 1)
-        {
-            var result = false;
-
-            try
-            {
-                var wait = new DefaultWait<IWebDriver>(Driver.WebDriver)
-                {
-                    Timeout = TimeSpan.FromSeconds(timeToWait),
-                    PollingInterval = TimeSpan.FromMilliseconds(250)
-                };
-
-                wait.Until(x => condition());
-
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                Exceptions.Add(ex);
-            }
-
-            return result;
-        }
-
-        /// <inheritdoc />
         public void TakeElementScreenShot(string name, Element element)
         {
             TakeRegionScreenShot(name, new Rectangle(element.Location, element.Size));
@@ -202,7 +190,7 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
-        public object ExecuteJs(string script, object[] arguments)
+        public object ExecuteJs(string script, params object[] arguments)
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
             var js = Driver as IJavaScriptExecutor;

@@ -17,7 +17,7 @@ namespace Bromine.Core
         /// <param name="driver">Driver used to navigate.</param>
         public Window(Driver driver)
         {
-            _driver = driver;
+            Driver = driver;
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace Bromine.Core
         }
 
         /// <summary>
-        /// <see cref="Driver.Exceptions"/>
+        /// <see cref="Core.Driver.Exceptions"/>
         /// </summary>
-        public List<Exception> Exceptions => _driver.Exceptions;
+        public List<Exception> Exceptions => Driver.Exceptions;
 
         /// <summary>
         /// Maximize the window.
@@ -108,7 +108,7 @@ namespace Bromine.Core
             }
         }
 
-        private readonly Driver _driver;     
-        private IWindow BrowserWindow => _driver.WebDriver.Manage().Window;
+        private Driver Driver { get; }
+        private IWindow BrowserWindow => Driver.WebDriver.Manage().Window;
     }
 }

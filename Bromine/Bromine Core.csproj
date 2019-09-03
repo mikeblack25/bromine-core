@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,11 +58,17 @@
     <Compile Include="Constants\BrowserType.cs" />
     <Compile Include="Core\Browser.cs" />
     <Compile Include="Core\Driver.cs" />
-    <Compile Include="Core\Element.cs" />
-    <Compile Include="Core\ElementStyle.cs" />
-    <Compile Include="Core\Find.cs" />
+    <Compile Include="Core\ElementInteraction\CallingInformation.cs" />
+    <Compile Include="Core\ElementLocator\LocatorStrategy.cs" />
+    <Compile Include="Core\ElementLocator\Find.cs" />
     <Compile Include="Core\Navigate.cs" />
+    <Compile Include="Core\ElementLocator\SeleniumFind.cs" />
+    <Compile Include="Core\Wait.cs" />
     <Compile Include="Core\Window.cs" />
+    <Compile Include="Core\ElementInteraction\Element.cs" />
+    <Compile Include="Core\ElementInteraction\ElementExtensions.cs" />
+    <Compile Include="Core\ElementInteraction\ElementStyle.cs" />
+    <Compile Include="Core\ElementInteraction\CssFormatExtensions.cs" />
     <Compile Include="IBrowser.cs" />
     <Compile Include="Models\BrowserOptions.cs" />
     <Compile Include="Models\DriverOptions.cs" />
@@ -80,9 +87,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\packages\Selenium.WebDriver.MicrosoftDriver.17.17134.0\build\Selenium.WebDriver.MicrosoftDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\Selenium.WebDriver.MicrosoftDriver.17.17134.0\build\Selenium.WebDriver.MicrosoftDriver.targets'))" />
     <Error Condition="!Exists('$(SolutionDir)\packages\Selenium.Firefox.WebDriver.0.24.0\build\Selenium.Firefox.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\Selenium.Firefox.WebDriver.0.24.0\build\Selenium.Firefox.WebDriver.targets'))" />
-    <Error Condition="!Exists('$(SolutionDir)\packages\Selenium.WebDriver.ChromeDriver.76.0.3809.6801\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\Selenium.WebDriver.ChromeDriver.74.0.3729.6\build\Selenium.WebDriver.ChromeDriver.targets'))" />
+    <Error Condition="!Exists('$(SolutionDir)\packages\Selenium.WebDriver.ChromeDriver.76.0.3809.6801\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\Selenium.WebDriver.ChromeDriver.76.0.3809.6801\build\Selenium.WebDriver.ChromeDriver.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\packages\Selenium.WebDriver.MicrosoftDriver.17.17134.0\build\Selenium.WebDriver.MicrosoftDriver.targets" Condition="Exists('$(SolutionDir)\packages\Selenium.WebDriver.MicrosoftDriver.17.17134.0\build\Selenium.WebDriver.MicrosoftDriver.targets')" />
   <Import Project="$(SolutionDir)\packages\Selenium.Firefox.WebDriver.0.24.0\build\Selenium.Firefox.WebDriver.targets" Condition="Exists('$(SolutionDir)\packages\Selenium.Firefox.WebDriver.0.24.0\build\Selenium.Firefox.WebDriver.targets')" />
-  <Import Project="$(SolutionDir)\packages\Selenium.WebDriver.ChromeDriver.76.0.3809.6801\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('$(SolutionDir)\packages\Selenium.WebDriver.ChromeDriver.74.0.3729.6\build\Selenium.WebDriver.ChromeDriver.targets')" />
+  <Import Project="$(SolutionDir)\packages\Selenium.WebDriver.ChromeDriver.76.0.3809.6801\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('$(SolutionDir)\packages\Selenium.WebDriver.ChromeDriver.76.0.3809.6801\build\Selenium.WebDriver.ChromeDriver.targets')" />
 </Project>

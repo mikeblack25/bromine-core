@@ -1,5 +1,6 @@
-﻿using Xunit;
+﻿using Tests.Bromine.Common;
 
+using Xunit;
 using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
@@ -16,61 +17,107 @@ namespace Tests.Bromine.Core
         /// </summary>
         public FindTests()
         {
-            Browser.Navigate.ToFile($@"{BasePath}\{AmazonHome}");
+            Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
 
         /// <summary>
-        /// Find element by id.
+        /// Find the child element of an element. Both the parent and child elements are located by CSS selector.
         /// </summary>
         [Fact]
-        public void FindElementsByIdTest()
+        public void FindChildElementTest()
         {
-            Browser.Find.ElementById(IdString);
+            var element = Browser.Find.ChildElement(ParentClassString, InputTagString);
+
+            True(element.Displayed);
         }
 
         /// <summary>
-        /// Find element by class.
+        /// Find the child element of an element. The parent element is passed as an element, and the child element is located by CSS selector.
         /// </summary>
         [Fact]
-        public void FindElementsByClassTest()
+        public void FindChildElementByElementTest()
         {
-            Browser.Find.ElementByClass(ClassString);
+            var ele = Browser.Find.Element(ParentClassString);
+            var element = Browser.Find.ChildElement(ele, InputTagString);
+
+            True(element.Displayed);
         }
 
         /// <summary>
-        /// Find element by CSS.
+        /// Find the child elements of an element. Both the parent and child elements are located by CSS selector.
         /// </summary>
         [Fact]
-        public void FindElementsByCssTest()
+        public void FindChildElementsTest()
         {
-            Browser.Find.ElementByCssSelector(CssSelectorString);
+            var elements = Browser.Find.ChildElements(ParentClassString, InputTagString);
+
+            Equal(2, elements.Count);
         }
 
         /// <summary>
-        /// Find element by tag.
+        /// Find the child elements of an element. The parent element is passed as an element, and the child element is located by CSS selector.
         /// </summary>
         [Fact]
-        public void FindElementsByTagTest()
+        public void FindChildElementsByElementTest()
         {
-            Browser.Find.ElementByTag(TagString);
+            var ele = Browser.Find.Element(ParentClassString);
+            var elements = Browser.Find.ChildElements(ele, InputTagString);
+
+            Equal(2, elements.Count);
         }
 
         /// <summary>
-        /// Find element by text.
+        /// Find element with all the following classes.
+        /// "gb_ee" "gb_g" "gb_Dg" "gb_ug"
         /// </summary>
         [Fact]
-        public void FindElementsByTextTest()
+        public void FindElementByClassesTest()
         {
-            Browser.Find.ElementByText(TextString);
+            var element = Browser.Find.ElementByClasses("gb_ee", "gb_g", "gb_Dg", "gb_ug");
+
+            True(element.Displayed);
         }
 
         /// <summary>
-        /// Find element by partial text.
+        /// Find the elements with all the following classes.
+        /// "gb_f" "gb_g"
         /// </summary>
         [Fact]
-        public void FindElementsByPartialTextTest()
+        public void FindElementsByClassesTest()
         {
-            Browser.Find.ElementByPartialText(TextString.Substring(2));
+            var elements = Browser.Find.ElementsByClasses("gb_f", "gb_g");
+
+            Equal(2, elements.Count);
+        }
+
+        /// <summary>
+        /// Find element by nested classes.
+        /// class -> gb_ee
+        ///   class -> gb_f
+        ///     class -> gb_e
+        /// </summary>
+        [Fact]
+        public void FindElementByDescendentClassTest()
+        {
+            const string gmailString = "Gmail";
+
+            var element = Browser.Find.ElementByDescendentClass("gb_ee", "gb_f", "gb_e");
+
+            Equal(gmailString, element.Text);
+        }
+
+        /// <summary>
+        /// Find elements by nested classes.
+        /// class -> gb_ee
+        ///   class -> gb_f
+        ///   class -> gb_f
+        /// </summary>
+        [Fact]
+        public void FindElementsByDescendentClassTest()
+        {
+            var elements = Browser.Find.ElementsByDescendentClass("gb_ee", "gb_f");
+
+            Equal(2, elements.Count);
         }
 
         /// <summary>
@@ -89,5 +136,7 @@ namespace Tests.Bromine.Core
         private static string CssSelectorString => $"#{IdString}";
         private static string TagString => "div";
         private static string TextString => "Careers";
+        private static string ParentClassString => ".FPdoLc";
+        private static string InputTagString => "input";
     }
 }
