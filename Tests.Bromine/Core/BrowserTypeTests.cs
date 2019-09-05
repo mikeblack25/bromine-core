@@ -4,9 +4,8 @@ using Bromine.Constants;
 using Bromine.Core;
 using Bromine.Models;
 
-using OpenQA.Selenium;
-
 using Tests.Bromine.Common;
+
 using Xunit;
 using static Xunit.Assert;
 
@@ -17,7 +16,7 @@ namespace Tests.Bromine.Core
     /// <summary>
     /// Tests to verify browser types and advanced browser configurations.
     /// </summary>
-    public class BrowserTypeTests
+    public class BrowserTypeTests : IDisposable
     {
         /// <summary>
         /// Test a Chrome browser can be created in both normal and headless (no UI) mode.
@@ -47,6 +46,42 @@ namespace Tests.Bromine.Core
             VerifyBrowser(browser, isHeadless);
         }
 
+        /// <summary>
+        /// Test a Chrome browser can be created on a remote machine in both normal and headless (no UI) mode.
+        /// </summary>
+        /// <param name="browser"></param>
+        /// <param name="isHeadless"></param>
+        [Trait(Category.Browser, Category.Chrome), Trait(Category.Browser, Category.Remote)]
+        [Theory]
+        [InlineData(BrowserType.Chrome)]
+        [InlineData(BrowserType.Chrome, true)]
+        public void InitializeRemoteChromeBrowserTest(BrowserType browser, bool isHeadless = false)
+        {
+            VerifyRemoteBrowser(browser, isHeadless);
+        }
+
+        /// <summary>
+        /// Test a Firefox browser can be created on a remote machine in both normal and headless (no UI) mode.
+        /// </summary>
+        /// <param name="browser"></param>
+        /// <param name="isHeadless"></param>
+        [Trait(Category.Browser, Category.Firefox), Trait(Category.Browser, Category.Remote)]
+        [Theory]
+        [InlineData(BrowserType.Firefox)]
+        [InlineData(BrowserType.Firefox, true)]
+        public void InitializeRemoteFirefoxBrowserTest(BrowserType browser, bool isHeadless = false)
+        {
+            VerifyRemoteBrowser(browser, isHeadless);
+        }
+
+        /// <summary>
+        /// Dispose of the browser.
+        /// </summary>
+        public void Dispose()
+        {
+            Browser.Dispose();
+        }
+
         private void VerifyBrowser(BrowserType browser, bool isHeadless)
         {
             BrowserInit(new DriverOptions(browser, isHeadless));
@@ -54,55 +89,26 @@ namespace Tests.Bromine.Core
             Contains(browser.ToString(), Browser.Information);
         }
 
+        private void VerifyRemoteBrowser(BrowserType browser, bool isHeadless)
+        {
+            var browserOptions = new BrowserOptions(browser, isHeadless, 0, RemoteAddress);
+
+            Browser = new Browser(browserOptions);
+
+            Browser.Navigate.ToUrl(TestSites.GoogleUrl);
+        }
+
         private void BrowserInit(DriverOptions driverOptions)
         {
             var browserOptions = new BrowserOptions(driverOptions);
 
-            try
-            {
-                Browser = new Browser(browserOptions);
+            Browser = new Browser(browserOptions);
 
-                Browser.Navigate.ToUrl(TestSites.GoogleUrl);
-
-                Equal(TestSites.GoogleUrl, Browser.Url);
-            }
-            catch (WebDriverException e)
-            {
-                // The driver is not loaded on the computer.
-                if (e.Message.Contains("Cannot start the driver service on"))
-                {
-                    Browser.Exceptions.Add(e);
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            catch (InvalidOperationException e)
-            {
-                // The driver is not loaded on the computer.
-                if (e.Message.Contains(
-                    "Expected browser binary location, but unable to find binary in default location"))
-                {
-                    Browser.Exceptions.Add(e);
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            catch (Exception e)
-            {
-                Browser.Exceptions.Add(e);
-
-                throw;
-            }
-            finally
-            {
-                Browser?.Dispose();
-            }
+            Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
 
         private Browser Browser { get; set; }
+
+        private const string RemoteAddress = "localhost:4444";
     }
 }
