@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 
@@ -33,30 +32,7 @@ namespace Bromine.Core
             Options = options;
             Exceptions = exceptions;
 
-            switch (options.Browser)
-            {
-                case BrowserType.Chrome:
-                    {
-                        WebDriver = InitializeChromeDriver(options);
-                        break;
-                    }
-                case BrowserType.Edge:
-                    {
-                        // TODO: If isHeadless = true Log message not supported.
-                        WebDriver = InitializeEdgeDriver(options.HideDriverWindow);
-                        break;
-                    }
-                case BrowserType.Firefox:
-                    {
-                        WebDriver = InitializeFirefoxDriver(options.IsHeadless, options.HideDriverWindow);
-                        break;
-                    }
-                default:
-                    {
-                        Exceptions.Add(new InvalidEnumArgumentException($"{options.Browser} is not a supported Browser type"));
-                        break;
-                    }
-            }
+            WebDriver = InitializeDriver();
         }
 
         /// <summary>
@@ -91,6 +67,35 @@ namespace Bromine.Core
         internal IWebDriver WebDriver { get; }
 
         /// <summary>
+        /// Initialize the browser from the class instance of <see cref="Options"/>.
+        /// </summary>
+        public IWebDriver InitializeDriver()
+        {
+            switch (Options.Browser)
+            {
+                case BrowserType.Chrome:
+                {
+                    return Options.IsRemoteDriver ? InitializeRemoteDriver(GetChromeOptions()) : InitializeChromeDriver();
+                }
+                case BrowserType.Edge:
+                {
+                    return Options.IsRemoteDriver ? InitializeRemoteDriver(GetEdgeOptions()) : InitializeEdgeDriver();
+                }
+                case BrowserType.Firefox:
+                {
+                    return Options.IsRemoteDriver ? InitializeRemoteDriver(GetFirefoxOptions()) : InitializeFirefoxDriver();
+                }
+                default:
+                {
+                    var exception = new Exception($"{Options.Browser} is not a supported Browser type");
+                    Exceptions.Add(exception);
+
+                    throw exception;
+                }
+            }
+        }
+
+        /// <summary>
         /// Close the Browser and WebDriver.
         /// </summary>
         // ReSharper disable once InheritdocConsiderUsage
@@ -111,105 +116,121 @@ namespace Bromine.Core
             }
         }
 
+        #region Chrome
         /// <summary>
         /// Get a Chrome browser driver.
         /// </summary>
-        /// <param name="driverOptions">Provide driver configuration options.</param>
         /// <returns></returns>
-        private IWebDriver InitializeChromeDriver(DriverOptions driverOptions)
+        private IWebDriver InitializeChromeDriver()
+        {
+            var options = GetChromeOptions();
+
+            try
+            {
+                return !Options.UseDefaultDriverPath ? new ChromeDriver(StartChromeDriverService(), options) : new ChromeDriver(DefaultPath, options);
+            }
+            catch (Exception e)
+            {
+                Exceptions.Add(e);
+                Dispose();
+
+                throw;
+            }
+        }
+
+        private ChromeOptions GetChromeOptions()
         {
             var options = new ChromeOptions();
             options.AddArgument("--allow-file-access-from-files");
 
-            if (driverOptions.IsHeadless)
+            if (Options.IsHeadless)
             {
                 options.AddArgument(HeadlessFlagString);
             }
 
-            try
-            {
-                if (!driverOptions.UseDefaultDriverPath)
-                {
-                    DriverService = ChromeDriverService.CreateDefaultService();
-
-                    if (driverOptions.HideDriverWindow)
-                    {
-                        DriverService.HideCommandPromptWindow = true;
-                    }
-
-                    DriverService.HideCommandPromptWindow = true;
-
-                    return !Options.IsRemoteDriver ? new ChromeDriver((ChromeDriverService)DriverService, options) : new RemoteWebDriver(options);
-                }
-                else
-                {
-                    var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-                    return !Options.IsRemoteDriver ? new ChromeDriver(path, options) : new RemoteWebDriver(options);
-                }
-
-            }
-            catch (Exception e)
-            {
-                Exceptions.Add(e);
-                Dispose();
-
-                throw;
-            }
+            return options;
         }
 
+        /// <summary>
+        /// TODO: This is coupling the Driver service with the default driver path. This should be split.
+        /// </summary>
+        /// <returns></returns>
+        private ChromeDriverService StartChromeDriverService()
+        {
+            if (!Options.UseDefaultDriverPath)
+            {
+                DriverService = ChromeDriverService.CreateDefaultService();
+
+                if (Options.HideDriverWindow)
+                {
+                    DriverService.HideCommandPromptWindow = true;
+                }
+
+                return (ChromeDriverService) DriverService;
+            }
+
+            var exception = new Exception("StartChromeDriverService should only be called when !Options.UseDefaultDriverPath");
+            Exceptions.Add(exception);
+
+            throw exception;
+        }
+        #endregion
+
+        #region Firefox
         /// <summary>
         /// Get a Firefox browser driver.
         /// </summary>
-        /// <param name="hideDriverWindow">If true do not display the Web Driver dialog.</param>
-        /// <param name="isHeadless">If true do not render the browser UI. This is faster and takes less resources.</param>
         /// <returns></returns>
-        private IWebDriver InitializeFirefoxDriver(bool isHeadless = false, bool hideDriverWindow = true)
+        private IWebDriver InitializeFirefoxDriver()
+        {
+            try
+            {
+                return new FirefoxDriver(GetFirefoxDriverService(), GetFirefoxOptions());
+            }
+            catch (Exception e)
+            {
+                Exceptions.Add(e);
+                Dispose();
+
+                throw;
+            }
+        }
+
+        private FirefoxOptions GetFirefoxOptions()
         {
             var options = new FirefoxOptions();
-            DriverService = FirefoxDriverService.CreateDefaultService();
 
-            if (hideDriverWindow)
-            {
-                DriverService.HideCommandPromptWindow = true;
-            }
-
-            if (isHeadless)
+            if (Options.IsHeadless)
             {
                 options.AddArgument(HeadlessFlagString);
             }
 
-            try
-            {
-                return !Options.IsRemoteDriver ? new FirefoxDriver((FirefoxDriverService)DriverService, options) : new RemoteWebDriver(options);
-            }
-            catch (Exception e)
-            {
-                Exceptions.Add(e);
-                Dispose();
-
-                throw;
-            }
+            return options;
         }
 
-        /// <summary>
-        /// Get a Edge browser driver.
-        /// </summary>
-        /// <param name="hideDriverWindow">If true do not display the Web Driver dialog.</param>
-        /// <returns></returns>
-        private IWebDriver InitializeEdgeDriver(bool hideDriverWindow = true)
+        private FirefoxDriverService GetFirefoxDriverService()
         {
-            var options = new EdgeOptions();
-            DriverService = EdgeDriverService.CreateDefaultService();
+            DriverService = FirefoxDriverService.CreateDefaultService();
 
-            if (hideDriverWindow)
+            if (Options.HideDriverWindow)
             {
                 DriverService.HideCommandPromptWindow = true;
             }
 
+            return (FirefoxDriverService) DriverService;
+        }
+        #endregion
+
+        #region Edge
+        /// <summary>
+        /// Get a Edge browser driver.
+        /// </summary>
+        /// <returns></returns>
+        private IWebDriver InitializeEdgeDriver()
+        {
             try
             {
-                return !Options.IsRemoteDriver ? new EdgeDriver((EdgeDriverService)DriverService, options) : new RemoteWebDriver(options);
+                return new EdgeDriver(GetEdgeDriverService(), GetEdgeOptions());
             }
             catch (Exception e)
             {
@@ -220,6 +241,24 @@ namespace Bromine.Core
             }
         }
 
+        private EdgeOptions GetEdgeOptions() => new EdgeOptions();
+
+        private EdgeDriverService GetEdgeDriverService()
+        {
+            DriverService = EdgeDriverService.CreateDefaultService();
+
+            if (Options.HideDriverWindow)
+            {
+                DriverService.HideCommandPromptWindow = true;
+            }
+
+            return (EdgeDriverService) DriverService;
+        }
+        #endregion
+
+        private IWebDriver InitializeRemoteDriver(OpenQA.Selenium.DriverOptions options) => new RemoteWebDriver(options);
+
+        private string DefaultPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private const string HeadlessFlagString = "--headless";
     }
 }
