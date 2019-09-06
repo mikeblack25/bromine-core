@@ -20,10 +20,10 @@ namespace Tests.Bromine.Page.Google
         public Element StoreLink => Browser.SeleniumFind.ElementByText("Store");
         public Element GmailLink => Browser.SeleniumFind.ElementByText("Gmail");
         public Element ImagesLink => Browser.SeleniumFind.ElementByText("Images");
-        public Element GoogleAppsLink => Browser.Find.ElementByClasses("gb_z", "gb_uc");
-        public Element ProfileLink => Browser.Find.ElementByClasses("gb_z", "gb_Ia", "gb_g");
-        public Element GoogleImage => Browser.Find.Element("#hplogo");
-        public Element SearchField => Browser.Find.ElementByClasses("gLFyf", "gsfi");
+        public Element GoogleAppsLink => Browser.Find.ElementByClasses("gb_z gb_uc");
+        public Element ProfileLink => Browser.Find.ElementByClasses("gb_z gb_Ia gb_g");
+        public Element GoogleImage => Browser.Find.Element("hplogo".Id());
+        public Element SearchField => Browser.Find.ElementByClasses("gLFyf gsfi");
         public Element GoogleSearchButton => Browser.Find.Element("[value='Google Search']");
         public Element RandomSearchButton => Browser.Find.Element("center > div > div > div:nth-child(2) > span");
         public Element AdvertisingLink => Browser.SeleniumFind.ElementByText("Advertising");

@@ -175,25 +175,24 @@ namespace Bromine.Core.ElementLocator
         /// Locate elements by locatorStrategy and locator string.
         /// </summary>
         /// <param name="locatorStrategy">How will elements be found?</param>
-        /// <param name="cssLocator">String to locate elements.</param>
+        /// <param name="locator">String to locate elements based on the provided locationStrategy.</param>
         /// <returns></returns>
-        public List<Element> Elements(LocatorStrategy locatorStrategy, string cssLocator)
+        public List<Element> Elements(LocatorStrategy locatorStrategy, string locator)
         {
             var elementsList = new List<Element>();
 
             try
             {
-                var elements = Driver.WebDriver.FindElements(Element(locatorStrategy, cssLocator));
+                var elements = Driver.WebDriver.FindElements(Element(locatorStrategy, locator));
 
                 foreach (var element in elements)
                 {
-                    elementsList.Add(new Element(element, cssLocator, locatorStrategy));
+                    elementsList.Add(new Element(element, locator, locatorStrategy));
                 }
             }
             catch (Exception e)
             {
                 Driver.Exceptions.Add(e);
-                throw;
             }
 
             return elementsList;
