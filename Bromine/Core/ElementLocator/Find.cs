@@ -128,13 +128,13 @@ namespace Bromine.Core.ElementLocator
         /// <summary>
         /// Find Element by CSS selector.
         /// </summary>
-        /// <param name="cssSelector">Locate element by CSS selector.</param>
+        /// <param name="locator">Locate element by CSS selector.</param>
         /// <returns></returns>
-        public Element Element(string cssSelector)
+        public Element Element(string locator)
         {
             try
             {
-                return Elements(cssSelector)[0];
+                return Elements(locator)[0];
             }
             catch (Exception e)
             {
@@ -144,12 +144,42 @@ namespace Bromine.Core.ElementLocator
             }
         }
 
+        private List<Element> GetElements(string locator)
+        {
+            var elements = SeleniumFind.ElementsByCssSelector(locator);
+
+            if (IsElementInitialized(elements)) { return elements; }
+
+            elements = SeleniumFind.ElementsByCssSelector(locator.Id());
+
+            if (IsElementInitialized(elements)) { return elements; }
+
+            elements = SeleniumFind.ElementsByCssSelector(locator.Class());
+
+            if (IsElementInitialized(elements)) { return elements; }
+
+            elements = SeleniumFind.ElementsByText(locator);
+
+            if (IsElementInitialized(elements)) { return elements; }
+
+            elements = SeleniumFind.ElementsByPartialText(locator);
+
+            if (IsElementInitialized(elements)) { return elements; }
+
+            return elements;
+        }
+
+        private bool IsElementInitialized(List<Element> element)
+        {
+            return element[0].IsInitialized;
+        }
+
         /// <summary>
         /// Find Elements by CSS selector.
         /// </summary>
-        /// <param name="cssSelector">Locate elements by CSS selector.</param>
+        /// <param name="locator">Locate elements by CSS selector.</param>
         /// <returns></returns>
-        public List<Element> Elements(string cssSelector) => SeleniumFind.Elements(LocatorStrategy.Css, cssSelector);
+        public List<Element> Elements(string locator) => GetElements(locator);
 
         private SeleniumFind SeleniumFind { get; }
     }

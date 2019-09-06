@@ -31,8 +31,13 @@ namespace Bromine.Core.ElementInteraction
                 Information.LocatorStrategy = locatorType;
             }
 
-            _isInitialized = true;
+            IsInitialized = true;
         }
+
+        /// <summary>
+        /// Flag to determine if the element has been created correctly.
+        /// </summary>
+        public bool IsInitialized { get; }
 
         /// <summary>
         /// Element TagName value.
@@ -79,7 +84,7 @@ namespace Bromine.Core.ElementInteraction
         /// </summary>
         public void Clear()
         {
-            if (!_isInitialized) { return; }
+            if (!IsInitialized) { return; }
 
             try
             {
@@ -96,7 +101,7 @@ namespace Bromine.Core.ElementInteraction
         /// </summary>
         public void Click()
         {
-            if (!_isInitialized) { return; }
+            if (!IsInitialized) { return; }
 
             try
             {
@@ -115,7 +120,7 @@ namespace Bromine.Core.ElementInteraction
         /// <returns></returns>
         public Element GetParent()
         {
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -140,7 +145,7 @@ namespace Bromine.Core.ElementInteraction
         {
             var attribute = string.Empty;
 
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -165,7 +170,7 @@ namespace Bromine.Core.ElementInteraction
         {
             var cssValue = string.Empty;
 
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -188,7 +193,7 @@ namespace Bromine.Core.ElementInteraction
         /// <returns></returns>
         public string GetProperty(string propertyName)
         {
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -209,7 +214,7 @@ namespace Bromine.Core.ElementInteraction
         /// <param name="text">Text to update to the requested element.</param>
         public void SendKeys(string text)
         {
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -270,11 +275,10 @@ namespace Bromine.Core.ElementInteraction
                 CalledTimestamp = DateTime.Now
             };
 
-            _isInitialized = false;
+            IsInitialized = false;
         }
 
         internal readonly IWebElement WebElement;
-        private readonly bool _isInitialized;
         // ReSharper disable once CollectionNeverQueried.Local
         private List<Exception> Exceptions { get; }
     }
