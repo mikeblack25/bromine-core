@@ -14,8 +14,14 @@ namespace Bromine.Verifies
         {
         }
 
+        /// <summary>
+        /// True if a SoftVerify statement has failed.
+        /// </summary>
+        public bool HasFailure { get; private set; }
+
         internal override void HandleException(Exception exception, string message = "")
         {
+            HasFailure = true;
             Exceptions.Add(BuildException(exception, message));
         }
 
@@ -34,7 +40,7 @@ namespace Bromine.Verifies
                 message += $"{exception.Message} {Environment.NewLine}";
             }
 
-            throw new Exception(message);
+            Exceptions.Add(new Exception(message));
         }
     }
 }

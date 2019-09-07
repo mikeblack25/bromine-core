@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Web.UI;
 
 using Bromine.Core;
 using Bromine.Core.ElementInteraction;
@@ -101,11 +100,6 @@ namespace Bromine
         /// Provide ability change the style of Elements.
         /// </summary>
         ElementStyle ElementStyle { get; }
-
-        /// <summary>
-        /// Tags supported by the HTML standard.
-        /// </summary>
-        HtmlTextWriterTag HtmlTag(HtmlTextWriterTag tag);
 
         /// <summary>
         /// Provides Wait behavior using Selenium's DefaultWait class.

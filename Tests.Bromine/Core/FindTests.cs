@@ -44,9 +44,11 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementByClassesTest()
         {
-            var element = Browser.Find.ElementByClasses("gb_Oa gb_Fg gb_g gb_Eg gb_Jg gb_Wf");
+            var classes = "gb_Oa gb_Fg gb_g gb_Eg gb_Jg gb_Wf";
 
-            Browser.Verify.True(element.Displayed);
+            Browser.Wait.For.DisplayedElement(Browser.Find.ElementByClasses(classes), 5);
+
+            Browser.Verify.True(Browser.Find.ElementByClasses(classes).Displayed);
         }
 
         /// <summary>
@@ -150,14 +152,9 @@ namespace Tests.Bromine.Core
         {
             Browser?.Dispose();
 
-            Browser.Verify.True(ErrorList.Count == 0, string.Join(",", ErrorList));
+            Assert.True(ErrorList.Count == 0, string.Join(",", ErrorList));
         }
 
-        private static string IdString => "s-suggestion";
-        private static string ClassString => "a-link-normal";
-        private static string CssSelectorString => $"#{IdString}";
-        private static string TagString => "div";
-        private static string TextString => "Careers";
         private static string ParentClassString => ".FPdoLc";
         private static string InputTagString => "input";
     }

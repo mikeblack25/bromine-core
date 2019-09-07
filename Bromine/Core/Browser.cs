@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Web.UI;
 
 using Bromine.Core.ElementInteraction;
 using Bromine.Core.ElementLocator;
 using Bromine.Models;
 using Bromine.Verifies;
+
 using OpenQA.Selenium;
 
 namespace Bromine.Core
@@ -94,9 +94,6 @@ namespace Bromine.Core
 
         /// <inheritdoc />
         public ElementStyle ElementStyle { get; }
-
-        /// <inheritdoc />
-        public HtmlTextWriterTag HtmlTag(HtmlTextWriterTag tag) => tag;
 
         /// <inheritdoc />
         public Wait Wait { get; }
@@ -214,8 +211,11 @@ namespace Bromine.Core
         /// <inheritdoc />
         public void Dispose()
         {
+            var didSoftVerifyFail = SoftVerify.HasFailure;
             SoftVerify.Dispose();
             Driver?.Dispose();
+
+            if (didSoftVerifyFail) { throw new Exception("One or more soft verify statements failed.");}
         }
 
         private void EnableImplicitWait(int secondsToWait)

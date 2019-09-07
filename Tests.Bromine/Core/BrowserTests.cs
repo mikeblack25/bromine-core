@@ -4,7 +4,7 @@ using System.IO;
 using Bromine.Constants;
 using Bromine.Core;
 using Bromine.Models;
-using Bromine.Verifies;
+
 using Tests.Bromine.Common;
 
 using Xunit;
