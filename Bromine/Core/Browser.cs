@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Web.UI;
 
+using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
 using Bromine.Models;
+using Bromine.Verifies;
 
 using OpenQA.Selenium;
 
@@ -32,6 +34,10 @@ namespace Bromine.Core
             BrowserOptions = options;
 
             Log = new Log(logLevel);
+            Verify = new Verify(Exceptions);
+            ConditionalVerify = new ConditionalVerify(Exceptions);
+            SoftVerify = new SoftVerify(Exceptions);
+
             Driver = new Driver(BrowserOptions.Driver, Exceptions);
 
             if (options.Driver.ImplicitWaitEnabled)
@@ -95,9 +101,6 @@ namespace Bromine.Core
         public ElementStyle ElementStyle { get; }
 
         /// <inheritdoc />
-        public HtmlTextWriterTag HtmlTag(HtmlTextWriterTag tag) => tag;
-
-        /// <inheritdoc />
         public Wait Wait { get; }
 
         /// <inheritdoc />
@@ -149,6 +152,15 @@ namespace Bromine.Core
 
         /// <inheritdoc />
         public string Information => Driver.WebDriver.GetType().ToString();
+
+        /// <inheritdoc />
+        public Verify Verify { get; }
+
+        /// <inheritdoc />
+        public ConditionalVerify ConditionalVerify { get; }
+
+        /// <inheritdoc />
+        public SoftVerify SoftVerify { get; }
 
         internal Driver Driver { get; }
 
@@ -204,7 +216,11 @@ namespace Bromine.Core
         /// <inheritdoc />
         public void Dispose()
         {
+            var didSoftVerifyFail = SoftVerify.HasFailure;
+            SoftVerify.Dispose();
             Driver?.Dispose();
+
+            if (didSoftVerifyFail) { throw new Exception("One or more soft verify statements failed.");}
         }
 
         private void EnableImplicitWait(int secondsToWait)

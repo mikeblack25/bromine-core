@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 
+using Bromine.Core.ElementLocator;
+
 using OpenQA.Selenium;
 
-namespace Bromine.Core
+// ReSharper disable once CheckNamespace
+namespace Bromine.Core.ElementInteraction
 {
     /// <summary>
     /// Provides ability to interact with elements.
@@ -28,8 +31,13 @@ namespace Bromine.Core
                 Information.LocatorStrategy = locatorType;
             }
 
-            _isInitialized = true;
+            IsInitialized = true;
         }
+
+        /// <summary>
+        /// Flag to determine if the element has been created correctly.
+        /// </summary>
+        public bool IsInitialized { get; }
 
         /// <summary>
         /// Element TagName value.
@@ -76,7 +84,7 @@ namespace Bromine.Core
         /// </summary>
         public void Clear()
         {
-            if (!_isInitialized) { return; }
+            if (!IsInitialized) { return; }
 
             try
             {
@@ -93,7 +101,7 @@ namespace Bromine.Core
         /// </summary>
         public void Click()
         {
-            if (!_isInitialized) { return; }
+            if (!IsInitialized) { return; }
 
             try
             {
@@ -112,7 +120,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public Element GetParent()
         {
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -137,7 +145,7 @@ namespace Bromine.Core
         {
             var attribute = string.Empty;
 
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -162,7 +170,7 @@ namespace Bromine.Core
         {
             var cssValue = string.Empty;
 
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -185,7 +193,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public string GetProperty(string propertyName)
         {
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -206,7 +214,7 @@ namespace Bromine.Core
         /// <param name="text">Text to update to the requested element.</param>
         public void SendKeys(string text)
         {
-            if (_isInitialized)
+            if (IsInitialized)
             {
                 try
                 {
@@ -256,7 +264,7 @@ namespace Bromine.Core
         /// <summary>
         /// Construct the default behavior of the Element object.
         /// </summary>
-        private Element()
+        internal Element()
         {
             Exceptions = new List<Exception>();
             var stackTrace = new StackTrace();
@@ -267,98 +275,11 @@ namespace Bromine.Core
                 CalledTimestamp = DateTime.Now
             };
 
-            _isInitialized = false;
+            IsInitialized = false;
         }
 
         internal readonly IWebElement WebElement;
-        private readonly bool _isInitialized;
         // ReSharper disable once CollectionNeverQueried.Local
         private List<Exception> Exceptions { get; }
-    }
-
-
-    /// <summary>
-    /// Provide details about how and when the element was requested.
-    /// </summary>
-    public class CallingInformation
-    {
-        /// <summary>
-        /// Name of the calling method that requested an element.
-        /// </summary>
-        public string CallingMethod { get; set; }
-
-        /// <summary>
-        /// Timestamp the element was requested.
-        /// </summary>
-        public DateTime CalledTimestamp { get; set; }
-
-        /// <summary>
-        /// String used to find the requested element.
-        /// </summary>
-        public string LocatorString { get; set; }
-
-        /// <summary>
-        /// Locator strategy used to find the requested element.
-        /// </summary>
-        public LocatorStrategy LocatorStrategy { get; set; }
-    }
-
-
-    /// <summary>
-    /// Supported ways to locate an element.
-    /// </summary>
-    public enum LocatorStrategy
-    {
-#pragma warning disable 1591
-        Id = 1,
-        Class,
-        Css,
-        Js,
-        Tag,
-        Text,
-        PartialText,
-        XPath
-#pragma warning restore 1591
-    }
-
-
-    /// <summary>
-    /// Extension methods to provide additional capabilities to Elements.
-    /// </summary>
-    public static class ElementExtensions
-    {
-        /// <summary>
-        /// Find child elements with the given locatorStrategy and locator string.
-        /// </summary>
-        /// <param name="element">Parent element to find children of.</param>
-        /// <param name="locatorStrategy">How will the element be found?</param>
-        /// <param name="locator">String to locate child elements.</param>
-        /// <returns></returns>
-        public static List<Element> FindElements(this Element element, LocatorStrategy locatorStrategy, string locator) => element.FindElements(SeleniumFind.Element(locatorStrategy, locator));
-
-        /// <summary>
-        /// Find child elements by CSS and locator string.
-        /// </summary>
-        /// <param name="element">Parent element to find children of.</param>
-        /// <param name="locator">String to locate child elements.</param>
-        /// <returns></returns>
-        public static List<Element> FindElements(this Element element, string locator) => element.FindElements(SeleniumFind.Element(LocatorStrategy.Css, locator));
-
-        /// <summary>
-        /// Find child element with the given locatorStrategy and locator string.
-        /// </summary>
-        /// <param name="element">Parent element to find a child of.</param>
-        /// <param name="locatorStrategy">How will the element be found.</param>
-        /// <param name="locator">String to locate child elements.</param>
-        /// <returns></returns>
-        public static Element FindElement(this Element element, LocatorStrategy locatorStrategy, string locator) => FindElements(element, locatorStrategy, locator)[0];
-
-        /// <summary>
-        /// Find child element by CSS and locator string.
-        /// </summary>
-        /// <param name="element">Parent element to find a child of.</param>
-        /// <param name="locator">String to locate child elements.</param>
-        /// <returns></returns>
-        public static Element FindElement(this Element element, string locator) => FindElements(element, LocatorStrategy.Css, locator)[0];
     }
 }

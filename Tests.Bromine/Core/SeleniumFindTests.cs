@@ -1,5 +1,6 @@
-﻿using Xunit;
-using static Xunit.Assert;
+﻿using Bromine.Core.ElementLocator;
+
+using Xunit;
 
 namespace Tests.Bromine.Core
 {
@@ -24,7 +25,9 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByIdTest()
         {
-            Browser.SeleniumFind.ElementById(IdString);
+            var element = Browser.SeleniumFind.ElementById(IdString);
+
+            Browser.Verify.Equal(LocatorStrategy.Id, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -33,7 +36,9 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByClassTest()
         {
-            Browser.SeleniumFind.ElementsById(ClassString);
+            var element = Browser.SeleniumFind.ElementByClass(ClassString);
+
+            Browser.Verify.Equal(LocatorStrategy.Class, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -42,7 +47,9 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByCssTest()
         {
-            Browser.SeleniumFind.ElementByCssSelector(CssSelectorString);
+            var element = Browser.SeleniumFind.ElementByCssSelector(CssSelectorString);
+
+            Browser.Verify.Equal(LocatorStrategy.Css, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -51,7 +58,9 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByTagTest()
         {
-            Browser.SeleniumFind.ElementByTag(TagString);
+            var element = Browser.SeleniumFind.ElementByTag(TagString);
+
+            Browser.Verify.Equal(LocatorStrategy.Tag, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -60,7 +69,9 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByTextTest()
         {
-            Browser.SeleniumFind.ElementByText(TextString);
+            var element = Browser.SeleniumFind.ElementByText(TextString);
+
+            Browser.Verify.Equal(LocatorStrategy.Text, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -69,7 +80,9 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FindElementsByPartialTextTest()
         {
-            Browser.SeleniumFind.ElementByPartialText(TextString.Substring(2));
+            var element = Browser.SeleniumFind.ElementByPartialText(TextString.Substring(2));
+
+            Browser.Verify.Equal(LocatorStrategy.PartialText, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -80,7 +93,7 @@ namespace Tests.Bromine.Core
         {
             Browser?.Dispose();
 
-            True(ErrorList.Count == 0, string.Join(",", ErrorList));
+            Assert.True(ErrorList.Count == 0, string.Join(",", ErrorList));
         }
 
         private static string IdString => "s-suggestion";

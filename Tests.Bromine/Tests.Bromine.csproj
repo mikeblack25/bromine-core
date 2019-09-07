@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\Debug\Tests.Bromine.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -82,10 +83,14 @@
     <Compile Include="Core\FindTests.cs" />
     <Compile Include="Core\SeleniumFindTests.cs" />
     <Compile Include="Core\WaitTests.cs" />
+    <Compile Include="Page\Google\Home.cs" />
+    <Compile Include="Page\Google\HomeTests.cs" />
+    <Compile Include="Page\PageBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\BrowserTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Pages\Amazon.com\Amazon.com_files\01gMokLtdHL.js.download">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

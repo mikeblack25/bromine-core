@@ -1,9 +1,9 @@
-﻿namespace Bromine.Extensions
+﻿namespace Bromine.Core.ElementInteraction
 {
     /// <summary>
     /// Format extension methods for CSS.
     /// </summary>
-    public static class CssFormat
+    public static class CssFormatExtensions
     {
         /// <summary>
         /// Format the class locator for CSS.

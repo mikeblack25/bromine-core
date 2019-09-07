@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
+
+using Bromine.Core.ElementLocator;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 
-namespace Bromine.Core
+namespace Bromine.Core.ElementInteraction
 {
     /// <summary>
     /// Add style to WebElements.
@@ -15,7 +18,7 @@ namespace Bromine.Core
         /// </summary>
         public ElementStyle(Browser browser)
         {
-            _browser = browser;
+            Browser = browser;
         }
 
         /// <summary>
@@ -32,7 +35,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                _browser.Exceptions.Add(e);
+                Browser.Exceptions.Add(e);
             }
         }
 
@@ -45,11 +48,11 @@ namespace Bromine.Core
         {
             try
             {
-                Driver.ExecuteJavaScript(ElementBorderScript(element.Information.LocatorStrategy, element.Information.LocatorString, color));
+                Driver.ExecuteJavaScript(ElementBorderScript(LocatorStrategyFromCss(element.Information.LocatorStrategy, element.Information.LocatorString), RemoveLocatorPrefix(element.Information.LocatorString), color));
             }
             catch (Exception e)
             {
-                _browser.Exceptions.Add(e);
+                Browser.Exceptions.Add(e);
             }
         }
 
@@ -67,7 +70,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                _browser.Exceptions.Add(e);
+                Browser.Exceptions.Add(e);
             }
         }
 
@@ -80,11 +83,11 @@ namespace Bromine.Core
         {
             try
             {
-                Driver.ExecuteJavaScript(ElementsBorderScript(element.Information.LocatorStrategy, element.Information.LocatorString, color));
+                Driver.ExecuteJavaScript(ElementsBorderScript(LocatorStrategyFromCss(element.Information.LocatorStrategy, element.Information.LocatorString), RemoveLocatorPrefix(element.Information.LocatorString), color));
             }
             catch (Exception e)
             {
-                _browser.Exceptions.Add(e);
+                Browser.Exceptions.Add(e);
             }
         }
 
@@ -95,7 +98,38 @@ namespace Bromine.Core
         /// <returns></returns>
         public string GetStyleAttribute(Element element) => element.GetAttribute("style");
 
-        private string GetLocatorStrategy(LocatorStrategy locatorStrategy)
+        private LocatorStrategy LocatorStrategyFromCss(LocatorStrategy locatorStrategy, string locator)
+        {
+            var firstChar = locator.First();
+
+            if (locatorStrategy == LocatorStrategy.Css)
+            {
+                if (firstChar == '#') { return LocatorStrategy.Id; }
+
+                if (firstChar == '.') { return LocatorStrategy.Class; }
+            }
+
+            return locatorStrategy;
+        }
+
+        private string RemoveLocatorPrefix(string locator)
+        {
+            var firstChar = locator.First();
+            var locatorWithoutPrefix = locator.Substring(1);
+
+            switch (firstChar)
+            {
+                case '#':
+                case '.':
+                {
+                    return locatorWithoutPrefix;
+                }
+            }
+
+            return locator;
+        }
+
+        private string GetLocatorStrategyForJsScript(LocatorStrategy locatorStrategy)
         {
             var locatorString = string.Empty;
 
@@ -120,7 +154,7 @@ namespace Bromine.Core
                 case LocatorStrategy.Text:
                 case LocatorStrategy.XPath:
                 {
-                    _browser.Exceptions.Add(new Exception($"{locatorStrategy} is not a valid location strategy here"));
+                    Browser.Exceptions.Add(new Exception($"{locatorStrategy} is not a valid location strategy here"));
 
                     break;
                 }
@@ -129,10 +163,10 @@ namespace Bromine.Core
             return locatorString;
         }
 
-        private string ElementBorderScript(LocatorStrategy locatorStrategy, string locator, string color) => $"document.{GetLocatorStrategy(locatorStrategy)}(\"{locator}\").style.borderColor = \"{color}\"";
-        private string ElementsBorderScript(LocatorStrategy locatorStrategy, string locator, string color) => "{\n  var x = document." + $"{GetLocatorStrategy(locatorStrategy)}" + "(\"" + $"{locator}\");\n  var i;\n  for (i = 0; i < x.length; i++) " + "{\n    " + "x[i].style.borderColor = \"" + $"{color}" + "\";\n  }\n}";
+        private string ElementBorderScript(LocatorStrategy locatorStrategy, string locator, string color) => $"document.{GetLocatorStrategyForJsScript(locatorStrategy)}(\"{locator}\").style.borderColor = \"{color}\"";
+        private string ElementsBorderScript(LocatorStrategy locatorStrategy, string locator, string color) => "{\n  var x = document." + $"{GetLocatorStrategyForJsScript(locatorStrategy)}" + "(\"" + $"{locator}\");\n  var i;\n  for (i = 0; i < x.length; i++) " + "{\n    " + "x[i].style.borderColor = \"" + $"{color}" + "\";\n  }\n}";
 
-        private readonly Browser _browser;
-        private IWebDriver Driver => _browser.Driver.WebDriver;
+        private Browser Browser { get; }
+        private IWebDriver Driver => Browser.Driver.WebDriver;
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-using Bromine.Core;
+using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
 
 using Tests.Bromine.Common;
 
 using Xunit;
-using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
 {
@@ -22,7 +22,7 @@ namespace Tests.Bromine.Core
         public ElementExtensionTests()
         {
             Browser.Navigate.ToUrl(TestSites.AmazonUrl);
-            _element = Browser.Find.Element("nav-fill");
+            _element = Browser.Find.Element(".nav-fill");
         }
 
         /// <summary>
@@ -44,13 +44,18 @@ namespace Tests.Bromine.Core
         }
 
         /// <summary>
-        /// Verify one or more child elements are found from the element found in the test setup.
+        /// VerifyBase one or more child elements are found from the element found in the test setup.
         /// </summary>
         public override void Dispose()
         {
-            InRange(_elementsOfElement.Count, 1, int.MaxValue);
-
-            base.Dispose();
+            try
+            {
+                Browser.Verify.InRange(_elementsOfElement.Count, 1, int.MaxValue);
+            }
+            finally
+            {
+                base.Dispose();
+            }
         }
 
         private readonly Element _element;

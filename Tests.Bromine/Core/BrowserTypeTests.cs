@@ -7,9 +7,7 @@ using Bromine.Models;
 using OpenQA.Selenium;
 
 using Tests.Bromine.Common;
-
 using Xunit;
-using static Xunit.Assert;
 
 using DriverOptions = Bromine.Models.DriverOptions;
 
@@ -52,7 +50,7 @@ namespace Tests.Bromine.Core
         {
             BrowserInit(new DriverOptions(browser, isHeadless));
 
-            Contains(browser.ToString(), Browser.Information);
+            Browser.Verify.Contains(browser.ToString(), Browser.Information);
         }
 
         private void BrowserInit(DriverOptions driverOptions)
@@ -65,7 +63,7 @@ namespace Tests.Bromine.Core
 
                 Browser.Navigate.ToUrl(TestSites.GoogleUrl);
 
-                Equal(TestSites.GoogleUrl, Browser.Url);
+                Browser.Verify.Equal(TestSites.GoogleUrl, Browser.Url);
             }
             catch (WebDriverException e)
             {
