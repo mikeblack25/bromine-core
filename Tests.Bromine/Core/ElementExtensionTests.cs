@@ -6,7 +6,6 @@ using Bromine.Core.ElementLocator;
 using Tests.Bromine.Common;
 
 using Xunit;
-using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
 {
@@ -45,13 +44,13 @@ namespace Tests.Bromine.Core
         }
 
         /// <summary>
-        /// Verify one or more child elements are found from the element found in the test setup.
+        /// VerifyBase one or more child elements are found from the element found in the test setup.
         /// </summary>
         public override void Dispose()
         {
             try
             {
-                InRange(_elementsOfElement.Count, 1, int.MaxValue);
+                Browser.Verify.InRange(_elementsOfElement.Count, 1, int.MaxValue);
             }
             finally
             {

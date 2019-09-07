@@ -1,7 +1,6 @@
 ﻿using Tests.Bromine.Common;
 
 using Xunit;
-using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
 {
@@ -35,7 +34,7 @@ namespace Tests.Bromine.Core
         {
             var element = Browser.Find.Element(locator);
 
-            True(element.IsInitialized);
+            Browser.Verify.True(element.IsInitialized);
         }
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace Tests.Bromine.Core
         {
             var element = Browser.Find.ElementByClasses("gb_Oa gb_Fg gb_g gb_Eg gb_Jg gb_Wf");
 
-            True(element.Displayed);
+            Browser.Verify.True(element.Displayed);
         }
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace Tests.Bromine.Core
         {
             var elements = Browser.Find.ElementsByClasses("gb_f gb_g");
 
-            Equal(2, elements.Count);
+            Browser.Verify.Equal(2, elements.Count);
         }
 
         /// <summary>
@@ -70,7 +69,7 @@ namespace Tests.Bromine.Core
         {
             var element = Browser.Find.ChildElement(ParentClassString, InputTagString);
 
-            True(element.Displayed);
+            Browser.Verify.True(element.Displayed);
         }
 
         /// <summary>
@@ -82,7 +81,7 @@ namespace Tests.Bromine.Core
             var ele = Browser.Find.Element(ParentClassString);
             var element = Browser.Find.ChildElement(ele, InputTagString);
 
-            True(element.Displayed);
+            Browser.Verify.True(element.Displayed);
         }
 
         /// <summary>
@@ -93,7 +92,7 @@ namespace Tests.Bromine.Core
         {
             var elements = Browser.Find.ChildElements(ParentClassString, InputTagString);
 
-            Equal(2, elements.Count);
+            Browser.Verify.Equal(2, elements.Count);
         }
 
         /// <summary>
@@ -105,7 +104,7 @@ namespace Tests.Bromine.Core
             var ele = Browser.Find.Element(ParentClassString);
             var elements = Browser.Find.ChildElements(ele, InputTagString);
 
-            Equal(2, elements.Count);
+            Browser.Verify.Equal(2, elements.Count);
         }
 
         /// <summary>
@@ -124,7 +123,7 @@ namespace Tests.Bromine.Core
 
             var element = Browser.Find.ElementByDescendentCss("#gbw .gb_fe div [data-pid='23']");
 
-            Equal(gmailString, element.Text);
+            Browser.Verify.Equal(gmailString, element.Text);
         }
 
         /// <summary>
@@ -140,7 +139,7 @@ namespace Tests.Bromine.Core
         {
             var elements = Browser.Find.ElementsByDescendentCss("#gbw .gb_fe div");
 
-            Equal(2, elements.Count);
+            Browser.Verify.Equal(2, elements.Count);
         }
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace Tests.Bromine.Core
         {
             Browser?.Dispose();
 
-            True(ErrorList.Count == 0, string.Join(",", ErrorList));
+            Browser.Verify.True(ErrorList.Count == 0, string.Join(",", ErrorList));
         }
 
         private static string IdString => "s-suggestion";

@@ -1,7 +1,6 @@
 ﻿using Bromine.Core.ElementLocator;
 
 using Xunit;
-using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
 {
@@ -28,7 +27,7 @@ namespace Tests.Bromine.Core
         {
             var element = Browser.SeleniumFind.ElementById(IdString);
 
-            Equal(LocatorStrategy.Id, element.Information.LocatorStrategy);
+            Browser.Verify.Equal(LocatorStrategy.Id, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace Tests.Bromine.Core
         {
             var element = Browser.SeleniumFind.ElementByClass(ClassString);
 
-            Equal(LocatorStrategy.Class, element.Information.LocatorStrategy);
+            Browser.Verify.Equal(LocatorStrategy.Class, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace Tests.Bromine.Core
         {
             var element = Browser.SeleniumFind.ElementByCssSelector(CssSelectorString);
 
-            Equal(LocatorStrategy.Css, element.Information.LocatorStrategy);
+            Browser.Verify.Equal(LocatorStrategy.Css, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace Tests.Bromine.Core
         {
             var element = Browser.SeleniumFind.ElementByTag(TagString);
 
-            Equal(LocatorStrategy.Tag, element.Information.LocatorStrategy);
+            Browser.Verify.Equal(LocatorStrategy.Tag, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -72,7 +71,7 @@ namespace Tests.Bromine.Core
         {
             var element = Browser.SeleniumFind.ElementByText(TextString);
 
-            Equal(LocatorStrategy.Text, element.Information.LocatorStrategy);
+            Browser.Verify.Equal(LocatorStrategy.Text, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace Tests.Bromine.Core
         {
             var element = Browser.SeleniumFind.ElementByPartialText(TextString.Substring(2));
 
-            Equal(LocatorStrategy.PartialText, element.Information.LocatorStrategy);
+            Browser.Verify.Equal(LocatorStrategy.PartialText, element.Information.LocatorStrategy);
         }
 
         /// <summary>
@@ -94,7 +93,7 @@ namespace Tests.Bromine.Core
         {
             Browser?.Dispose();
 
-            True(ErrorList.Count == 0, string.Join(",", ErrorList));
+            Assert.True(ErrorList.Count == 0, string.Join(",", ErrorList));
         }
 
         private static string IdString => "s-suggestion";

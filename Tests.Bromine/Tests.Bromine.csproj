@@ -89,6 +89,7 @@
     <Compile Include="Core\BrowserTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Pages\Amazon.com\Amazon.com_files\01gMokLtdHL.js.download">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

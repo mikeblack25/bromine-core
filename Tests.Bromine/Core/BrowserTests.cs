@@ -4,11 +4,10 @@ using System.IO;
 using Bromine.Constants;
 using Bromine.Core;
 using Bromine.Models;
-
+using Bromine.Verifies;
 using Tests.Bromine.Common;
 
 using Xunit;
-using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
 {
@@ -20,23 +19,23 @@ namespace Tests.Bromine.Core
     {
         /// <summary>
         /// Navigate to <see cref="TestSites.AmazonUrl"/>.
-        /// Verify Browser.Source contains <see cref="CoreTestsBase.Amazon" />.
-        /// Verify Browser.Title contains <see cref="CoreTestsBase.Amazon" />.
+        /// VerifyBase Browser.Source contains <see cref="CoreTestsBase.Amazon" />.
+        /// VerifyBase Browser.Title contains <see cref="CoreTestsBase.Amazon" />.
         /// </summary>
         [Fact]
         public void VerifySourceAndTitle()
         {
             Browser.Navigate.ToUrl(TestSites.AmazonUrl);
 
-            Contains(Amazon, Browser.Source);
-            Contains(Amazon, Browser.Title);
+            Browser.Verify.Contains(Amazon, Browser.Source);
+            Browser.Verify.Contains(Amazon, Browser.Title);
         }
 
         /// <summary>
         /// Dispose of the default browser and create a new Browser in the test to verify A browser can be created with a reference to another image save path.
         /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Take a ScreenShot of the visible page.
-        /// Verify the file <see cref="Browser.ScreenShotDirectory"/> exists.
+        /// VerifyBase the file <see cref="Browser.ScreenShotDirectory"/> exists.
         /// Delete the file located <see cref="Browser.ScreenShotDirectory"/>.
         /// </summary>
         [Fact]
@@ -57,7 +56,7 @@ namespace Tests.Bromine.Core
             browser.Navigate.ToUrl(TestSites.AmazonUrl);
             browser.TakeVisibleScreenShot(name);
 
-            True(File.Exists(browser.ScreenShotPath), $"Unable to find the expected ScreenShot at {browser.ScreenShotPath}");
+            Browser.Verify.True(File.Exists(browser.ScreenShotPath), $"Unable to find the expected ScreenShot at {browser.ScreenShotPath}");
 
             browser.Dispose();
         }
@@ -66,7 +65,7 @@ namespace Tests.Bromine.Core
         /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Take a ScreenShot of the visible page.
         /// Take a ScreenShot of a region of the screen with a width and height of 50 pixels.
-        /// Verify the saved image <see cref="Browser.LastImageSize"/> is the expected size.
+        /// VerifyBase the saved image <see cref="Browser.LastImageSize"/> is the expected size.
         /// TODO: Investigate why Browser.LastImage is locked and can't be deleted.
         /// </summary>
         [Fact]
@@ -83,14 +82,14 @@ namespace Tests.Bromine.Core
 
             Browser.TakeRegionScreenShot(name, region);
 
-            Equal(regionSize, Browser.LastImageSize);
+            Browser.Verify.Equal(regionSize, Browser.LastImageSize);
         }
 
         /// <summary>
         /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Maximize window to find the element in question.
         /// Take a ScreenShot of the element on the page.
-        /// Verify the saved image <see cref="Browser.LastImageSize"/> is the expected size.
+        /// VerifyBase the saved image <see cref="Browser.LastImageSize"/> is the expected size.
         /// TODO: Investigate why Browser.LastImage is locked and can't be deleted.
         /// </summary>
         [Fact]
@@ -107,33 +106,33 @@ namespace Tests.Bromine.Core
 
             Browser.TakeElementScreenShot(name, CartButton);
 
-            Equal(regionSize, Browser.LastImageSize);
+            Browser.Verify.Equal(regionSize, Browser.LastImageSize);
         }
 
         /// <summary>
         /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Try to save a ScreenShot to an invalid name.
-        /// Verify <see cref="Browser.Exceptions"/> is not empty trying to save an invalid file name.>
-        /// Verify <see cref="Browser.LastImage"/> returns null and an exception is logged when an invalid path is selected.
+        /// VerifyBase <see cref="Browser.Exceptions"/> is not empty trying to save an invalid file name.>
+        /// VerifyBase <see cref="Browser.LastImage"/> returns null and an exception is logged when an invalid path is selected.
         /// </summary>
         [Fact]
         public void VerifyTakeVisibleScreenShotError()
         {
-            Empty(Browser.Exceptions);
+            Browser.Verify.Empty(Browser.Exceptions);
 
             Browser.Navigate.ToUrl(TestSites.AmazonUrl);
             Browser.TakeVisibleScreenShot(@"-\\\\--");
 
-            NotEmpty(Browser.Exceptions);
+            Browser.Verify.NotEmpty(Browser.Exceptions);
 
             var exceptionCount = Browser.Exceptions.Count;
 
-            Null(Browser.LastImage);
-            Equal(++exceptionCount, Browser.Exceptions.Count);
+            Browser.Verify.Null(Browser.LastImage);
+            Browser.Verify.Equal(++exceptionCount, Browser.Exceptions.Count);
         }
 
         /// <summary>
-        /// Verify the behavior of <see cref="Browser.Window"/>.
+        /// VerifyBase the behavior of <see cref="Browser.Window"/>.
         /// <see cref="Window.Maximize"/>
         /// <see cref="Window.Minimize"/>
         /// <see cref="Window.FullScreen"/>
@@ -148,29 +147,29 @@ namespace Tests.Bromine.Core
 
             Browser.Window.Maximize();
 
-            NotEqual(windowSize, windowSize = Browser.Window.Size);
-            NotEqual(position, position = Browser.Window.Position);
+            Browser.Verify.NotEqual(windowSize, windowSize = Browser.Window.Size);
+            Browser.Verify.NotEqual(position, position = Browser.Window.Position);
 
             Browser.Window.Minimize();
 
-            NotEqual(windowSize, windowSize = Browser.Window.Size);
-            NotEqual(position, position = Browser.Window.Position);
+            Browser.Verify.NotEqual(windowSize, windowSize = Browser.Window.Size);
+            Browser.Verify.NotEqual(position, position = Browser.Window.Position);
 
             Browser.Window.FullScreen();
 
-            NotEqual(windowSize, Browser.Window.Size);
-            NotEqual(position, Browser.Window.Position);
+            Browser.Verify.NotEqual(windowSize, Browser.Window.Size);
+            Browser.Verify.NotEqual(position, Browser.Window.Position);
 
             windowSize = new Size(100, 100);
             Browser.Window.Size = windowSize;
 
-            InRange(windowSize.Width, windowSize.Width, 600);
-            InRange(windowSize.Height, windowSize.Height, 150);
+            Browser.Verify.InRange(windowSize.Width, windowSize.Width, 600);
+            Browser.Verify.InRange(windowSize.Height, windowSize.Height, 150);
 
             position = new Point(25, 75);
             Browser.Window.Position = position;
 
-            Equal(position, Browser.Window.Position);
+            Browser.Verify.Equal(position, Browser.Window.Position);
         }
 
         private void DeleteInitialImage(string name)

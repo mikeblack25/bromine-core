@@ -8,7 +8,7 @@ using System.Web.UI;
 using Bromine.Core.ElementInteraction;
 using Bromine.Core.ElementLocator;
 using Bromine.Models;
-
+using Bromine.Verifies;
 using OpenQA.Selenium;
 
 namespace Bromine.Core
@@ -31,6 +31,10 @@ namespace Bromine.Core
         {
             Exceptions = new List<Exception>();
             BrowserOptions = options;
+
+            Verify = new Verify(Exceptions);
+            ConditionalVerify = new ConditionalVerify(Exceptions);
+            SoftVerify = new SoftVerify(Exceptions);
 
             Driver = new Driver(BrowserOptions.Driver, Exceptions);
 
@@ -147,6 +151,15 @@ namespace Bromine.Core
         /// <inheritdoc />
         public string Information => Driver.WebDriver.GetType().ToString();
 
+        /// <inheritdoc />
+        public Verify Verify { get; }
+
+        /// <inheritdoc />
+        public ConditionalVerify ConditionalVerify { get; }
+
+        /// <inheritdoc />
+        public SoftVerify SoftVerify { get; }
+
         internal Driver Driver { get; }
 
         /// <inheritdoc />
@@ -201,6 +214,7 @@ namespace Bromine.Core
         /// <inheritdoc />
         public void Dispose()
         {
+            SoftVerify.Dispose();
             Driver?.Dispose();
         }
 
