@@ -1,34 +1,101 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
 using System.IO;
 
-using Bromine.Constants;
-using Bromine.Core;
-using Bromine.Models;
-
-using Tests.Bromine.Common;
+using Bromine.Logger;
 
 using Xunit;
-using static Xunit.Assert;
 
 namespace Tests.Bromine.Core
 {
-    /// <inheritdoc />
     /// <summary>
     /// Tests to verify the Browser class is working as expected.
     /// </summary>
-    public class LogTests : CoreTestsBase
+    public class LogTests
     {
         /// <summary>
-        /// Navigate to <see cref="TestSites.AmazonUrl"/>.
-        /// Verify Browser.Source contains <see cref="CoreTestsBase.Amazon" />.
-        /// Verify Browser.Title contains <see cref="CoreTestsBase.Amazon" />.
+        /// Verify Log.Message logs to a rolling log file.
         /// </summary>
         [Fact]
-        public void VerifySourceAndTitle()
+        public void VerifyLogMessageWritesToARollingLogFileTest()
         {
-            Browser.Navigate.ToUrl(TestSites.AmazonUrl);
+            var message = "This is an INFO message";
+            // ReSharper disable once PossibleNullReferenceException
+            var method = new StackFrame(0).GetMethod().DeclaringType.Name;
+            Log = new Log($"{method}.txt");
 
+            DeleteLogFile();
 
+            Log.Message(message);
+
+            // TODO: Add Ordered test support since the log file can not be read in the context of the current session.
+            //var log = ReadLog();
+
+            //Contains(message, log);
         }
+
+        /// <summary>
+        /// Verify Log.Error logs to a rolling log file.
+        /// </summary>
+        [Fact]
+        public void VerifyLoErrorWritesToARollingLogFileTest()
+        {
+            var message = "This is an ERROR message.";
+            // ReSharper disable once PossibleNullReferenceException
+            var method = new StackFrame(0).GetMethod().DeclaringType.Name;
+            Log = new Log($"{method}.txt");
+
+            DeleteLogFile();
+
+            Log.Message(message);
+
+            // TODO: Add Ordered test support since the log file can not be read in the context of the current session.
+            //var log = ReadLog();
+
+            //Contains(message, log);
+        }
+
+        /// <summary>
+        /// Verify Log.Error logs to a rolling log file.
+        /// </summary>
+        [Fact]
+        public void VerifyLoDebugWritesToARollingLogFileTest()
+        {
+            var message = "This is a DEBUG message.";
+            // ReSharper disable once PossibleNullReferenceException
+            var method = new StackFrame(0).GetMethod().DeclaringType.Name;
+            Log = new Log($"{method}.txt");
+
+            DeleteLogFile();
+
+            Log.Message(message);
+
+            // TODO: Add Ordered test support since the log file can not be read in the context of the current session.
+            //var log = ReadLog();
+
+            //Contains(message, log);
+        }
+
+        private void DeleteLogFile()
+        {
+            if (File.Exists(Log.FilePath))
+            {
+                File.Delete(Log.FilePath);
+            }
+        }
+
+        private string ReadLog()
+        {
+            if (File.Exists(Log.FilePath))
+            {
+                using (var reader = new StreamReader(Log.FilePath))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private Log Log { get; set; }
     }
 }

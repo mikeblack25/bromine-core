@@ -9,5 +9,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("bb346a0f-1dd9-49ef-8d1f-da87b91963cd")]
 [assembly: AssemblyVersion("1.0.0.4")]
 
-[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config")]
 [assembly: InternalsVisibleTo("Tests.Bromine")]

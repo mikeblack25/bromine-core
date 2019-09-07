@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Bromine.Logger;
+
 namespace Bromine.Core
 {
     /// <summary>

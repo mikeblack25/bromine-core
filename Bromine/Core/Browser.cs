@@ -6,6 +6,7 @@ using System.IO;
 
 using Bromine.Core.ElementInteraction;
 using Bromine.Core.ElementLocator;
+using Bromine.Logger;
 using Bromine.Models;
 using Bromine.Verifies;
 
@@ -19,7 +20,7 @@ namespace Bromine.Core
         /// <summary>
         /// Launch a Chrome browser with the default configuration.
         /// </summary>
-        public Browser() : this(new BrowserOptions())
+        public Browser(string logFileName = "", bool appendToFile = true) : this(new BrowserOptions(), logFileName, appendToFile)
         {
         }
 
@@ -27,13 +28,14 @@ namespace Bromine.Core
         /// Provides methods of interacting with the web browser.
         /// </summary>
         /// <param name="options">Provides advanced browser and driver options.</param>
-        /// <param name="logLevel">Level of information to log.</param>
-        public Browser(BrowserOptions options, string logLevel = "All")
+        /// <param name="logFileName">Level of information to log.</param>
+        /// <param name="appendToFile"></param>
+        public Browser(BrowserOptions options, string logFileName = "", bool appendToFile = true)
         {
             Exceptions = new List<Exception>();
             BrowserOptions = options;
 
-            Log = new Log(logLevel);
+            Log = new Log(logFileName, appendToFile);
             Verify = new Verify(Exceptions);
             ConditionalVerify = new ConditionalVerify(Exceptions);
             SoftVerify = new SoftVerify(Exceptions);
