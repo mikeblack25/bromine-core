@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Common\Category.cs" />
     <Compile Include="Common\TestSites.cs" />
+    <Compile Include="Logger\XunitLogTests.cs" />
     <Compile Include="Logger\RollingLogFileTests.cs" />
     <Compile Include="Core\ElementInteraction\ElementExtensionTests.cs" />
     <Compile Include="Core\ElementInteraction\ElementStyleTests.cs" />

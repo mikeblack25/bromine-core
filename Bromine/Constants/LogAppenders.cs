@@ -6,7 +6,8 @@
     public enum LogAppenders
     {
 #pragma warning disable 1591
-        RolllingFile,
+        RollingFile,
+        Xunit
 #pragma warning restore 1591
     }
 }

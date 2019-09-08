@@ -95,6 +95,7 @@
     <Compile Include="Core\ElementInteraction\ElementStyle.cs" />
     <Compile Include="Core\ElementInteraction\CssFormatExtensions.cs" />
     <Compile Include="IBrowser.cs" />
+    <Compile Include="Logger\XunitAppender.cs" />
     <Compile Include="Models\BrowserOptions.cs" />
     <Compile Include="Models\DriverOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

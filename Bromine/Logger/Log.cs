@@ -11,6 +11,8 @@ using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
 
+using Xunit.Abstractions;
+
 namespace Bromine.Logger
 {
     /// <summary>
@@ -19,13 +21,21 @@ namespace Bromine.Logger
     public class Log : IDisposable
     {
         /// <inheritdoc />
-        public Log(string filePath = "", bool appendToFile = true) : this(new List < LogAppenders > { LogAppenders.RolllingFile }, filePath, appendToFile)
+        public Log(string filePath = "", bool appendToFile = true, ITestOutputHelper outputHelper = null) : this(new List < LogAppenders > { LogAppenders.RollingFile }, filePath, appendToFile, outputHelper)
         {
         }
 
         /// <inheritdoc />
-        public Log(List<LogAppenders> appenders, string filePath = "", bool appendToFile = true)
+        public Log(List<LogAppenders> appenders, string filePath = "", bool appendToFile = true, ITestOutputHelper outputHelper = null)
         {
+            Hierarchy = (Hierarchy)LogManager.GetRepository();
+            Hierarchy.Root.Level = Level.All;
+            OutputHelper = outputHelper;
+            Layout = new PatternLayout
+            {
+                ConversionPattern = LogPattern
+            };
+
             Appenders = appenders;
             FilePath = filePath.Contains(":") ? filePath : $@"{GetResultsPath()}\{filePath}";
             AppendToFile = appendToFile;
@@ -56,6 +66,11 @@ namespace Bromine.Logger
         /// File appender to add logs to an existing file.
         /// </summary>
         public RollingFileAppender RollingFileAppender { get; private set; }
+
+        /// <summary>
+        /// Appender for logging messages to the console when using Xunit.
+        /// </summary>
+        public XunitAppender XunitAppender { get; private set; }
 
         /// <summary>
         /// Start / Resume logging.
@@ -102,19 +117,13 @@ namespace Bromine.Logger
 
         private void InitializeRollingFileAppender()
         {
-            Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
-
-            PatternLayout patternLayout = new PatternLayout
-            {
-                ConversionPattern = $"%date %-5level %message%newline"
-            };
-            patternLayout.ActivateOptions();
+            Layout.ActivateOptions();
 
             RollingFileAppender = new RollingFileAppender
             {
                 AppendToFile = AppendToFile,
                 File = FilePath,
-                Layout = patternLayout,
+                Layout = Layout,
                 MaxSizeRollBackups = 5,
                 RollingStyle = RollingFileAppender.RollingMode.Size,
                 StaticLogFileName = true
@@ -122,9 +131,23 @@ namespace Bromine.Logger
 
             RollingFileAppender.ActivateOptions();
 
-            hierarchy.Root.AddAppender(RollingFileAppender);
-            hierarchy.Root.Level = Level.All;
-            hierarchy.Configured = true;
+            Hierarchy.Root.AddAppender(RollingFileAppender);
+            Hierarchy.Configured = true;
+        }
+
+        private void InitializeXunitAppender()
+        {
+            Layout.ActivateOptions();
+
+            XunitAppender = new XunitAppender(OutputHelper, LogPattern)
+            {
+                Layout = Layout
+            };
+
+            XunitAppender.ActivateOptions();
+
+            Hierarchy.Root.AddAppender(XunitAppender);
+            Hierarchy.Configured = true;
         }
 
         /// <summary>
@@ -160,9 +183,14 @@ namespace Bromine.Logger
             {
                 switch (appender)
                 {
-                    case LogAppenders.RolllingFile:
+                    case LogAppenders.RollingFile:
                     {
                         InitializeRollingFileAppender();
+                        break;
+                    }
+                    case LogAppenders.Xunit:
+                    {
+                        InitializeXunitAppender();
                         break;
                     }
                 }
@@ -177,10 +205,13 @@ namespace Bromine.Logger
             }
         }
 
+        private Hierarchy Hierarchy { get; }
+        private PatternLayout Layout { get; }
+        private ITestOutputHelper OutputHelper { get; }
         private string GetResultsPath(string directory = Results) => $@"{AppDomain.CurrentDomain.BaseDirectory}\{directory}";
 
         private const string Results =  "Results";
-
+        private string LogPattern => "%date %-5level %message%newline";
         private static readonly ILog Logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     }
 }
