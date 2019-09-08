@@ -48,6 +48,8 @@ namespace Tests.Bromine.Core
 
         /// <summary>
         /// Test a Chrome browser can be created on a remote machine in both normal and headless (no UI) mode.
+        /// NOTE: The Selenium Hub and Node must be launched before this test will work.
+        /// TODO: Setup and teardown the Selenium Grid for this test.
         /// </summary>
         /// <param name="browser"></param>
         /// <param name="isHeadless"></param>
@@ -62,6 +64,8 @@ namespace Tests.Bromine.Core
 
         /// <summary>
         /// Test a Firefox browser can be created on a remote machine in both normal and headless (no UI) mode.
+        /// NOTE: The Selenium Hub and Node must be launched before this test will work.
+        /// TODO: Setup and teardown the Selenium Grid for this test.
         /// </summary>
         /// <param name="browser"></param>
         /// <param name="isHeadless"></param>
