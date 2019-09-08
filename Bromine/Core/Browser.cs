@@ -42,7 +42,7 @@ namespace Bromine.Core
 
             Driver = new Driver(BrowserOptions.Driver, Exceptions);
 
-            if (options.Driver.ImplicitWaitEnabled)
+            if (BrowserOptions.Driver.ImplicitWaitEnabled)
             {
                 EnableImplicitWait(options.Driver.SecondsToWait);
             }
