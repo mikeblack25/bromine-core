@@ -7,7 +7,6 @@ using Bromine.Models;
 using Tests.Bromine.Common;
 
 using Xunit;
-using static Xunit.Assert;
 
 using DriverOptions = Bromine.Models.DriverOptions;
 
@@ -90,7 +89,7 @@ namespace Tests.Bromine.Core
         {
             BrowserInit(new DriverOptions(browser, isHeadless));
 
-            Contains(browser.ToString(), Browser.Information);
+            Browser.Verify.Contains(browser.ToString(), Browser.Information);
         }
 
         private void VerifyRemoteBrowser(BrowserType browser, bool isHeadless)

@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Web.UI;
 
 using Bromine.Core;
 using Bromine.Core.ElementInteraction;
 using Bromine.Core.ElementLocator;
 using Bromine.Models;
-
+using Bromine.Verifies;
 using OpenQA.Selenium;
 
 namespace Bromine
@@ -103,11 +102,6 @@ namespace Bromine
         ElementStyle ElementStyle { get; }
 
         /// <summary>
-        /// Tags supported by the HTML standard.
-        /// </summary>
-        HtmlTextWriterTag HtmlTag(HtmlTextWriterTag tag);
-
-        /// <summary>
         /// Provides Wait behavior using Selenium's DefaultWait class.
         /// </summary>
         Wait Wait { get; }
@@ -126,6 +120,25 @@ namespace Bromine
         /// Namespace of the Selenium driver being used by the browser.
         /// </summary>
         string Information { get; }
+
+        /// <summary>
+        /// Assert expected conditions.
+        /// Execution will stop when a verify condition fails.
+        /// </summary>
+        Verify Verify { get; }
+
+        /// <summary>
+        /// Assert expected conditions.
+        /// Execution will stop when a verify condition fails and the test will be marked as skipped.
+        /// </summary>
+        ConditionalVerify ConditionalVerify { get; }
+
+        /// <summary>
+        /// Assert expected conditions.
+        /// Execution will not stop when a verify condition fails.
+        /// The test will be marked as failed if any exceptions occur during execution.
+        /// </summary>
+        SoftVerify SoftVerify { get; }
 
         /// <summary>
         /// Take a ScreenShot of requested element.

@@ -51,14 +51,14 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="element">Element to wait for.</param>
         /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
-        public void DisplayedElement(Element element, int timeToWait) => Condition(() => element.Displayed, timeToWait);
+        public void DisplayedElement(Element element, int timeToWait = 1) => Condition(() => element.Displayed, timeToWait);
 
         /// <summary>
         /// Wait for the given URL to be loaded.
         /// </summary>
         /// <param name="expectedUrl">Expected URL to wait for.</param>
         /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
-        public void Navigation(string expectedUrl, int timeToWait) => Condition(() => Browser.Url == expectedUrl, timeToWait);
+        public void Navigation(string expectedUrl, int timeToWait = 1) => Condition(() => Browser.Url == expectedUrl, timeToWait);
 
         /// <summary>
         /// Wait for the document to be in a "complete" state.
