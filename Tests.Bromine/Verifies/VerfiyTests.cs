@@ -22,7 +22,7 @@ namespace Tests.Bromine.Verifies
         }
 
         /// <summary>
-        /// Verify oroperty.
+        /// Verify property.
         /// </summary>
         public Verify Verify { get; }
 
@@ -73,7 +73,5 @@ namespace Tests.Bromine.Verifies
 
             Assert.Throws<DoesNotContainException>(() => Assert.DoesNotContain(expectedSubString, actualString));
         }
-
-        /// Possible private const strings at bottom.
     }
 }
