@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 
+using Bromine.Constants;
+
 using log4net;
 using log4net.Appender;
+using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
@@ -13,7 +16,7 @@ namespace Bromine.Logger
     /// <summary>
     /// Provides log support functionality using the log4net library. 
     /// </summary>
-    public class Log
+    public class Log : IDisposable
     {
         /// <inheritdoc />
         public Log(string filePath = "", bool appendToFile = true) : this(new List < LogAppenders > { LogAppenders.RolllingFile }, filePath, appendToFile)
@@ -30,7 +33,7 @@ namespace Bromine.Logger
             CreateResultsDirectory();
             InitializeAppenders();
 
-            log4net.Config.XmlConfigurator.Configure();
+            Start();
         }
 
         /// <summary>
@@ -53,6 +56,22 @@ namespace Bromine.Logger
         /// File appender to add logs to an existing file.
         /// </summary>
         public RollingFileAppender RollingFileAppender { get; private set; }
+
+        /// <summary>
+        /// Start / Resume logging.
+        /// </summary>
+        public void Start()
+        {
+            XmlConfigurator.Configure();
+        }
+
+        /// <summary>
+        /// Stop / Pause logging.
+        /// </summary>
+        public void Stop()
+        {
+            LogManager.GetRepository().ResetConfiguration();
+        }
 
         /// <summary>
         /// Add an info message to the log.
@@ -108,6 +127,33 @@ namespace Bromine.Logger
             hierarchy.Configured = true;
         }
 
+        /// <summary>
+        /// Clear the rolling log file.
+        /// </summary>
+        public void ClearRollingFileAppender()
+        {
+            ReleaseRollingFileLock();
+            File.WriteAllText(FilePath, string.Empty);
+        }
+
+        /// <summary>
+        /// Release the file log on the rolling log file.
+        /// </summary>
+        public void ReleaseRollingFileLock()
+        {
+            RollingFileAppender.ImmediateFlush = true;
+            RollingFileAppender.LockingModel = new FileAppender.MinimalLock();
+            RollingFileAppender.ActivateOptions();
+        }
+
+        /// <summary>
+        /// Stop logging.
+        /// </summary>
+        public void Dispose()
+        {
+            Stop();
+        }
+
         private void InitializeAppenders()
         {
             foreach (var appender in Appenders)
@@ -134,16 +180,6 @@ namespace Bromine.Logger
         private string GetResultsPath(string directory = Results) => $@"{AppDomain.CurrentDomain.BaseDirectory}\{directory}";
 
         private const string Results =  "Results";
-
-        /// <summary>
-        /// Supported approaches to log.
-        /// </summary>
-        public enum LogAppenders
-        {
-#pragma warning disable 1591
-            RolllingFile,
-#pragma warning restore 1591
-        }
 
         private static readonly ILog Logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     }

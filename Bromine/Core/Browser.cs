@@ -223,6 +223,8 @@ namespace Bromine.Core
             Driver?.Dispose();
 
             if (didSoftVerifyFail) { throw new Exception("One or more soft verify statements failed.");}
+
+            Log.Dispose();
         }
 
         private void EnableImplicitWait(int secondsToWait)

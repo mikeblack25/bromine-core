@@ -74,14 +74,14 @@
   <ItemGroup>
     <Compile Include="Common\Category.cs" />
     <Compile Include="Common\TestSites.cs" />
-    <Compile Include="Core\LogTests.cs" />
-    <Compile Include="Core\ElementExtensionTests.cs" />
-    <Compile Include="Core\ElementStyleTests.cs" />
+    <Compile Include="Logger\RollingLogFileTests.cs" />
+    <Compile Include="Core\ElementInteraction\ElementExtensionTests.cs" />
+    <Compile Include="Core\ElementInteraction\ElementStyleTests.cs" />
     <Compile Include="Core\BrowserTypeTests.cs" />
     <Compile Include="Core\CoreTestsBase.cs" />
     <Compile Include="Core\NavigateTests.cs" />
-    <Compile Include="Core\FindTests.cs" />
-    <Compile Include="Core\SeleniumFindTests.cs" />
+    <Compile Include="Core\ElementLocator\FindTests.cs" />
+    <Compile Include="Core\ElementLocator\SeleniumFindTests.cs" />
     <Compile Include="Core\WaitTests.cs" />
     <Compile Include="Page\Google\Home.cs" />
     <Compile Include="Page\Google\HomeTests.cs" />

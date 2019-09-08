@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants\BrowserType.cs" />
+    <Compile Include="Constants\LogAppenders.cs" />
     <Compile Include="Core\Browser.cs" />
     <Compile Include="Core\Driver.cs" />
     <Compile Include="Core\ElementInteraction\CallingInformation.cs" />

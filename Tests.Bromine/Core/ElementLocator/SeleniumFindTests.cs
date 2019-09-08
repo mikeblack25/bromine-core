@@ -2,7 +2,7 @@
 
 using Xunit;
 
-namespace Tests.Bromine.Core
+namespace Tests.Bromine.Core.ElementLocator
 {
     /// <inheritdoc />
     /// <summary>

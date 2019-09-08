@@ -1,10 +1,11 @@
 ﻿using Bromine.Core.ElementInteraction;
 using Bromine.Core.ElementLocator;
+
 using Tests.Bromine.Common;
 
 using Xunit;
 
-namespace Tests.Bromine.Core
+namespace Tests.Bromine.Core.ElementInteraction
 {
     /// <inheritdoc />
     /// <summary>
