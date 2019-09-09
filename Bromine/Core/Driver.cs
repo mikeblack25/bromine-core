@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
 using Bromine.Constants;
+using Bromine.Logger;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Extensions;
 
@@ -26,11 +27,11 @@ namespace Bromine.Core
         /// Initialize an IWebDriver for the given browser and desired configuration.
         /// </summary>
         /// <param name="options">Object to bass desired browser driver configuration.</param>
-        /// <param name="exceptions">Exception list to track unexpected results during execution.</param>
-        public Driver(DriverOptions options, List<Exception> exceptions)
+        /// <param name="log"><see cref="Log"/>.</param>
+        public Driver(DriverOptions options, Log log)
         {
             Options = options;
-            Exceptions = exceptions;
+            Log = log;
 
             WebDriver = InitializeDriver();
         }
@@ -57,9 +58,9 @@ namespace Bromine.Core
         public Screenshot ScreenShot => WebDriver.TakeScreenshot();
 
         /// <summary>
-        /// List of un expected runtime behavior.
+        /// <see cref="Log"/>
         /// </summary>
-        public List<Exception> Exceptions { get; }
+        public Log Log { get; }
 
         /// <summary>
         /// Selenium WebDriver. <see cref="IWebDriver"/>
@@ -85,10 +86,14 @@ namespace Bromine.Core
                 {
                     return Options.IsRemoteDriver ? InitializeRemoteDriver(GetFirefoxOptions()) : InitializeFirefoxDriver();
                 }
+                case BrowserType.InternetExplorer:
+                {
+                    return Options.IsRemoteDriver ? InitializeRemoteDriver(GetInternetExplorerOptions()) : InitializeInternetExplorerDriver();
+                    }
                 default:
                 {
                     var exception = new Exception($"{Options.Browser} is not a supported Browser type");
-                    Exceptions.Add(exception);
+                    Log.Error(exception.Message);
 
                     throw exception;
                 }
@@ -107,7 +112,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Log.Error(e.Message);
             }
             finally
             {
@@ -131,7 +136,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Log.Error(e.Message);
                 Dispose();
 
                 throw;
@@ -170,7 +175,7 @@ namespace Bromine.Core
             }
 
             var exception = new Exception("StartChromeDriverService should only be called when !Options.UseDefaultDriverPath");
-            Exceptions.Add(exception);
+            Log.Error(exception.Message);
 
             throw exception;
         }
@@ -189,7 +194,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Log.Error(e.Message);
                 Dispose();
 
                 throw;
@@ -234,7 +239,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Log.Error(e.Message);
                 Dispose();
 
                 throw;
@@ -253,6 +258,41 @@ namespace Bromine.Core
             }
 
             return (EdgeDriverService) DriverService;
+        }
+        #endregion
+
+        #region Internet Explorer
+        /// <summary>
+        /// Get a Firefox browser driver.
+        /// </summary>
+        /// <returns></returns>
+        private IWebDriver InitializeInternetExplorerDriver()
+        {
+            try
+            {
+                return new InternetExplorerDriver(GetInternetExplorerDriverService(), GetInternetExplorerOptions());
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                Dispose();
+
+                throw;
+            }
+        }
+
+        private InternetExplorerOptions GetInternetExplorerOptions() => new InternetExplorerOptions();
+
+        private InternetExplorerDriverService GetInternetExplorerDriverService()
+        {
+            DriverService = InternetExplorerDriverService.CreateDefaultService();
+
+            if (Options.HideDriverWindow)
+            {
+                DriverService.HideCommandPromptWindow = true;
+            }
+
+            return (InternetExplorerDriverService)DriverService;
         }
         #endregion
 

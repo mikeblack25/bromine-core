@@ -1,8 +1,9 @@
 ﻿using Tests.Bromine.Common;
 
 using Xunit;
+using Xunit.Abstractions;
 
-namespace Tests.Bromine.Core
+namespace Tests.Bromine.Core.ElementLocator
 {
     /// <inheritdoc />
     /// <summary>
@@ -11,10 +12,7 @@ namespace Tests.Bromine.Core
     public class FindTests : CoreTestsBase
     {
         /// <inheritdoc />
-        /// <summary>
-        /// Navigate to the Amazon home page.
-        /// </summary>
-        public FindTests()
+        public FindTests(ITestOutputHelper output) : base(output)
         {
             Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
@@ -150,9 +148,9 @@ namespace Tests.Bromine.Core
         /// </summary>
         public override void Dispose()
         {
-            Browser?.Dispose();
+            Assert.Equal(0, Browser.Log.ErrorCount);
 
-            Assert.True(ErrorList.Count == 0, string.Join(",", ErrorList));
+            Browser?.Dispose();
         }
 
         private static string ParentClassString => ".FPdoLc";

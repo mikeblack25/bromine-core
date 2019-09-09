@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Bromine.Logger;
+
 using Xunit;
 
 namespace Bromine.Verifies
@@ -13,9 +15,9 @@ namespace Bromine.Verifies
     public abstract class VerifyBase
     {
         /// <inheritdoc />
-        protected VerifyBase(List<Exception> exceptions)
+        protected VerifyBase(Log log)
         {
-            Exceptions = exceptions;
+            Log = log;
         }
 
         /// <summary>
@@ -33,7 +35,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -53,7 +54,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -72,7 +72,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -91,7 +90,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -110,7 +108,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -128,7 +125,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -147,7 +143,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -166,7 +161,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -185,7 +179,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -203,7 +196,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -223,7 +215,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -243,7 +234,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -261,7 +251,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -279,7 +268,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -298,7 +286,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -316,7 +303,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -336,7 +322,6 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
@@ -354,13 +339,14 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
                 HandleException(e, message);
             }
         }
 
         internal virtual void HandleException(Exception exception, string message = "")
         {
+            Log.Error(exception.Message);
+
             throw BuildException(exception, message);
         }
 
@@ -374,6 +360,6 @@ namespace Bromine.Verifies
             return e;
         }
 
-        internal List<Exception> Exceptions { get; }
+        internal Log Log { get; }
     }
 }

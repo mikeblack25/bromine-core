@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Core
 {
@@ -9,15 +10,21 @@ namespace Tests.Bromine.Core
     /// </summary>
     public class WaitTests : CoreTestsBase
     {
+        /// <inheritdoc />
+        /// <param name="output"><see cref="ITestOutputHelper"/></param>
+        public WaitTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         /// <summary>
         /// VerifyBase the browser can wait for conditions for the time specified and that Exceptions are logged when the expected conditions are not met.
         /// </summary>
         [Fact]
         public void VerifyWaitForCondition()
         {
-            Browser.Verify.Empty(Browser.Exceptions);
+            Browser.Verify.Empty(Browser.Log.XunitAppender.Logs);
             Browser.Verify.False(Browser.Wait.For.Condition(() => false));
-            Browser.Verify.NotEmpty(Browser.Exceptions);
+            Browser.Verify.NotEmpty(Browser.Log.XunitAppender.Logs);
 
             var startTime = DateTime.Now;
             const int timeToWait = 5;
@@ -26,10 +33,10 @@ namespace Tests.Bromine.Core
 
             Browser.Verify.InRange(DateTime.Now, startTime.AddSeconds(timeToWait - 1), startTime.AddSeconds(timeToWait + 1));
 
-            var exceptionCount = Browser.Exceptions.Count;
+            var exceptionCount = Browser.Log.ErrorCount;
 
             Browser.Verify.True(Browser.Wait.For.Condition(() => true));
-            Browser.Verify.Equal(exceptionCount, Browser.Exceptions.Count);
+            Browser.Verify.Equal(exceptionCount, Browser.Log.ErrorCount);
         }
     }
 }

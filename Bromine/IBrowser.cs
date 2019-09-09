@@ -1,12 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 using Bromine.Core;
 using Bromine.Core.ElementInteraction;
 using Bromine.Core.ElementLocator;
+using Bromine.Logger;
 using Bromine.Models;
 using Bromine.Verifies;
+
 using OpenQA.Selenium;
 
 namespace Bromine
@@ -16,6 +17,11 @@ namespace Bromine
     /// </summary>
     public interface IBrowser : IDisposable
     {
+        /// <summary>
+        /// Logging support for uniform reporting.
+        /// </summary>
+        Log Log { get; }
+
         /// <summary>
         /// Url of the current page.
         /// </summary>
@@ -49,7 +55,7 @@ namespace Bromine
         /// <summary>
         /// Get the driver logs.
         /// </summary>
-        ILogs Logs { get; }
+        ILogs SeleniumLogs { get; }
 
         /// <summary>
         /// Manipulate cookies.
@@ -85,11 +91,6 @@ namespace Bromine
         /// Helpers to navigate to pages and files.
         /// </summary>
         Navigate Navigate { get; }
-
-        /// <summary>
-        /// List of exceptions.
-        /// </summary>
-        List<Exception> Exceptions { get; }
 
         /// <summary>
         /// Browser configuration used to initialize the web driver.

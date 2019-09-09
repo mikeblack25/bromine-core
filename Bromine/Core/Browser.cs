@@ -1,15 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
 using Bromine.Core.ElementInteraction;
 using Bromine.Core.ElementLocator;
+using Bromine.Logger;
 using Bromine.Models;
 using Bromine.Verifies;
 
 using OpenQA.Selenium;
+
+using Xunit.Abstractions;
 
 namespace Bromine.Core
 {
@@ -18,8 +20,17 @@ namespace Bromine.Core
     {
         /// <summary>
         /// Launch a Chrome browser with the default configuration.
+        /// NOTE: No logging is supported in this configuration.
         /// </summary>
         public Browser() : this(new BrowserOptions())
+        {
+        }
+
+        /// <summary>
+        /// Launch a Chrome browser with the default configuration and console logging for Xunit.
+        /// </summary>
+        /// <param name="output"><see cref="ITestOutputHelper"/></param>
+        public Browser(ITestOutputHelper output) : this(new BrowserOptions(), string.Empty, output)
         {
         }
 
@@ -27,17 +38,18 @@ namespace Bromine.Core
         /// Provides methods of interacting with the web browser.
         /// </summary>
         /// <param name="options">Provides advanced browser and driver options.</param>
-        public Browser(BrowserOptions options)
+        /// <param name="logFileName">Level of information to log.</param>
+        /// <param name="output"><see cref="ITestOutputHelper"/></param>
+        public Browser(BrowserOptions options, string logFileName = "", ITestOutputHelper output = null)
         {
-            Exceptions = new List<Exception>();
             BrowserOptions = options;
 
-            Verify = new Verify(Exceptions);
-            ConditionalVerify = new ConditionalVerify(Exceptions);
-            SoftVerify = new SoftVerify(Exceptions);
+            Log = new Log(logFileName, output);
+            Verify = new Verify(Log);
+            ConditionalVerify = new ConditionalVerify(Log);
+            SoftVerify = new SoftVerify(Log);
 
-            Driver = new Driver(BrowserOptions.Driver, Exceptions);
-
+            Driver = new Driver(BrowserOptions.Driver, Log);
             if (BrowserOptions.Driver.ImplicitWaitEnabled)
             {
                 EnableImplicitWait(options.Driver.SecondsToWait);
@@ -54,6 +66,9 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
+        public Log Log { get; }
+
+        /// <inheritdoc />
         public string Url => Driver.WebDriver.Url;
 
         /// <inheritdoc />
@@ -63,7 +78,7 @@ namespace Bromine.Core
         public string Source => Driver.WebDriver.PageSource;
 
         /// <inheritdoc />
-        public ILogs Logs => Driver.WebDriver.Manage().Logs;
+        public ILogs SeleniumLogs => Driver.WebDriver.Manage().Logs;
 
         /// <inheritdoc />
         public ICookieJar Cookies => Driver.WebDriver.Manage().Cookies;
@@ -85,9 +100,6 @@ namespace Bromine.Core
 
         /// <inheritdoc />
         public Navigate Navigate { get; }
-
-        /// <inheritdoc />
-        public List<Exception> Exceptions { get; }
 
         /// <inheritdoc />
         public BrowserOptions BrowserOptions { get; }
@@ -118,7 +130,8 @@ namespace Bromine.Core
                 }
                 catch (Exception e)
                 {
-                    Exceptions.Add(e);
+                    Log.Error(e.Message);
+
                     return null;
                 }
             }
@@ -193,9 +206,9 @@ namespace Bromine.Core
                 ScreenShot = Driver.ScreenShot;
                 ScreenShot.SaveAsFile(ScreenShotPath, ScreenshotImageFormat.Png);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Exceptions.Add(ex);
+                Log.Error(e.Message);
             }
         }
 
@@ -215,7 +228,8 @@ namespace Bromine.Core
             SoftVerify.Dispose();
             Driver?.Dispose();
 
-            if (didSoftVerifyFail) { throw new Exception("One or more soft verify statements failed.");}
+            if (didSoftVerifyFail) { Log.Error("One or more soft verify statements failed."); }
+            Log.Dispose();
         }
 
         private void EnableImplicitWait(int secondsToWait)

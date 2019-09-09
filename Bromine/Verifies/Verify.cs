@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Bromine.Logger;
 
 namespace Bromine.Verifies
 {
@@ -9,8 +8,7 @@ namespace Bromine.Verifies
     public class Verify : VerifyBase
     {
         /// <inheritdoc />
-        /// <param name="exceptions"></param>
-        public Verify(List<Exception> exceptions) : base(exceptions)
+        public Verify(Log log) : base(log)
         {
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+
+using Bromine.Logger;
 
 using Xunit;
 
@@ -11,8 +12,7 @@ namespace Bromine.Verifies
     public class ConditionalVerify : VerifyBase
     {
         /// <inheritdoc />
-        /// <param name="exceptions"></param>
-        public ConditionalVerify(List<Exception> exceptions) : base(exceptions)
+        public ConditionalVerify(Log log) : base(log)
         {
         }
 
@@ -21,6 +21,8 @@ namespace Bromine.Verifies
             var ex = BuildException(exception, message);
 
             Skip.If(true, ex.Message);
+
+            Log.Error(ex.Message);
         }
     }
 }
