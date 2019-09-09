@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-
-using Bromine.Constants;
 
 using log4net;
 using log4net.Appender;
@@ -21,12 +18,12 @@ namespace Bromine.Logger
     public class Log : IDisposable
     {
         /// <inheritdoc />
-        public Log(string filePath = "", bool appendToFile = true, ITestOutputHelper outputHelper = null) : this(new List < LogAppenders > { LogAppenders.RollingFile }, filePath, appendToFile, outputHelper)
+        public Log(ITestOutputHelper outputHelper) : this(string.Empty, outputHelper)
         {
         }
 
         /// <inheritdoc />
-        public Log(List<LogAppenders> appenders, string filePath = "", bool appendToFile = true, ITestOutputHelper outputHelper = null)
+        public Log(string filePath = "", ITestOutputHelper outputHelper = null)
         {
             Hierarchy = (Hierarchy)LogManager.GetRepository();
             Hierarchy.Root.Level = Level.All;
@@ -36,20 +33,15 @@ namespace Bromine.Logger
                 ConversionPattern = LogPattern
             };
 
-            Appenders = appenders;
             FilePath = filePath.Contains(":") ? filePath : $@"{GetResultsPath()}\{filePath}";
-            AppendToFile = appendToFile;
 
             CreateResultsDirectory();
-            InitializeAppenders();
+
+            if (!string.IsNullOrWhiteSpace(filePath)) { InitializeRollingFileAppender(); }
+            if (outputHelper != null) { InitializeXunitAppender(); }
 
             Start();
         }
-
-        /// <summary>
-        /// Log appenders used by the current session.
-        /// </summary>
-        public List<LogAppenders> Appenders { get; }
 
         /// <summary>
         /// Path to log files.
@@ -58,9 +50,9 @@ namespace Bromine.Logger
         public string FilePath { get; }
 
         /// <summary>
-        /// Should logs be appended to the current file (if it exists).
+        /// Number of errors that have been logged.
         /// </summary>
-        public bool AppendToFile { get; }
+        public int ErrorCount { get; private set; }
 
         /// <summary>
         /// File appender to add logs to an existing file.
@@ -104,6 +96,7 @@ namespace Bromine.Logger
         public void Error(string message)
         {
             Logger.Error(message);
+            ErrorCount++;
         }
 
         /// <summary>
@@ -121,7 +114,7 @@ namespace Bromine.Logger
 
             RollingFileAppender = new RollingFileAppender
             {
-                AppendToFile = AppendToFile,
+                AppendToFile = true,
                 File = FilePath,
                 Layout = Layout,
                 MaxSizeRollBackups = 5,
@@ -175,26 +168,6 @@ namespace Bromine.Logger
         public void Dispose()
         {
             Stop();
-        }
-
-        private void InitializeAppenders()
-        {
-            foreach (var appender in Appenders)
-            {
-                switch (appender)
-                {
-                    case LogAppenders.RollingFile:
-                    {
-                        InitializeRollingFileAppender();
-                        break;
-                    }
-                    case LogAppenders.Xunit:
-                    {
-                        InitializeXunitAppender();
-                        break;
-                    }
-                }
-            }
         }
 
         private void CreateResultsDirectory()

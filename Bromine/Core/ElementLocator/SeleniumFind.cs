@@ -23,11 +23,6 @@ namespace Bromine.Core.ElementLocator
         }
 
         /// <summary>
-        /// Exceptions.
-        /// </summary>
-        public List<Exception> Exceptions => Driver.Exceptions;
-
-        /// <summary>
         /// Find Element by ID.
         /// </summary>
         /// <param name="id">ID to locate an element.</param>
@@ -54,7 +49,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Driver.Log.Error(e.Message);
 
                 return new Element();
             }
@@ -80,7 +75,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Driver.Log.Error(e.Message);
 
                 return new Element();
             }
@@ -106,7 +101,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Driver.Log.Error(e.Message);
 
                 return new Element();
             }
@@ -132,7 +127,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Driver.Log.Error(e.Message);
 
                 return new Element();
             }
@@ -158,7 +153,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Driver.Log.Error(e.Message);
 
                 return new Element();
             }
@@ -192,7 +187,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Driver.Exceptions.Add(e);
+                Driver.Log.Error(e.Message);
             }
 
             return elementsList;

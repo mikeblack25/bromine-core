@@ -1,9 +1,8 @@
-﻿using Bromine.Verifies;
-
-using System;
-using System.Collections.Generic;
+﻿using Bromine.Logger;
+using Bromine.Verifies;
 
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Tests.Bromine.Verifies
@@ -16,9 +15,9 @@ namespace Tests.Bromine.Verifies
         /// <summary>
         /// 
         /// </summary>
-        public VerfiyTests()
+        public VerfiyTests(ITestOutputHelper output)
         {
-            Verify = new Verify(new List<Exception>());
+            Verify = new Verify(new Log(output));
         }
 
         /// <summary>

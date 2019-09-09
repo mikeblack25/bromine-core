@@ -8,15 +8,20 @@ using Bromine.Models;
 using Tests.Bromine.Common;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Core
 {
-    /// <inheritdoc />
     /// <summary>
     /// Tests to verify the Browser class is working as expected.
     /// </summary>
     public class BrowserTests : CoreTestsBase
     {
+        /// <inheritdoc />
+        public BrowserTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         /// <summary>
         /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// VerifyBase Browser.Source contains <see cref="CoreTestsBase.Amazon" />.
@@ -112,23 +117,22 @@ namespace Tests.Bromine.Core
         /// <summary>
         /// Navigate to <see cref="TestSites.AmazonUrl"/>.
         /// Try to save a ScreenShot to an invalid name.
-        /// VerifyBase <see cref="Browser.Exceptions"/> is not empty trying to save an invalid file name.>
         /// VerifyBase <see cref="Browser.LastImage"/> returns null and an exception is logged when an invalid path is selected.
         /// </summary>
         [Fact]
         public void VerifyTakeVisibleScreenShotError()
         {
-            Browser.Verify.Empty(Browser.Exceptions);
+            Browser.Verify.Empty(Browser.Log.XunitAppender.Logs);
 
             Browser.Navigate.ToUrl(TestSites.AmazonUrl);
             Browser.TakeVisibleScreenShot(@"-\\\\--");
 
-            Browser.Verify.NotEmpty(Browser.Exceptions);
+            Browser.Verify.NotEmpty(Browser.Log.XunitAppender.Logs);
 
-            var exceptionCount = Browser.Exceptions.Count;
+            var exceptionCount = Browser.Log.ErrorCount;
 
             Browser.Verify.Null(Browser.LastImage);
-            Browser.Verify.Equal(++exceptionCount, Browser.Exceptions.Count);
+            Browser.Verify.Equal(++exceptionCount, Browser.Log.ErrorCount);
         }
 
         /// <summary>

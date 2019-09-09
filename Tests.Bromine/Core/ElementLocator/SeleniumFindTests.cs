@@ -1,20 +1,17 @@
 ﻿using Bromine.Core.ElementLocator;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Core.ElementLocator
 {
-    /// <inheritdoc />
     /// <summary>
     /// Test to verify the Find class is working as expected.
     /// </summary>
     public class SeleniumFindTests : CoreTestsBase
     {
         /// <inheritdoc />
-        /// <summary>
-        /// Navigate to the Amazon home page.
-        /// </summary>
-        public SeleniumFindTests()
+        public SeleniumFindTests(ITestOutputHelper output) : base(output)
         {
             Browser.Navigate.ToFile($@"{BasePath}\{AmazonHome}");
         }
@@ -91,9 +88,9 @@ namespace Tests.Bromine.Core.ElementLocator
         /// </summary>
         public override void Dispose()
         {
-            Browser?.Dispose();
+            Assert.Equal(0, Browser.Log.ErrorCount);
 
-            Assert.True(ErrorList.Count == 0, string.Join(",", ErrorList));
+            Browser?.Dispose();
         }
 
         private static string IdString => "s-suggestion";

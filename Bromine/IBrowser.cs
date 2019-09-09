@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 using Bromine.Core;
@@ -92,11 +91,6 @@ namespace Bromine
         /// Helpers to navigate to pages and files.
         /// </summary>
         Navigate Navigate { get; }
-
-        /// <summary>
-        /// List of exceptions.
-        /// </summary>
-        List<Exception> Exceptions { get; }
 
         /// <summary>
         /// Browser configuration used to initialize the web driver.

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 using Bromine.Core.ElementInteraction;
 using Bromine.Core.ElementLocator;
 
 using Tests.Bromine.Common;
+
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Core.ElementInteraction
 {
@@ -15,10 +17,7 @@ namespace Tests.Bromine.Core.ElementInteraction
     public class ElementExtensionTests : CoreTestsBase
     {
         /// <inheritdoc />
-        /// <summary>
-        /// Navigate to Amazon and find an element by class.
-        /// </summary>
-        public ElementExtensionTests()
+        public ElementExtensionTests(ITestOutputHelper output) : base(output)
         {
             Browser.Navigate.ToUrl(TestSites.AmazonUrl);
             _element = Browser.Find.Element(".nav-fill");

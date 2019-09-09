@@ -32,7 +32,7 @@ namespace Tests.Bromine.Logger
             // ReSharper disable once PossibleNullReferenceException
             TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
-            Log = new Log(Appenders, string.Empty, false, Output);
+            Log = new Log(Output);
 
             Log.Message(Message);
         }
@@ -47,7 +47,7 @@ namespace Tests.Bromine.Logger
             // ReSharper disable once PossibleNullReferenceException
             TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
-            Log = new Log(Appenders, string.Empty, false, Output);
+            Log = new Log(Output);
 
             Log.Error(Message);
         }
@@ -62,7 +62,7 @@ namespace Tests.Bromine.Logger
             // ReSharper disable once PossibleNullReferenceException
             TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
-            Log = new Log(Appenders, string.Empty, false, Output);
+            Log = new Log(Output);
 
             Log.Debug(Message);
         }
