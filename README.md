@@ -60,10 +60,151 @@ The desired WebDriver can now be added.
 
 **NOTE:** I would suggest avoiding using the Internet Explorer browser as it is difficult to use and setup the driver.
 
-### Drivers
-Bromine Core provides the following drivers.
+## Features
+### Cross Browser Support
+Bromine Core provides out of the box support the following drivers.
 Additional drivers can be added to your project as needed.
 
 - Chrome
 - Edge
 - Firefox
+- Internet Explorer
+
+### Element
+Elements are components that are used to structure a web page and provide a way to interact with it.
+It is safe to say that anything you see or do on a website is part of an element.
+
+#### Element Calling Information
+After an element has been located using a Browser.Find or Browser.SeleniumFind method,
+information about how it was found can be found in the Information property.
+
+![](Documentation\Features\CallingInformation\ElementByClass.JPG)
+![](Documentation\Features\CallingInformation\ElementByCss.JPG)
+![](Documentation\Features\CallingInformation\ElementById.JPG)
+![](Documentation\Features\CallingInformation\ElementByPartialText.JPG)
+![](Documentation\Features\CallingInformation\ElementByText.JPG)
+
+#### CSS Format Extensions
+The following help build CSS formatted strings.
+
+- ``` "some_class_locator".Class() ``` will build ``` ".some_class_locator" ```
+- ``` "some_id_locator".Id() ``` will build ``` "#some_id_locator" ```
+
+#### Element Style
+Approaches to styling elements is provided by the ElementStyle class.
+The following style options are currently supported.
+
+``` C#
+Browser.ElementStyle.AddBorder(LocatorStrategy locatorStrategy, string locator, string color)
+Browser.ElementStyle.AddBorder(Element element, string color)
+Browser.ElementStyle.AddBorders(LocatorStrategy locatorStrategy, string locator, string color)
+Browser.ElementStyle.AddBorders(Element element, string color)
+```
+
+
+### Element Locators
+Under the covers Selenium is used to locate elements.
+
+The following methods are supported by the framework.
+- Id
+- Class
+- Css
+- Js
+- Tag
+- Text
+- PartialText
+
+**Note:** All location strategies are not applicable in all cases.
+
+This framework provides two main classes to locate elements Find and SeleniumFind.
+
+#### Find
+Find makes it easy to locate elements with helper methods that are built to make using CSS Selector syntax easier.
+
+``` C#
+Browser.Find.Element(string locator)
+Browser.Find.Elements(string locators)
+```
+
+These methods will attempt to locate an element or elements by CSS Selector, Id, Class, Text, Partial Text, and Tag.
+Any valid string in the DOM should be found by this call.
+
+**NOTE:** Loose matches may find unexpected elements.
+
+``` C#
+        /// <summary>
+        /// Find element by all supported element location strategies.
+        /// </summary>
+        /// <param name="locator"></param>
+        [InlineData(".gNO89b")] // CSS Selector
+        [InlineData("gbqfbb")] // Id
+        [InlineData("gNO89b")] // Class
+        [InlineData("Gmail")] // Text
+        [InlineData("Gmai")] // Partial Text
+        [InlineData("input")] // Tag
+        [Theory]
+        public void FindElement(string locator)
+        {
+            var element = Browser.Find.Element(locator);
+
+            Browser.Verify.True(element.IsInitialized);
+        }
+```
+
+``` C#
+Browser.Find.ElementByClasses(string classes)
+Browser.Find.ElementsByClasses(string classes)
+```
+
+``` C#
+        /// <summary>
+        /// Find element with all the following classes.
+        /// gb_Oa gb_Fg gb_g gb_Eg gb_Jg gb_Wf
+        /// </summary>
+        [Fact]
+        public void FindElementByClassesTest()
+        {
+            var classes = "gb_Oa gb_Fg gb_g gb_Eg gb_Jg gb_Wf";
+
+            Browser.Wait.For.DisplayedElement(Browser.Find.ElementByClasses(classes), 5);
+
+            Browser.Verify.True(Browser.Find.ElementByClasses(classes).Displayed);
+        }
+```
+
+Child elements can be located with the following methods.
+
+``` C#
+Browser.Find.ChildElement(string parentLocator, string childLocator)
+Browser.Find.ChildElement(Element parentElement, string childLocator)
+Browser.Find.ChildElements(string parentLocator, string childLocator)
+Browser.Find.ChildElements(Element parentElement, string childLocator)
+```
+
+To find descendent elements the following methods are provided.
+
+``` C#
+Browser.Find.ElementByDescendentCss(string classes)
+Browser.Find.ElementsByDescendentCss(string classes)
+```
+
+``` C#
+        /// <summary>
+        /// Find element in the DOM by descendent CSS selection. Each element is separated by a space and is a CSS selector.
+        /// The first element is the parent.
+        /// If additional selectors are added they are expected under the previous element in the DOM structure.
+        /// Id -> gbw
+        ///   class -> gb_fe
+        ///     tag -> div
+        ///        attribute -> data-pid=23
+        /// </summary>
+        [Fact]
+        public void FindElementByDescendentCssTest()
+        {
+            const string gmailString = "Gmail";
+
+            var element = Browser.Find.ElementByDescendentCss("#gbw .gb_fe div [data-pid='23']");
+
+            Browser.Verify.Equal(gmailString, element.Text);
+        }
+```
