@@ -1,11 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
 using Bromine;
 using Bromine.Core;
 using Bromine.Core.ElementInteraction;
+
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Core
 {
@@ -18,21 +19,15 @@ namespace Tests.Bromine.Core
         /// <summary>
         /// Construct a Chrome browser to use for tests.
         /// </summary>
-        protected CoreTestsBase()
+        protected CoreTestsBase(ITestOutputHelper output = null)
         {
-            Browser = new Browser();
-            ErrorList = new List<string>();
+            Browser = new Browser(output);
         }
 
         /// <summary>
         /// Main entry point to interact with a web browser.
         /// </summary>
         public IBrowser Browser { get; set; }
-
-        /// <summary>
-        /// List of errors generated during a test.
-        /// </summary>
-        public List<string> ErrorList { get; }
 
         /// <summary>
         /// Base path to all static html pages sourced in the Pages folder of the project.

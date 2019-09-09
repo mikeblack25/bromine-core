@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using Bromine.Core.ElementInteraction;
@@ -22,76 +22,64 @@ namespace Bromine.Core.ElementLocator
         }
 
         /// <summary>
+        /// Find Element by a valid locator strategy (excluding Js and XPath).
+        /// <see cref="LocatorStrategy"/>
+        /// </summary>
+        /// <param name="locator">String to locate an element.</param>
+        /// <returns></returns>
+        public Element Element(string locator)
+        {
+            var elements = Elements(locator);
+
+            return elements.Count > 0 ? elements.First() : new Element();
+        }
+
+        /// <summary>
+        /// Find Elements by a valid locator strategy (excluding Js and XPath).
+        /// <see cref="LocatorStrategy"/>
+        /// </summary>
+        /// <param name="locator">String to locate an element.</param>
+        /// <returns></returns>
+        public List<Element> Elements(string locator)
+        {
+            var elements = SeleniumFind.ElementsByCssSelector(locator);
+
+            if (elements.Count > 0) { return elements; }
+
+            elements = SeleniumFind.ElementsById(locator);
+
+            if (elements.Count > 0) { return elements; }
+
+            elements = SeleniumFind.ElementsByClass(locator);
+
+            if (elements.Count > 0) { return elements; }
+
+            elements = SeleniumFind.ElementsByText(locator);
+
+            if (elements.Count > 0) { return elements; }
+
+            elements = SeleniumFind.ElementsByPartialText(locator);
+
+            if (elements.Count > 0) { return elements; }
+
+            return SeleniumFind.ElementsByTag(locator);
+        }
+
+        /// <summary>
         /// Find element by className or classNames.
         /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
-        /// <param name="className">Class name(s) of descendent class elements.</param>
+        /// <param name="classes">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
-        public Element ElementByClasses(params string[] className)
-        {
-            var builder = new StringBuilder();
-
-            foreach (var item in className)
-            {
-                builder.Append($".{item}");
-            }
-
-            return Element(builder.ToString());
-        }
+        public Element ElementByClasses(string classes) => Element(BuildClasses(classes));
 
         /// <summary>
         /// Find elements by className or classNames.
         /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
-        /// <param name="className">Class name(s) of descendent class elements.</param>
+        /// <param name="classes">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
-        public List<Element> ElementsByClasses(params string[] className)
-        {
-            var builder = new StringBuilder();
-
-            foreach (var item in className)
-            {
-                builder.Append($".{item}");
-            }
-
-            return Elements(builder.ToString());
-        }
-
-        /// <summary>
-        /// Find element by descendent className.
-        /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
-        /// </summary>
-        /// <param name="className">Class name(s) of descendent class elements.</param>
-        /// <returns></returns>
-        public Element ElementByDescendentClass(params string[] className)
-        {
-            var builder = new StringBuilder();
-
-            foreach (var item in className)
-            {
-                builder.Append($".{item} ");
-            }
-
-            return Element(builder.ToString().TrimEnd());
-        }
-
-        /// <summary>
-        /// Find element by descendent className.
-        /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
-        /// </summary>
-        /// <param name="className">Class name(s) of descendent class elements.</param>
-        /// <returns></returns>
-        public List<Element> ElementsByDescendentClass(params string[] className)
-        {
-            var builder = new StringBuilder();
-
-            foreach (var item in className)
-            {
-                builder.Append($".{item} ");
-            }
-
-            return Elements(builder.ToString().TrimEnd());
-        }
+        public List<Element> ElementsByClasses(string classes) => Elements(BuildClasses(classes));
 
         /// <summary>
         /// Find child Element by CSS selector based on a parent element found by CSS selector.
@@ -115,7 +103,12 @@ namespace Bromine.Core.ElementLocator
         /// <param name="parentLocator">Locate the parent element by CSS selector.</param>
         /// <param name="childLocator">Locate child element by CSS selector.</param>
         /// <returns></returns>
-        public List<Element> ChildElements(string parentLocator, string childLocator) => Elements(parentLocator)[0].FindElements(childLocator);
+        public List<Element> ChildElements(string parentLocator, string childLocator)
+        {
+            var elements = Elements(parentLocator);
+
+            return elements.Count > 0 ? ChildElements(elements.First(), childLocator) : elements;
+        }
 
         /// <summary>
         /// Find child Elements by CSS selector based on a parent element found by CSS selector.
@@ -126,30 +119,33 @@ namespace Bromine.Core.ElementLocator
         public List<Element> ChildElements(Element parentElement, string childLocator) => parentElement.FindElements(childLocator);
 
         /// <summary>
-        /// Find Element by CSS selector.
+        /// Find element by descendent className.
+        /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
         /// </summary>
-        /// <param name="cssSelector">Locate element by CSS selector.</param>
+        /// <param name="classes">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
-        public Element Element(string cssSelector)
-        {
-            try
-            {
-                return Elements(cssSelector)[0];
-            }
-            catch (Exception e)
-            {
-                SeleniumFind.Exceptions.Add(e);
-
-                return new Element();
-            }
-        }
+        public Element ElementByDescendentCss(string classes) => Element(classes);
 
         /// <summary>
-        /// Find Elements by CSS selector.
+        /// Find element by descendent className.
+        /// NOTE: Class inputs should be organized based on the class node structure in the DOM.
         /// </summary>
-        /// <param name="cssSelector">Locate elements by CSS selector.</param>
+        /// <param name="classes">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
-        public List<Element> Elements(string cssSelector) => SeleniumFind.Elements(LocatorStrategy.Css, cssSelector);
+        public List<Element> ElementsByDescendentCss(string classes) => Elements(classes);
+
+        private string BuildClasses(string classes)
+        {
+            var classItems = classes.Split(' ');
+            var builder = new StringBuilder();
+
+            foreach (var item in classItems)
+            {
+                builder.Append(item.Class());
+            }
+
+            return builder.ToString();
+        }
 
         private SeleniumFind SeleniumFind { get; }
     }

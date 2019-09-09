@@ -7,8 +7,9 @@
     {
 #pragma warning disable 1591
         Chrome,
+        Edge,
         Firefox,
-        Edge
+        InternetExplorer
 #pragma warning restore 1591
     }
 }

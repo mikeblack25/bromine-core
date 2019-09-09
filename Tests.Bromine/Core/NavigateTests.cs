@@ -5,17 +5,22 @@ using OpenQA.Selenium;
 using Tests.Bromine.Common;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Core
 {
-    /// <inheritdoc />
     /// <summary>
     /// Tests to verify the Navigate class is working as expected.
     /// </summary>
     public class NavigateTests : CoreTestsBase
     {
+        /// <inheritdoc />
+        public NavigateTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         /// <summary>
-        /// Verify behavior in <see cref="Navigate"/> for the following.
+        /// VerifyBase behavior in <see cref="Navigate"/> for the following.
         /// <see cref="Navigate.ToFile"/>
         /// <see cref="Navigate.Back"/>
         /// <see cref="Navigate.Forward"/>
@@ -24,33 +29,33 @@ namespace Tests.Bromine.Core
         [Fact]
         public void NavigateToFileVerifyBackForwardAndRefreshTest()
         {
-            Browser.Navigate.ToFile($@"{BasePath}\{AmazonHome}"); // Verify Navigate.ToFile().
+            Browser.Navigate.ToFile($@"{BasePath}\{AmazonHome}"); // VerifyBase Navigate.ToFile().
             var originalUrl = Browser.Url;
 
             CartButton.Click();
             var nextUrl = Browser.Url;
 
-            Assert.Contains("cart", nextUrl);
+            Browser.Verify.Contains("cart", nextUrl);
 
             Browser.Navigate.Back();
 
-            Assert.Equal(originalUrl, Browser.Url); // Verify Navigate.Back().
+            Browser.Verify.Equal(originalUrl, Browser.Url); // VerifyBase Navigate.Back().
 
             Browser.Navigate.Forward();
 
-            Assert.Equal(nextUrl, Browser.Url); // Verify Navigate.Forward().
+            Browser.Verify.Equal(nextUrl, Browser.Url); // VerifyBase Navigate.Forward().
 
             var cartButton = CartButton;
 
-            Assert.True(cartButton.Displayed);
+            Browser.Verify.True(cartButton.Displayed);
 
             Browser.Navigate.Refresh();
 
-            Assert.Throws<StaleElementReferenceException>(() => cartButton.Displayed); // Verify Navigate.Refresh().
+            Assert.Throws<StaleElementReferenceException>(() => cartButton.Displayed); // VerifyBase Navigate.Refresh().
         }
 
         /// <summary>
-        /// Verify the Browser can navigate to the requested URL.
+        /// VerifyBase the Browser can navigate to the requested URL.
         /// <see cref="Navigate.ToUrl"/>
         /// </summary>
         [Fact]
@@ -58,7 +63,7 @@ namespace Tests.Bromine.Core
         {
             Browser.Navigate.ToUrl(TestSites.AmazonUrl);
 
-            Assert.Equal(TestSites.AmazonUrl, Browser.Url);
+            Browser.Verify.Equal(TestSites.AmazonUrl, Browser.Url);
         }
     }
 }

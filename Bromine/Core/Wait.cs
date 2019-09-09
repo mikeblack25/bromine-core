@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Bromine.Core.ElementInteraction;
 
@@ -39,6 +38,11 @@ namespace Bromine.Core
         public For(Browser browser)
         {
             Browser = browser;
+
+            DefaultWait = new DefaultWait<IWebDriver>(Driver.WebDriver)
+            {
+                PollingInterval = TimeSpan.FromMilliseconds(250)
+            };
         }
 
         /// <summary>
@@ -46,21 +50,14 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="element">Element to wait for.</param>
         /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
-        public void DisplayedElement(Element element, int timeToWait) => Condition(() => element.Displayed, timeToWait);
-
-        /// <summary>
-        /// Wait for the given element to be visible.
-        /// </summary>
-        /// <param name="element">Element to wait for.</param>
-        /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
-        public void VisibleElement(Element element, int timeToWait) => Condition(() => element.Enabled, timeToWait);
+        public void DisplayedElement(Element element, int timeToWait = 1) => Condition(() => element.Displayed, timeToWait);
 
         /// <summary>
         /// Wait for the given URL to be loaded.
         /// </summary>
         /// <param name="expectedUrl">Expected URL to wait for.</param>
         /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
-        public void Navigation(string expectedUrl, int timeToWait) => Condition(() => Browser.Url == expectedUrl, timeToWait);
+        public void Navigation(string expectedUrl, int timeToWait = 1) => Condition(() => Browser.Url == expectedUrl, timeToWait);
 
         /// <summary>
         /// Wait for the document to be in a "complete" state.
@@ -75,32 +72,26 @@ namespace Bromine.Core
         /// <returns></returns>
         public bool Condition(Func<bool> condition, int timeToWait = 1)
         {
-            var result = false;
-
             try
             {
-                var wait = new DefaultWait<IWebDriver>(Driver.WebDriver)
-                {
-                    Timeout = TimeSpan.FromSeconds(timeToWait),
-                    PollingInterval = TimeSpan.FromMilliseconds(250)
-                };
+                DefaultWait.Timeout = TimeSpan.FromSeconds(timeToWait);
 
-                wait.Until(x => condition());
+                DefaultWait.Until(x => condition());
 
-                result = true;
+                return true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Exceptions.Add(ex);
-            }
+                Driver.Log.Error(e.Message);
 
-            return result;
+                return false;
+            }
         }
 
         private const string PageLoadedScript = "\"return document.readyState\").Equals(\"complete\")";
 
         private Browser Browser { get; }
         private Driver Driver => Browser.Driver;
-        private List<Exception> Exceptions => Browser.Exceptions;
+        private DefaultWait<IWebDriver> DefaultWait { get; }
     }
 }

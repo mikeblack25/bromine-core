@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 using OpenQA.Selenium;
@@ -34,7 +33,7 @@ namespace Bromine.Core
                 }
                 catch (Exception e)
                 {
-                    Exceptions.Add(e);
+                    Driver.Log.Error(e.Message);
                 }            
             }
         } 
@@ -53,15 +52,10 @@ namespace Bromine.Core
                 }
                 catch (Exception e)
                 {
-                    Exceptions.Add(e);
+                    Driver.Log.Error(e.Message);
                 }
             }
         }
-
-        /// <summary>
-        /// <see cref="Core.Driver.Exceptions"/>
-        /// </summary>
-        public List<Exception> Exceptions => Driver.Exceptions;
 
         /// <summary>
         /// Maximize the window.
@@ -74,7 +68,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Driver.Log.Error(e.Message);
             }
         }
 
@@ -89,7 +83,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Driver.Log.Error(e.Message);
             }
         }
 
@@ -104,7 +98,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Exceptions.Add(e);
+                Driver.Log.Error(e.Message);
             }
         }
 
