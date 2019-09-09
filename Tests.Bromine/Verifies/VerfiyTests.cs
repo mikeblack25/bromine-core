@@ -30,7 +30,7 @@ namespace Tests.Bromine.Verifies
         /// i8
         /// </summary>
         [Fact]
-        public void VerifyContainsTest()
+        public void ContainsTest()
         {
             var expectedSubString = "ipsum";
             var actualString = "Lorem ipsum dolor sit amet";
@@ -42,19 +42,19 @@ namespace Tests.Bromine.Verifies
         /// 
         /// </summary>
         [Fact]
-        public void VerifyContainsFailedTest()
+        public void ContainsFailedTest()
         {
             var expectedSubString = "test";
             var actualString = "Lorem ipsum dolor sit amet";
 
-            Assert.Throws<DoesNotContainException>(() => Assert.DoesNotContain(expectedSubString, actualString));
+            Assert.Throws<ContainsException>(() => Assert.Contains(expectedSubString, actualString));
         }
 
         /// <summary>
         /// 
         /// </summary>
         [Fact]
-        public void VerifyDoesNotContainTest()
+        public void DoesNotContainTest()
         {
             var expectedSubString = "test";
             var actualString = "Lorem ipsum dolor sit amet";
@@ -66,7 +66,7 @@ namespace Tests.Bromine.Verifies
         /// 
         /// </summary>
         [Fact]
-        public void VerifyDoesNotContainFailedTest()
+        public void DoesNotContainFailedTest()
         {
             var expectedSubString = "ipsum";
             var actualString = "Lorem ipsum dolor sit amet";
