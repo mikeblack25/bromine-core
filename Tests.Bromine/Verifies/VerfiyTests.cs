@@ -10,12 +10,12 @@ namespace Tests.Bromine.Verifies
     /// <summary>
     /// Tests to verify the Verify methods
     /// </summary>
-    public class VerfiyTests
+    public class VerifyTests
     {
         /// <summary>
         /// 
         /// </summary>
-        public VerfiyTests(ITestOutputHelper output)
+        public VerifyTests(ITestOutputHelper output)
         {
             Verify = new Verify(new Log(output));
         }
@@ -26,7 +26,7 @@ namespace Tests.Bromine.Verifies
         public Verify Verify { get; }
 
         /// <summary>
-        /// i8
+        /// Verifies that a sub-string is contained within a given string.
         /// </summary>
         [Fact]
         public void ContainsTest()
@@ -38,7 +38,7 @@ namespace Tests.Bromine.Verifies
         }
 
         /// <summary>
-        /// 
+        /// Verifies that a sub-string is NOT contained within a given string and throws the proper exception.
         /// </summary>
         [Fact]
         public void ContainsFailedTest()
@@ -50,7 +50,7 @@ namespace Tests.Bromine.Verifies
         }
 
         /// <summary>
-        /// 
+        /// Verifies that a sub-string is NOT contained within a given string.
         /// </summary>
         [Fact]
         public void DoesNotContainTest()
@@ -62,7 +62,7 @@ namespace Tests.Bromine.Verifies
         }
 
         /// <summary>
-        /// 
+        /// Verifies that a sub-string is contained within a given string and throws the proper exception.
         /// </summary>
         [Fact]
         public void DoesNotContainFailedTest()
@@ -71,6 +71,18 @@ namespace Tests.Bromine.Verifies
             var actualString = "Lorem ipsum dolor sit amet";
 
             Assert.Throws<DoesNotContainException>(() => Assert.DoesNotContain(expectedSubString, actualString));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Fact]
+        public void DoesNotMatchTest()
+        {
+            var expectedRegexPattern = "";
+            var actualString = "";
+
+            Verify.DoesNotMatch(expectedRegexPattern, actualString);
         }
     }
 }
