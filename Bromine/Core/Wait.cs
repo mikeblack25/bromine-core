@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Bromine.Core.ElementInteraction;
 
@@ -81,9 +80,9 @@ namespace Bromine.Core
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Exceptions.Add(ex);
+                Driver.Log.Error(e.Message);
 
                 return false;
             }
@@ -94,6 +93,5 @@ namespace Bromine.Core
         private Browser Browser { get; }
         private Driver Driver => Browser.Driver;
         private DefaultWait<IWebDriver> DefaultWait { get; }
-        private List<Exception> Exceptions => Browser.Exceptions;
     }
 }

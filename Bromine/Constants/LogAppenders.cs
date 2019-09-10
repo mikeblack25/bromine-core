@@ -1,15 +1,13 @@
 ﻿namespace Bromine.Constants
 {
     /// <summary>
-    /// Supported web browser types.
+    /// Supported approaches to log.
     /// </summary>
-    public enum BrowserType
+    public enum LogAppenders
     {
 #pragma warning disable 1591
-        Chrome,
-        Edge,
-        Firefox,
-        InternetExplorer
+        RollingFile,
+        Xunit
 #pragma warning restore 1591
     }
 }

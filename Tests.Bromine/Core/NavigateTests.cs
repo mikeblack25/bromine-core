@@ -5,15 +5,20 @@ using OpenQA.Selenium;
 using Tests.Bromine.Common;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Core
 {
-    /// <inheritdoc />
     /// <summary>
     /// Tests to verify the Navigate class is working as expected.
     /// </summary>
     public class NavigateTests : CoreTestsBase
     {
+        /// <inheritdoc />
+        public NavigateTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         /// <summary>
         /// VerifyBase behavior in <see cref="Navigate"/> for the following.
         /// <see cref="Navigate.ToFile"/>

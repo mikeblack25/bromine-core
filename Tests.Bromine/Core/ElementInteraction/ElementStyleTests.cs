@@ -1,10 +1,12 @@
 ﻿using Bromine.Core.ElementInteraction;
 using Bromine.Core.ElementLocator;
+
 using Tests.Bromine.Common;
 
 using Xunit;
+using Xunit.Abstractions;
 
-namespace Tests.Bromine.Core
+namespace Tests.Bromine.Core.ElementInteraction
 {
     /// <inheritdoc />
     /// <summary>
@@ -13,7 +15,7 @@ namespace Tests.Bromine.Core
     public class ElementStyleTests : CoreTestsBase
     {
         /// <inheritdoc />
-        public ElementStyleTests()
+        public ElementStyleTests(ITestOutputHelper output) : base(output)
         {
             Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }

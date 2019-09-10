@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+
+using Bromine.Logger;
 
 namespace Bromine.Verifies
 {
@@ -9,8 +10,7 @@ namespace Bromine.Verifies
     public class SoftVerify : VerifyBase, IDisposable
     {
         /// <inheritdoc />
-        /// <param name="exceptions"></param>
-        public SoftVerify(List<Exception> exceptions) : base(exceptions)
+        public SoftVerify(Log log) : base(log)
         {
         }
 
@@ -22,7 +22,7 @@ namespace Bromine.Verifies
         internal override void HandleException(Exception exception, string message = "")
         {
             HasFailure = true;
-            Exceptions.Add(BuildException(exception, message));
+            Log.Error(BuildException(exception, message).Message);
         }
 
         /// <summary>
@@ -30,17 +30,9 @@ namespace Bromine.Verifies
         /// </summary>
         public void Dispose()
         {
-            var message = string.Empty;
+            if (Log.ErrorCount == 0) { return; }
 
-            if (Exceptions.Count <= 0) { return; }
-
-
-            foreach (var exception in Exceptions)
-            {
-                message += $"{exception.Message} {Environment.NewLine}";
-            }
-
-            Exceptions.Add(new Exception(message));
+            Log.Error("One or more verify statements failed. See above logs.");
         }
     }
 }
