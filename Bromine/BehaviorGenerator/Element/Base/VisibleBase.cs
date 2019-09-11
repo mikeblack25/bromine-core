@@ -1,10 +1,17 @@
-﻿namespace Bromine.Bdd
+﻿using Bromine.BehaviorGenerator.Constants;
+
+namespace Bromine.BehaviorGenerator.Element.Base
 {
     /// <summary>
     /// 
     /// </summary>
-    public class BddVisibleElementBase : BddElementBase
+    public class VisibleElementBase : ElementBase
     {
+        /// <inheritdoc />
+        public VisibleElementBase(string format, params GherkinActions[] actions) : base(format, actions)
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>

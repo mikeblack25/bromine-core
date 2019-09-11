@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Bromine.Bdd
+namespace Bromine.BehaviorGenerator
 {
     /// <summary>
     /// 
     /// </summary>
-    public class PomElementStatementGenerator
+    public class ActionGenerator
     {
         /// <summary>
         /// 
@@ -13,7 +13,7 @@ namespace Bromine.Bdd
         /// <param name="pom"></param>
         /// <param name="pomDestination"></param>
         /// <param name="fileSuffix"></param>
-        public PomElementStatementGenerator(object pom, string pomDestination, string fileSuffix = "Steps")
+        public ActionGenerator(object pom, string pomDestination, string fileSuffix = "Steps")
         {
             PomDestinationPath = pomDestination;
             var type = pom.GetType();

@@ -1,6 +1,5 @@
-﻿using Bromine.Bdd;
+﻿using Bromine.BehaviorGenerator;
 using Bromine.Constants;
-
 using Tests.Bromine.Page;
 using Tests.Bromine.Page.Google;
 
@@ -28,7 +27,7 @@ namespace Tests.Bromine.Bdd
         [Fact]
         public void GetElements()
         {
-            var generator = new PomElementStatementGenerator(Home, @"C:\repos\bromine-core\Tests.Bromine\Page");
+            var generator = new ActionGenerator(Home, @"C:\repos\bromine-core\Tests.Bromine\Page");
         }
     }
 }

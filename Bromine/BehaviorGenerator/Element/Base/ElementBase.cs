@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Bromine.BehaviorGenerator.Constants;
 
-namespace Bromine.Bdd
+namespace Bromine.BehaviorGenerator.Element.Base
 {
     /// <summary>
     /// 
     /// </summary>
-    public class BddElementBase
+    public class ElementBase
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="format"></param>
-        /// <param name="keywords"></param>
-        public BddElementBase(string format, params GherkinKeywords[] keywords)
+        /// <param name="actions"></param>
+        public ElementBase(string format, params GherkinActions[] actions)
         {
             Format = format;
-            Keywords = keywords.ToList();
+            Keywords = actions.ToList();
         }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace Bromine.Bdd
         /// <summary>
         /// 
         /// </summary>
-        public List<GherkinKeywords> Keywords { get; }
+        public List<GherkinActions> Keywords { get; }
 
         /// <summary>
         /// 

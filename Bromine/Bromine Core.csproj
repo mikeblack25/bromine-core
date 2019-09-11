@@ -77,20 +77,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bdd\BddFieldElement.cs" />
-    <Compile Include="Bdd\BddLabelElement.cs" />
-    <Compile Include="Bdd\BddINavigationElementBase.cs" />
-    <Compile Include="Bdd\BddImageElement.cs" />
-    <Compile Include="Bdd\BddDropdownElement.cs" />
-    <Compile Include="Bdd\BddLinkElement.cs" />
-    <Compile Include="Bdd\BddFrameElement.cs" />
-    <Compile Include="Bdd\BddTemplate.cs" />
-    <Compile Include="Bdd\BddVisibleElementBase.cs" />
-    <Compile Include="Bdd\BddElementBase.cs" />
-    <Compile Include="Bdd\BddButtonElement.cs" />
-    <Compile Include="Bdd\GherkinKeywords.cs" />
-    <Compile Include="Bdd\PomElementStatementGenerator.cs" />
-    <Compile Include="Bdd\PomTemplate.cs" />
+    <Compile Include="BehaviorGenerator\Element\Field.cs" />
+    <Compile Include="BehaviorGenerator\Element\Label.cs" />
+    <Compile Include="BehaviorGenerator\Element\Base\NavigationBase.cs" />
+    <Compile Include="BehaviorGenerator\Element\Image.cs" />
+    <Compile Include="BehaviorGenerator\Element\Dropdown.cs" />
+    <Compile Include="BehaviorGenerator\Element\Link.cs" />
+    <Compile Include="BehaviorGenerator\Element\Frame.cs" />
+    <Compile Include="BehaviorGenerator\Template\SpecFlow.cs" />
+    <Compile Include="BehaviorGenerator\Element\Base\VisibleBase.cs" />
+    <Compile Include="BehaviorGenerator\Element\Base\ElementBase.cs" />
+    <Compile Include="BehaviorGenerator\Element\Button.cs" />
+    <Compile Include="BehaviorGenerator\Constants\GherkinActions.cs" />
+    <Compile Include="BehaviorGenerator\ActionGenerator.cs" />
     <Compile Include="Constants\BrowserType.cs" />
     <Compile Include="Constants\LogAppenders.cs" />
     <Compile Include="Core\Browser.cs" />

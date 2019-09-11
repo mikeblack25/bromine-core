@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using Bromine.BehaviorGenerator.Constants;
+using Bromine.BehaviorGenerator.Element.Base;
 
-namespace Bromine.Bdd
+namespace Bromine.BehaviorGenerator.Template
 {
     /// <summary>
     /// 
     /// </summary>
-    public class BddTemplate
+    public class SpecFlowTemplate
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="elements"></param>
-        public BddTemplate(List<BddElementBase> elements)
+        public SpecFlowTemplate(List<ElementBase> elements)
         {
             Elements = elements;
         }
@@ -25,25 +27,25 @@ namespace Bromine.Bdd
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="action"></param>
         /// <param name="format"></param>
         /// <returns></returns>
-        private string BuildAttribute(GherkinKeywords keyword, string format)
+        private string BuildAttribute(GherkinActions action, string format)
         {
-            return $"[{keyword.ToString()}(\"{format}\")]";
+            return $"[{action.ToString()}(\"{format}\")]";
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="action"></param>
         /// <param name="format"></param>
         /// <returns></returns>
-        public string BuildMethodHeader(GherkinKeywords keyword, string format)
+        public string BuildMethodHeader(GherkinActions action, string format)
         {
             var items = format.Split(' ');
 
-            var builder = new StringBuilder($"public void {keyword}");
+            var builder = new StringBuilder($"public void {action}");
 
             foreach (var item in items)
             {
@@ -57,7 +59,7 @@ namespace Bromine.Bdd
         }
 
 
-        private List<BddElementBase> Elements { get; }
+        private List<ElementBase> Elements { get; }
         /*
          *[Given("we '(.*)' items in stock\.")]
 public void GivenWeHaveASpecificNumberOfItemsInStock(string itemsInStockExpression)
