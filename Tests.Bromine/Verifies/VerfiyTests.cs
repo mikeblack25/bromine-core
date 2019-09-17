@@ -13,22 +13,17 @@ using Xunit.Sdk;
 namespace Tests.Bromine.Verifies
 {
     /// <summary>
-    /// Tests to verify the Verify methods.
+    /// Tests to verify the behavior of Verify methods.
     /// </summary>
     public class VerifyTests
     {
         /// <summary>
-        /// 
+        /// Create an instance of Verify for testing its methods.
         /// </summary>
         public VerifyTests(ITestOutputHelper output)
         {
             Verify = new Verify(new Log(output));
         }
-
-        /// <summary>
-        /// Verify property.
-        /// </summary>
-        public Verify Verify { get; }
 
         /// <summary>
         /// Verifies that all items in the collection pass when executed against.
@@ -65,8 +60,8 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void CollectionFailedTest()
         {
-            var johnDoe = "John Doe";
-            var janeDoe = "Jane Doe";
+            const string johnDoe = "John Doe";
+            const string janeDoe = "Jane Doe";
 
             var list = new List<object>
             {
@@ -84,10 +79,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void ContainsTest()
         {
-            var expectedSubString = "ipsum";
-            var actualString = "Lorem ipsum dolor sit amet";
-
-            Verify.Contains(expectedSubString, actualString);
+            Verify.Contains(IpsumString, LoremIpsumDolorSitAmetString);
         }
 
         /// <summary>
@@ -96,10 +88,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void ContainsFailedTest()
         {
-            var expectedSubString = "test";
-            var actualString = "Lorem ipsum dolor sit amet";
-
-            Assert.Throws<ContainsException>(() => Assert.Contains(expectedSubString, actualString));
+            Assert.Throws<ContainsException>(() => Assert.Contains(TestString, LoremIpsumDolorSitAmetString));
         }
 
         /// <summary>
@@ -108,10 +97,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void DoesNotContainTest()
         {
-            var expectedSubString = "test";
-            var actualString = "Lorem ipsum dolor sit amet";
-
-            Verify.DoesNotContain(expectedSubString, actualString);
+            Verify.DoesNotContain(TestString, LoremIpsumDolorSitAmetString);
         }
 
         /// <summary>
@@ -120,10 +106,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void DoesNotContainFailedTest()
         {
-            var expectedSubString = "ipsum";
-            var actualString = "Lorem ipsum dolor sit amet";
-
-            Assert.Throws<DoesNotContainException>(() => Assert.DoesNotContain(expectedSubString, actualString));
+            Assert.Throws<DoesNotContainException>(() => Assert.DoesNotContain(IpsumString, LoremIpsumDolorSitAmetString));
         }
 
         /// <summary>
@@ -132,10 +115,9 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void DoesNotMatchTest()
         {
-            var expectedRegexPattern = new Regex("(?:[a-z][a-z]+)").ToString();
-            var actualString = "1234";
+            const string actualString = "1234";
 
-            Verify.DoesNotMatch(expectedRegexPattern, actualString);
+            Verify.DoesNotMatch(Pattern, actualString);
         }
 
         /// <summary>
@@ -144,10 +126,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void DoesNotMatchFailedTest()
         {
-            var expectedRegexPattern = new Regex("(?:[a-z][a-z]+)").ToString();
-            var actualString = "test";
-
-            Assert.Throws<DoesNotMatchException>(() =>Assert.DoesNotMatch(expectedRegexPattern, actualString));
+            Assert.Throws<DoesNotMatchException>(() =>Assert.DoesNotMatch(Pattern, TestString));
         }
 
         /// <summary>
@@ -156,9 +135,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EmptyTest()
         {
-            List<string> emptyList = new List<string> { };
-            
-            Verify.Empty(emptyList);
+            Verify.Empty(new List<string>());
         }
 
         /// <summary>
@@ -167,14 +144,14 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EmptyFailedTest()
         {
-            List<string> emptyList = new List<string>
+            var list = new List<string>
             {
                 "test1",
                 "test2",
                 "test3"
             };
 
-            Assert.Throws<EmptyException>(() => Assert.Empty(emptyList));
+            Assert.Throws<EmptyException>(() => Assert.Empty(list));
         }
 
         /// <summary>
@@ -183,10 +160,9 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EndsWithTest()
         {
-            var expectedEndString = "test.";
-            var actualString = "This is a test.";
+            const string expectedEndString = "test.";
 
-            Verify.EndsWith(expectedEndString, actualString);
+            Verify.EndsWith(expectedEndString, ThisIsATestMessage);
         }
 
         /// <summary>
@@ -195,10 +171,9 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EndsWithFailedTest()
         {
-            var expectedEndString = "This";
-            var actualString = "This is a test.";
+            const string expectedEndString = "This";
 
-            Assert.Throws<EndsWithException>(() => Assert.EndsWith(expectedEndString, actualString));
+            Assert.Throws<EndsWithException>(() => Assert.EndsWith(expectedEndString, ThisIsATestMessage));
         }
 
         /// <summary>
@@ -228,10 +203,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EqualDoubleTest()
         {
-            var expected = 12.3;
-            var actual = 12.3;
-
-            Verify.Equal(expected, actual);
+            Verify.Equal(12.3, 12.3);
         }
 
         /// <summary>
@@ -240,10 +212,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EqualDoubleFailedTest()
         {
-            var expected = 12.3;
-            var actual = 12.4;
-
-            Assert.Throws<EqualException>(() => Assert.Equal(expected, actual));
+            Assert.Throws<EqualException>(() => Assert.Equal(12.3, 12.4));
         }
 
         /// <summary>
@@ -252,7 +221,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void FalseTest()
         {
-            Verify.False(1 == 2);
+            Verify.False(false);
         }
 
         /// <summary>
@@ -261,7 +230,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void FalseFailedTest()
         {
-            Assert.Throws<FalseException>(() => Assert.False(1 == 1));
+            Assert.Throws<FalseException>(() => Assert.False(true));
         }
 
         /// <summary>
@@ -270,11 +239,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void InRangeDoubleTest()
         {
-            var low = 10.0;
-            var high = 12.0;
-            var actual = 11.0;
-
-            Verify.InRange(actual, low, high);
+            Verify.InRange(11.0, 10.0, 12.0);
         }
 
         /// <summary>
@@ -283,11 +248,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void InRangeDoubleFailedTest()
         {
-            var low = 10.0;
-            var high = 12.0;
-            var actual = 13.0;
-
-            Assert.Throws<InRangeException>(() => Assert.InRange(actual, low, high));
+            Assert.Throws<InRangeException>(() => Assert.InRange(13.0, 11.0, 12.0));
         }
 
         /// <summary>
@@ -322,9 +283,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotNullTest()
         {
-            var test = new Point();
-
-            Verify.NotNull(test);
+            Verify.NotNull(new Point());
         }
 
         /// <summary>
@@ -360,10 +319,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotEqualTest()
         {
-            var expected = new Point();
-            var actual = new Size();
-
-            Verify.NotEqual(expected, actual);
+            Verify.NotEqual(new Point(), new Size());
         }
 
         /// <summary>
@@ -372,10 +328,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotEqualFailedTest()
         {
-            var expected = new Point();
-            var actual = new Point();
-
-            Assert.Throws<NotEqualException>(() => Assert.NotEqual(expected, actual));
+            Assert.Throws<NotEqualException>(() => Assert.NotEqual(new Point(), new Point()));
         }
 
         /// <summary>
@@ -384,7 +337,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotEmptyTest()
         {
-            List<string> list = new List<string>
+            var list = new List<string>
             {
                 "test1",
                 "test2",
@@ -400,9 +353,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotEmptyFailedTest()
         {
-            List<string> List = new List<string> { };
-
-            Assert.Throws<NotEmptyException>(() => Assert.NotEmpty(List));
+            Assert.Throws<NotEmptyException>(() => Assert.NotEmpty(new List<string>()));
         }
 
         /// <summary>
@@ -411,11 +362,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotInRangeTest()
         {
-            var low = 10.0;
-            var high = 12.0;
-            var actual = 13.0;
-
-            Verify.NotInRange(actual, low, high);
+            Verify.NotInRange(13.0, 10.0, 12.0);
         }
 
         /// <summary>
@@ -424,11 +371,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotInRangeFailedTest()
         {
-            var low = 10.0;
-            var high = 12.0;
-            var actual = 11.0;
-
-            Assert.Throws<NotInRangeException>(() => Assert.NotInRange(actual, low, high));
+            Assert.Throws<NotInRangeException>(() => Assert.NotInRange(11.0, 10.0, 12.0));
         }
 
         /// <summary>
@@ -437,7 +380,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void TrueTest()
         {
-            Verify.True(1 == 1);
+            Verify.True(true);
         }
 
         /// <summary>
@@ -446,7 +389,15 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void TrueFailedTest()
         {
-            Assert.Throws<TrueException>(() => Assert.True(1 == 2));
+            Assert.Throws<TrueException>(() => Assert.True(false));
         }
+
+        private Verify Verify { get; }
+
+        private static string Pattern => new Regex("(?:[a-z][a-z]+)").ToString();
+        private static string LoremIpsumDolorSitAmetString => "Lorem ipsum dolor sit amet";
+        private static string IpsumString => "ipsum";
+        private static string TestString => "test";
+        private static string ThisIsATestMessage => "This is a test.";
     }
 }
