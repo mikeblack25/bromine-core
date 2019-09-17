@@ -45,8 +45,7 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="collection">The collection.</param>
         /// <param name="action">The action to test each item against.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void Collection(IEnumerable<object> collection, Action<object> action, string message = "")
+        public void Collection(IEnumerable<object> collection, params Action<object>[] action)
         {
             try
             {
@@ -54,7 +53,7 @@ namespace Bromine.Verifies
             }
             catch (Exception e)
             {
-                HandleException(e, message);
+                HandleException(e);
             }
         }
 

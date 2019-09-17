@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
@@ -65,7 +65,17 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void CollectionFailedTest()
         {
+            var johnDoe = "John Doe";
+            var janeDoe = "Jane Doe";
 
+            var list = new List<object>
+            {
+                johnDoe,
+                janeDoe
+            };
+
+            Verify.Collection(list, item => Assert.Equal(johnDoe, item),
+                                                item => Assert.Equal(janeDoe, item));
         }
 
         /// <summary>
