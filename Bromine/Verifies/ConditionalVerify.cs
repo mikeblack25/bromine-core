@@ -12,9 +12,7 @@ namespace Bromine.Verifies
     public class ConditionalVerify : VerifyBase
     {
         /// <inheritdoc />
-        public ConditionalVerify(Log log) : base(log)
-        {
-        }
+        public ConditionalVerify(Log log) : base(log) { }
 
         internal override void HandleException(Exception exception, string message = "")
         {

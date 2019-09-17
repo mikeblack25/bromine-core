@@ -31,7 +31,9 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void AllTest()
         {
+            var items = new[] { "Lorem", "ipsum", "dolor", "sit", "amet" };
 
+            Verify.All(items, x => Assert.Contains(x.ToString(), LoremIpsumDolorSitAmetString));
         }
 
         /// <summary>
@@ -40,7 +42,9 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void AllFailedTest()
         {
+            var items = new[] { "Lorem", "ipsum", "dolor", "sit", "amet", "test" };
 
+            Assert.Throws<AllException>(() => Verify.All(items, x => Assert.Contains(x.ToString(), LoremIpsumDolorSitAmetString)));
         }
 
         /// <summary>
@@ -50,7 +54,17 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void CollectionTest()
         {
+            const string johnDoe = "John Doe";
+            const string janeDoe = "Jane Doe";
 
+            var list = new List<object>
+            {
+                johnDoe,
+                janeDoe
+            };
+
+            Verify.Collection(list, item => Assert.Equal(johnDoe, item),
+                item => Assert.Equal(janeDoe, item));
         }
 
         /// <summary>
@@ -69,8 +83,7 @@ namespace Tests.Bromine.Verifies
                 janeDoe
             };
 
-            Verify.Collection(list, item => Assert.Equal(johnDoe, item),
-                                                item => Assert.Equal(janeDoe, item));
+            Assert.Throws<CollectionException>(() => Assert.Collection(list, item => Assert.Equal(johnDoe, item)));
         }
 
         /// <summary>
@@ -194,7 +207,10 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EqualObjectsFailedTest()
         {
+            var expected = new Point();
+            var actual = new Point(1,1);
 
+            Assert.Throws<EqualException>(() => Verify.Equal(expected, actual));
         }
 
         /// <summary>
@@ -212,7 +228,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EqualDoubleFailedTest()
         {
-            Assert.Throws<EqualException>(() => Assert.Equal(12.3, 12.4));
+            Assert.Throws<EqualException>(() => Verify.Equal(12.3, 12.4));
         }
 
         /// <summary>

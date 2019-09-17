@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Bromine.Logger;
 
 using Xunit;
+using Xunit.Sdk;
 
 namespace Bromine.Verifies
 {
@@ -33,7 +34,7 @@ namespace Bromine.Verifies
             {
                 Assert.All(collection, action);
             }
-            catch (Exception e)
+            catch (AllException e)
             {
                 HandleException(e, message);
             }
@@ -158,7 +159,7 @@ namespace Bromine.Verifies
             {
                 Assert.Equal(expected, actual);
             }
-            catch (Exception e)
+            catch (NotEqualException e)
             {
                 HandleException(e, message);
             }
