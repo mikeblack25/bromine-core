@@ -52,7 +52,7 @@ namespace Bromine.Verifies
             {
                 Assert.Collection(collection, action);
             }
-            catch (Exception e)
+            catch (CollectionException e)
             {
                 HandleException(e);
             }
@@ -70,7 +70,7 @@ namespace Bromine.Verifies
             {
                 Assert.Contains(expectedSubString, actualString);
             }
-            catch (Exception e)
+            catch (ContainsException e)
             {
                 HandleException(e, message);
             }
@@ -337,7 +337,7 @@ namespace Bromine.Verifies
             {
                 Assert.True(condition);
             }
-            catch (Exception e)
+            catch (TrueException e)
             {
                 HandleException(e, message);
             }

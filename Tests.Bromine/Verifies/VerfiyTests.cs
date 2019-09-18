@@ -101,7 +101,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void ContainsFailedTest()
         {
-            Assert.Throws<ContainsException>(() => Assert.Contains(TestString, LoremIpsumDolorSitAmetString));
+            Assert.Throws<ContainsException>(() => Verify.Contains(TestString, LoremIpsumDolorSitAmetString));
         }
 
         /// <summary>
@@ -405,7 +405,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void TrueFailedTest()
         {
-            Assert.Throws<TrueException>(() => Assert.True(false));
+            Assert.Throws<TrueException>(() => Verify.True(false));
         }
 
         private Verify Verify { get; }
