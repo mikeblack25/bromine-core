@@ -44,7 +44,7 @@ namespace Tests.Bromine.Verifies
         {
             var items = new[] { "Lorem", "ipsum", "dolor", "sit", "amet", "test" };
 
-            Assert.Throws<AllException>(() => Verify.All(items, x => Assert.Contains(x.ToString(), LoremIpsumDolorSitAmetString)));
+            Assert.Throws<Exception>(() => Verify.All(items, x => Assert.Contains(x.ToString(), LoremIpsumDolorSitAmetString)));
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void ContainsFailedTest()
         {
-            Assert.Throws<ContainsException>(() => Verify.Contains(TestString, LoremIpsumDolorSitAmetString));
+            Assert.Throws<ContainsException>(() => Assert.Contains(TestString, LoremIpsumDolorSitAmetString));
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EqualDoubleFailedTest()
         {
-            Assert.Throws<EqualException>(() => Verify.Equal(12.3, 12.4));
+            Assert.Throws<Exception>(() => Verify.Equal(12.3, 12.4));
         }
 
         /// <summary>
@@ -405,7 +405,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void TrueFailedTest()
         {
-            Assert.Throws<TrueException>(() => Verify.True(false));
+            Assert.Throws<TrueException>(() => Assert.True(false));
         }
 
         private Verify Verify { get; }
