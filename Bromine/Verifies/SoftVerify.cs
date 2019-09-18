@@ -5,7 +5,10 @@ using Bromine.Logger;
 namespace Bromine.Verifies
 {
     /// <summary>
-    /// 
+    /// Provides different methods to "soft" verify test expectations.
+    /// When a verify statement fails:
+    /// - Test execution will continue.
+    /// - Test is reported as fail.
     /// </summary>
     public class SoftVerify : VerifyBase, IDisposable
     {
@@ -15,6 +18,11 @@ namespace Bromine.Verifies
         }
 
         /// <summary>
+        /// SoftVerify
+        /// </summary>
+        public override string Type => "SoftVerify";
+
+        /// <summary>
         /// True if a SoftVerify statement has failed.
         /// </summary>
         public bool HasFailure { get; private set; }
@@ -22,7 +30,7 @@ namespace Bromine.Verifies
         internal override void HandleException(Exception exception, string message = "")
         {
             HasFailure = true;
-            Log.Error(BuildException(exception, message).Message);
+            LogErrorMessage(exception, message);
         }
 
         /// <summary>

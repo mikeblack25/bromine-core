@@ -44,7 +44,7 @@ namespace Tests.Bromine.Verifies
         {
             var items = new[] { "Lorem", "ipsum", "dolor", "sit", "amet", "test" };
 
-            Assert.Throws<Exception>(() => Verify.All(items, x => Assert.Contains(x.ToString(), LoremIpsumDolorSitAmetString)));
+            Assert.Throws<AllException>(() => Verify.All(items, x => Assert.Contains(x.ToString(), LoremIpsumDolorSitAmetString)));
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Tests.Bromine.Verifies
             };
 
             Verify.Collection(list, item => Assert.Equal(johnDoe, item),
-                item => Assert.Equal(janeDoe, item));
+                                                item => Assert.Equal(janeDoe, item));
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Tests.Bromine.Verifies
                 janeDoe
             };
 
-            Assert.Throws<CollectionException>(() => Assert.Collection(list, item => Assert.Equal(johnDoe, item)));
+            Assert.Throws<CollectionException>(() => Verify.Collection(list, item => Assert.Equal(johnDoe, item)));
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void ContainsFailedTest()
         {
-            Assert.Throws<ContainsException>(() => Assert.Contains(TestString, LoremIpsumDolorSitAmetString));
+            Assert.Throws<ContainsException>(() => Verify.Contains(TestString, LoremIpsumDolorSitAmetString));
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void DoesNotContainFailedTest()
         {
-            Assert.Throws<DoesNotContainException>(() => Assert.DoesNotContain(IpsumString, LoremIpsumDolorSitAmetString));
+            Assert.Throws<DoesNotContainException>(() => Verify.DoesNotContain(IpsumString, LoremIpsumDolorSitAmetString));
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void DoesNotMatchFailedTest()
         {
-            Assert.Throws<DoesNotMatchException>(() =>Assert.DoesNotMatch(Pattern, TestString));
+            Assert.Throws<DoesNotMatchException>(() =>Verify.DoesNotMatch(Pattern, TestString));
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Tests.Bromine.Verifies
                 "test3"
             };
 
-            Assert.Throws<EmptyException>(() => Assert.Empty(list));
+            Assert.Throws<EmptyException>(() => Verify.Empty(list));
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Tests.Bromine.Verifies
         {
             const string expectedEndString = "This";
 
-            Assert.Throws<EndsWithException>(() => Assert.EndsWith(expectedEndString, ThisIsATestMessage));
+            Assert.Throws<EndsWithException>(() => Verify.EndsWith(expectedEndString, ThisIsATestMessage));
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void EqualDoubleFailedTest()
         {
-            Assert.Throws<Exception>(() => Verify.Equal(12.3, 12.4));
+            Assert.Throws<EqualException>(() => Verify.Equal(12.3, 12.4));
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void FalseFailedTest()
         {
-            Assert.Throws<FalseException>(() => Assert.False(true));
+            Assert.Throws<FalseException>(() => Verify.False(true));
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void InRangeDoubleFailedTest()
         {
-            Assert.Throws<InRangeException>(() => Assert.InRange(13.0, 11.0, 12.0));
+            Assert.Throws<InRangeException>(() => Verify.InRange(13.0, 11.0, 12.0));
         }
 
         /// <summary>
@@ -290,7 +290,7 @@ namespace Tests.Bromine.Verifies
             var high = new DateTime(2019, 3, 1, 0, 0, 0);
             var actual = new DateTime(2019, 4, 1, 0, 0, 0);
 
-            Assert.Throws<InRangeException>(() => Assert.InRange(actual, low, high));
+            Assert.Throws<InRangeException>(() => Verify.InRange(actual, low, high));
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotNullFailedTest()
         {
-            Assert.Throws<NotNullException>(() => Assert.NotNull(null));
+            Assert.Throws<NotNullException>(() => Verify.NotNull(null));
         }
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NullFailedTest()
         {
-
+            Verify.True(false, "Not implemented");
         }
 
         /// <summary>
@@ -344,7 +344,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotEqualFailedTest()
         {
-            Assert.Throws<NotEqualException>(() => Assert.NotEqual(new Point(), new Point()));
+            Assert.Throws<NotEqualException>(() => Verify.NotEqual(new Point(), new Point()));
         }
 
         /// <summary>
@@ -369,7 +369,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotEmptyFailedTest()
         {
-            Assert.Throws<NotEmptyException>(() => Assert.NotEmpty(new List<string>()));
+            Assert.Throws<NotEmptyException>(() => Verify.NotEmpty(new List<string>()));
         }
 
         /// <summary>
@@ -387,7 +387,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NotInRangeFailedTest()
         {
-            Assert.Throws<NotInRangeException>(() => Assert.NotInRange(11.0, 10.0, 12.0));
+            Assert.Throws<NotInRangeException>(() => Verify.NotInRange(11.0, 10.0, 12.0));
         }
 
         /// <summary>
@@ -405,7 +405,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void TrueFailedTest()
         {
-            Assert.Throws<TrueException>(() => Assert.True(false));
+            Assert.Throws<TrueException>(() => Verify.True(false));
         }
 
         private Verify Verify { get; }

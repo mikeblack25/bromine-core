@@ -22,6 +22,11 @@ namespace Bromine.Verifies
         }
 
         /// <summary>
+        /// Type of Verify.
+        /// </summary>
+        public abstract string Type { get; }
+
+        /// <summary>
         /// Verifies that all items in the collection pass when executed against
         /// action.
         /// </summary>
@@ -32,6 +37,7 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.All");
                 Assert.All(collection, action);
             }
             catch (AllException e)
@@ -50,6 +56,7 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.Collection");
                 Assert.Collection(collection, action);
             }
             catch (CollectionException e)
@@ -68,6 +75,7 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.Contains");
                 Assert.Contains(expectedSubString, actualString);
             }
             catch (ContainsException e)
@@ -86,9 +94,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.DoesNotContain");
                 Assert.DoesNotContain(expectedSubString, actualString);
             }
-            catch (Exception e)
+            catch (DoesNotContainException e)
             {
                 HandleException(e, message);
             }
@@ -104,9 +113,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.DoesNotMatch");
                 Assert.DoesNotMatch(expectedRegexPattern, actualString);
             }
-            catch (Exception e)
+            catch (DoesNotMatchException e)
             {
                 HandleException(e, message);
             }
@@ -121,9 +131,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.Empty");
                 Assert.Empty(collection);
             }
-            catch (Exception e)
+            catch (EmptyException e)
             {
                 HandleException(e, message);
             }
@@ -139,9 +150,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.EndsWith");
                 Assert.EndsWith(expectedEndString, actualString);
             }
-            catch (Exception e)
+            catch (EndsWithException e)
             {
                 HandleException(e, message);
             }
@@ -157,9 +169,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.Equal");
                 Assert.Equal(expected, actual);
             }
-            catch (NotEqualException e)
+            catch (EqualException e)
             {
                 HandleException(e, message);
             }
@@ -175,9 +188,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.Equal");
                 Assert.Equal(expected, actual);
             }
-            catch (Exception e)
+            catch (EqualException e)
             {
                 HandleException(e, message);
             }
@@ -192,9 +206,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.False");
                 Assert.False(condition);
             }
-            catch (Exception e)
+            catch (FalseException e)
             {
                 HandleException(e, message);
             }
@@ -211,9 +226,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.InRange");
                 Assert.InRange(actual, low, high);
             }
-            catch (Exception e)
+            catch (InRangeException e)
             {
                 HandleException(e, message);
             }
@@ -230,9 +246,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.InRange");
                 Assert.InRange(actual, low, high);
             }
-            catch (Exception e)
+            catch (InRangeException e)
             {
                 HandleException(e, message);
             }
@@ -247,9 +264,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.NotNull");
                 Assert.NotNull(condition);
             }
-            catch (Exception e)
+            catch (NotNullException e)
             {
                 HandleException(e, message);
             }
@@ -264,9 +282,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.Null");
                 Assert.Null(condition);
             }
-            catch (Exception e)
+            catch (NullException e)
             {
                 HandleException(e, message);
             }
@@ -282,9 +301,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.NotEqual");
                 Assert.NotEqual(expected, actual);
             }
-            catch (Exception e)
+            catch (NotEqualException e)
             {
                 HandleException(e, message);
             }
@@ -299,9 +319,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.NotEmpty");
                 Assert.NotEmpty(collection);
             }
-            catch (Exception e)
+            catch (NotEmptyException e)
             {
                 HandleException(e, message);
             }
@@ -318,9 +339,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.NotInRange");
                 Assert.NotInRange(actual, low, high);
             }
-            catch (Exception e)
+            catch (NotInRangeException e)
             {
                 HandleException(e, message);
             }
@@ -335,6 +357,7 @@ namespace Bromine.Verifies
         {
             try
             {
+                Log.Message($"Expected {Type}.True");
                 Assert.True(condition);
             }
             catch (TrueException e)
@@ -343,21 +366,15 @@ namespace Bromine.Verifies
             }
         }
 
-        internal virtual void HandleException(Exception exception, string message = "")
+        internal abstract void HandleException(Exception exception, string message = "");
+
+        internal virtual void LogErrorMessage(Exception exception, string message = "")
         {
+            if (message != string.Empty)
+            {
+                Log.Error(message);
+            }
             Log.Error(exception.Message);
-
-            throw BuildException(exception, message);
-        }
-
-        internal Exception BuildException(Exception exception, string message = "")
-        {
-            if (string.IsNullOrEmpty(message)) { message = exception.Message; }
-
-            var errorMessage = $"{message} {Environment.NewLine} {exception.Message}";
-            var e = new Exception(errorMessage.Trim(), exception.InnerException);
-
-            return e;
         }
 
         internal Log Log { get; }
