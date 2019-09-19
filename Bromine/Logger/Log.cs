@@ -6,6 +6,7 @@ using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
+using log4net.Repository;
 using log4net.Repository.Hierarchy;
 
 using Xunit.Abstractions;
@@ -25,9 +26,11 @@ namespace Bromine.Logger
         /// <inheritdoc />
         public Log(string filePath = "", ITestOutputHelper outputHelper = null)
         {
-            Hierarchy = (Hierarchy)LogManager.GetRepository();
-            Hierarchy.Root.Level = Level.All;
             OutputHelper = outputHelper;
+
+            Repo = LogManager.GetRepository();    
+            Root.Level = Level.All;
+
             Layout = new PatternLayout
             {
                 ConversionPattern = LogPattern
@@ -38,7 +41,13 @@ namespace Bromine.Logger
             CreateResultsDirectory();
 
             if (!string.IsNullOrWhiteSpace(filePath)) { InitializeRollingFileAppender(); }
-            if (outputHelper != null) { InitializeXunitAppender(); }
+
+            if (outputHelper != null)
+            {
+                InitializeXunitAppender();
+
+                Root.AddAppender(XunitAppender);
+            }
 
             Start();
         }
@@ -77,7 +86,7 @@ namespace Bromine.Logger
         /// </summary>
         public void Stop()
         {
-            LogManager.GetRepository().ResetConfiguration();
+            Repo.ResetConfiguration();
         }
 
         /// <summary>
@@ -139,7 +148,6 @@ namespace Bromine.Logger
 
             XunitAppender.ActivateOptions();
 
-            Hierarchy.Root.AddAppender(XunitAppender);
             Hierarchy.Configured = true;
         }
 
@@ -178,13 +186,16 @@ namespace Bromine.Logger
             }
         }
 
-        private Hierarchy Hierarchy { get; }
+        private ILoggerRepository Repo { get; }
+        private Hierarchy Hierarchy => (Hierarchy)Repo;
+        private log4net.Repository.Hierarchy.Logger Root => Hierarchy.Root;
         private PatternLayout Layout { get; }
         private ITestOutputHelper OutputHelper { get; }
-        private string GetResultsPath(string directory = Results) => $@"{AppDomain.CurrentDomain.BaseDirectory}\{directory}";
 
-        private const string Results =  "Results";
-        private string LogPattern => "%date %-5level %message%newline";
         private static readonly ILog Logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        private string GetResultsPath(string directory = Results) => $@"{AppDomain.CurrentDomain.BaseDirectory}\{directory}";
+        private const string Results = "Results";
+        private string LogPattern => "%date %-5level %message%newline";
     }
 }

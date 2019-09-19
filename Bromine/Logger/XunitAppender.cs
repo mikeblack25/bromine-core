@@ -31,11 +31,13 @@ namespace Bromine.Logger
         /// <summary>
         /// Add a log message to the console.
         /// </summary>
-        /// <param name="loggingEvent"></param>
+        /// <param name="loggingEvent">Log event to write to the console.</param>
         protected override void Append(LoggingEvent loggingEvent)
         {
-            Logs.Add(RenderLoggingEvent(loggingEvent));
-            _outputHelper.WriteLine(RenderLoggingEvent(loggingEvent));
+            var log = RenderLoggingEvent(loggingEvent);
+
+            Logs.Add(log);
+            _outputHelper.WriteLine(log);
         }
 
         private readonly ITestOutputHelper _outputHelper;
