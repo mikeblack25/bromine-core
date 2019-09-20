@@ -104,6 +104,7 @@
     <Compile Include="Verifies\SoftVerify.cs" />
     <Compile Include="Verifies\Verify.cs" />
     <Compile Include="Verifies\VerifyBase.cs" />
+    <Compile Include="Verifies\VerifyFailedEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)\README.md">

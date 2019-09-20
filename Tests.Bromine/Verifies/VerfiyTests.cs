@@ -327,7 +327,7 @@ namespace Tests.Bromine.Verifies
         [Fact]
         public void NullFailedTest()
         {
-            Verify.True(false, "Not implemented");
+            Assert.Throws<NullException>(() => Verify.Null(1));
         }
 
         /// <summary>

@@ -49,6 +49,8 @@ namespace Bromine.Core
             ConditionalVerify = new ConditionalVerify(Log);
             SoftVerify = new SoftVerify(Log);
 
+            Verify.VerifyFailed += VerifyOnVerifyFailed;
+
             Driver = new Driver(BrowserOptions.Driver, Log);
             if (BrowserOptions.Driver.ImplicitWaitEnabled)
             {
@@ -255,6 +257,13 @@ namespace Bromine.Core
             }
 
             _screenShotDirectory = path;
+        }
+
+        private void VerifyOnVerifyFailed(Exception e, VerifyFailedEvent args)
+        {
+            Dispose();
+
+            if (args.Type != ConditionalVerify.Type) { throw e; }
         }
 
         private Screenshot ScreenShot { get; set; }

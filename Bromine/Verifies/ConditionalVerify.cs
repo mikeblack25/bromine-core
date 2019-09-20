@@ -28,6 +28,10 @@ namespace Bromine.Verifies
             Skip.If(true, message);
 
             LogErrorMessage(exception, message);
+
+            OnVerifyFailed(exception, new VerifyFailedEvent(Type, message));
+
+            throw exception;
         }
     }
 }

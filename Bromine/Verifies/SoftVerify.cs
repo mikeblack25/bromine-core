@@ -31,6 +31,8 @@ namespace Bromine.Verifies
         {
             HasFailure = true;
             LogErrorMessage(exception, message);
+
+            OnVerifyFailed(exception, new VerifyFailedEvent(Type, message));
         }
 
         /// <summary>

@@ -42,7 +42,7 @@ namespace Tests.Bromine.Core.ElementLocator
         [Fact]
         public void FindElementByClassesTest()
         {
-            var classes = "gb_Oa gb_Fg gb_g gb_Eg gb_Jg gb_Wf";
+            var classes = "gb_Oa gb_Fg gb_g gb_Eg gb_Jg";
 
             Browser.Wait.For.DisplayedElement(Browser.Find.ElementByClasses(classes), 5);
 

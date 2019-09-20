@@ -22,6 +22,18 @@ namespace Bromine.Verifies
         }
 
         /// <summary>
+        /// Event fired when a verify statement fails.
+        /// </summary>
+        internal event VerifyFailedDelegate VerifyFailed;
+
+        /// <summary>
+        /// Delegate to invoke when a verify statement fails.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="args"></param>
+        internal delegate void VerifyFailedDelegate(Exception e, VerifyFailedEvent args);
+
+        /// <summary>
         /// Type of Verify.
         /// </summary>
         public abstract string Type { get; }
@@ -378,5 +390,15 @@ namespace Bromine.Verifies
         }
 
         internal Log Log { get; }
+
+        /// <summary>
+        /// Invoke the Verify Failed event.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="args"></param>
+        protected void OnVerifyFailed(Exception e, VerifyFailedEvent args)
+        {
+            VerifyFailed?.Invoke(e, args);
+        }
     }
 }
