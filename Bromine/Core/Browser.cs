@@ -113,7 +113,7 @@ namespace Bromine.Core
         public Wait Wait { get; }
 
         /// <inheritdoc />
-        public string ScreenShotDirectory => _screenShotDirectory;
+        public string ScreenShotDirectory { get; private set; }
 
         /// <inheritdoc />
         public string ScreenShotName { get; set; }
@@ -227,12 +227,16 @@ namespace Bromine.Core
         public void Dispose()
         {
             var didSoftVerifyFail = SoftVerify.HasFailure;
-            SoftVerify.Dispose();
             Driver?.Dispose();
 
             if (didSoftVerifyFail)
             {
                 Verify.False(true, "One or more Verify statements failed. See the logs for more details.");
+            }
+
+            if (Log.ErrorCount > 0)
+            {
+                Log.Message("REVIEW: One or more errors occured during execution.");
             }
 
             Log.Dispose();
@@ -256,7 +260,7 @@ namespace Bromine.Core
                 Directory.CreateDirectory(path);
             }
 
-            _screenShotDirectory = path;
+            ScreenShotDirectory = path;
         }
 
         private void VerifyOnVerifyFailed(Exception e, VerifyFailedEvent args)
@@ -269,6 +273,5 @@ namespace Bromine.Core
         private Screenshot ScreenShot { get; set; }
 
         private static string ScreenShotsDirectory => "ScreenShots";
-        private string _screenShotDirectory;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Bromine.Constants;
 
 using Xunit;
-using static Xunit.Assert;
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Page.Google
 {
@@ -13,9 +13,9 @@ namespace Tests.Bromine.Page.Google
         /// <summary>
         /// Navigate to <see cref="Home.Url"/>
         /// </summary>
-        public HomeTests()
+        public HomeTests(ITestOutputHelper output)
         {
-            InitializePages(BrowserType.Chrome);
+            InitializePages(BrowserType.Chrome, false, output);
             Home.Navigate();
         }
 
@@ -27,7 +27,7 @@ namespace Tests.Bromine.Page.Google
         {
             Home.AboutLink.Click();
 
-            Contains("https://about.google", Browser.Url);
+            Browser.Verify.Contains("https://about.google", Browser.Url);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Tests.Bromine.Page.Google
         {
             Home.StoreLink.Click();
 
-            Contains("https://store.google", Browser.Url);
+            Browser.Verify.Contains("https://store.google", Browser.Url);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Tests.Bromine.Page.Google
         {
             Home.GmailLink.Click();
 
-            Contains("https://www.google.com/gmail", Browser.Url);
+            Browser.Verify.Contains("https://www.google.com/gmail", Browser.Url);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Tests.Bromine.Page.Google
         {
             Home.ImagesLink.Click();
 
-            Contains("https://www.google.com/imghp", Browser.Url);
+            Browser.Verify.Contains("https://www.google.com/imghp", Browser.Url);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Tests.Bromine.Page.Google
         {
             var googleImage = Home.GoogleImage;
 
-            Contains("Google", googleImage.GetAttribute("alt"));
+            Browser.Verify.Contains("Google", googleImage.GetAttribute("alt"));
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Tests.Bromine.Page.Google
         {
             Home.Search("cat");
 
-            Contains("q=cat", Browser.Url);
+            Browser.Verify.Contains("q=cat", Browser.Url);
         }
     }
 }

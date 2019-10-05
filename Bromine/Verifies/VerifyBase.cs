@@ -49,7 +49,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.All");
+                BuildMessage($"Does {collection} conform to All {action}?");
                 Assert.All(collection, action);
             }
             catch (AllException e)
@@ -68,7 +68,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.Collection");
+                BuildMessage($"Does {collection} conform to {action}");
                 Assert.Collection(collection, action);
             }
             catch (CollectionException e)
@@ -87,7 +87,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.Contains");
+                BuildMessage($"Does {actualString} contain {expectedSubString}?");
                 Assert.Contains(expectedSubString, actualString);
             }
             catch (ContainsException e)
@@ -99,15 +99,15 @@ namespace Bromine.Verifies
         /// <summary>
         /// Verifies that a string does not contain a given sub-string, using the current culture.
         /// </summary>
-        /// <param name="expectedSubString">The sub-string which is expected not to be in the string.</param>
+        /// <param name="notExpectedSubString">The sub-string which is expected not to be in the string.</param>
         /// <param name="actualString">The string to be inspected.</param>
         /// <param name="message">Message to display if the expectation fails.</param>
-        public void DoesNotContain(string expectedSubString, string actualString, string message = "")
+        public void DoesNotContain(string notExpectedSubString, string actualString, string message = "")
         {
             try
             {
-                Log.Message($"Expected {Type}.DoesNotContain");
-                Assert.DoesNotContain(expectedSubString, actualString);
+                BuildMessage($"Is '{notExpectedSubString}' not found in '{actualString}'?");
+                Assert.DoesNotContain(notExpectedSubString, actualString);
             }
             catch (DoesNotContainException e)
             {
@@ -119,14 +119,14 @@ namespace Bromine.Verifies
         /// Verifies that a string does not match a regular expression.
         /// </summary>
         /// <param name="expectedRegexPattern">The regex pattern expected not to match.</param>
-        /// <param name="actualString">The string to be inspected.</param>
+        /// <param name="doesNotMatchString">The string to be inspected.</param>
         /// <param name="message">Message to display if the expectation fails.</param>
-        public void DoesNotMatch(string expectedRegexPattern, string actualString, string message = "")
+        public void DoesNotMatch(string expectedRegexPattern, string doesNotMatchString, string message = "")
         {
             try
             {
-                Log.Message($"Expected {Type}.DoesNotMatch");
-                Assert.DoesNotMatch(expectedRegexPattern, actualString);
+                BuildMessage($"Does '{doesNotMatchString}' match the '{expectedRegexPattern}' regex?");
+                Assert.DoesNotMatch(expectedRegexPattern, doesNotMatchString);
             }
             catch (DoesNotMatchException e)
             {
@@ -143,7 +143,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.Empty");
+                BuildMessage($"Is {collection} empty?");
                 Assert.Empty(collection);
             }
             catch (EmptyException e)
@@ -162,7 +162,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.EndsWith");
+                BuildMessage($"Does {actualString} end with {expectedEndString}?");
                 Assert.EndsWith(expectedEndString, actualString);
             }
             catch (EndsWithException e)
@@ -181,7 +181,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.Equal");
+                BuildMessage($"Does {expected} equal {actual}?");
                 Assert.Equal(expected, actual);
             }
             catch (EqualException e)
@@ -200,7 +200,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.Equal");
+                BuildMessage($"Does {expected} equal {actual}?");
                 Assert.Equal(expected, actual);
             }
             catch (EqualException e)
@@ -218,7 +218,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.False");
+                BuildMessage("Is False?");
                 Assert.False(condition);
             }
             catch (FalseException e)
@@ -238,7 +238,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.InRange");
+                BuildMessage($"Is {actual} between {low} and {high}?");
                 Assert.InRange(actual, low, high);
             }
             catch (InRangeException e)
@@ -258,10 +258,30 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.InRange");
+                BuildMessage($"Is {actual} between {low} and {high}?");
                 Assert.InRange(actual, low, high);
             }
             catch (InRangeException e)
+            {
+                HandleException(e, message);
+            }
+        }
+
+        /// <summary>
+        /// Verifies that a value is not within a given range, using the default comparer.
+        /// </summary>
+        /// <param name="actual">The actual value to be evaluated.</param>
+        /// <param name="low">The (inclusive) low value of the range.</param>
+        /// <param name="high">The (inclusive) high value of the range.</param>
+        /// <param name="message">Message to display if the expectation fails.</param>
+        public void NotInRange(double actual, double low, double high, string message = "")
+        {
+            try
+            {
+                BuildMessage($"Is {actual} outside of {low} and {high}?");
+                Assert.NotInRange(actual, low, high);
+            }
+            catch (NotInRangeException e)
             {
                 HandleException(e, message);
             }
@@ -276,7 +296,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.NotNull");
+                BuildMessage($"Is {condition} not null?");
                 Assert.NotNull(condition);
             }
             catch (NotNullException e)
@@ -294,7 +314,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.Null");
+                BuildMessage($"Is {condition} null?");
                 Assert.Null(condition);
             }
             catch (NullException e)
@@ -313,7 +333,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.NotEqual");
+                BuildMessage($"Is {expected} not equal to {actual}?");
                 Assert.NotEqual(expected, actual);
             }
             catch (NotEqualException e)
@@ -331,30 +351,10 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.NotEmpty");
+                BuildMessage($"Is {collection} not empty?");
                 Assert.NotEmpty(collection);
             }
             catch (NotEmptyException e)
-            {
-                HandleException(e, message);
-            }
-        }
-
-        /// <summary>
-        /// Verifies that a value is not within a given range, using the default comparer.
-        /// </summary>
-        /// <param name="actual">The actual value to be evaluated.</param>
-        /// <param name="low">The (inclusive) low value of the range.</param>
-        /// <param name="high">The (inclusive) high value of the range.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void NotInRange(double actual, double low, double high, string message = "")
-        {
-            try
-            {
-                Log.Message($"Expected {Type}.NotInRange");
-                Assert.NotInRange(actual, low, high);
-            }
-            catch (NotInRangeException e)
             {
                 HandleException(e, message);
             }
@@ -369,7 +369,7 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message($"Expected {Type}.True");
+                BuildMessage("Is True?");
                 Assert.True(condition);
             }
             catch (TrueException e)
@@ -399,6 +399,11 @@ namespace Bromine.Verifies
         protected void OnVerifyFailed(Exception e, VerifyFailedEvent args)
         {
             VerifyFailed?.Invoke(e, args);
+        }
+
+        private void BuildMessage(string message)
+        {
+            Log.Message($"{message}".TrimEnd());
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Bromine.Verifies
     /// - Test execution will continue.
     /// - Test is reported as fail.
     /// </summary>
-    public class SoftVerify : VerifyBase, IDisposable
+    public class SoftVerify : VerifyBase
     {
         /// <inheritdoc />
         public SoftVerify(Log log) : base(log)
@@ -33,16 +33,6 @@ namespace Bromine.Verifies
             LogErrorMessage(exception, message);
 
             OnVerifyFailed(exception, new VerifyFailedEvent(Type, message));
-        }
-
-        /// <summary>
-        /// Check if there are any exceptions to log out for results.
-        /// </summary>
-        public void Dispose()
-        {
-            if (Log.ErrorCount == 0) { return; }
-
-            Log.Error("One or more verify statements failed. See above logs.");
         }
     }
 }

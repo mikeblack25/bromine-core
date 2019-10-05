@@ -1,4 +1,5 @@
-﻿using Tests.Bromine.Common;
+﻿using System.Collections.Generic;
+using Tests.Bromine.Common;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -20,19 +21,17 @@ namespace Tests.Bromine.Core.ElementLocator
         /// <summary>
         /// Find element by all supported element location strategies.
         /// </summary>
-        /// <param name="locator"></param>
-        [InlineData(".gNO89b")] // CSS Selector
-        [InlineData("gbqfbb")] // Id
-        [InlineData("gNO89b")] // Class
-        [InlineData("Gmail")] // Text
-        [InlineData("Gmai")] // Partial Text
-        [InlineData("input")] // Tag
-        [Theory]
-        public void FindElement(string locator)
+        [Fact]
+        public void FindElement()
         {
-            var element = Browser.Find.Element(locator);
+            var list = new List<string> { ".gNO89b", "gbqfbb", "gNO89b", "Gmail", "Gmai", "input" };
 
-            Browser.Verify.True(element.IsInitialized);
+            foreach (var locator in list)
+            {
+                var element = Browser.Find.Element(locator);
+
+                Browser.SoftVerify.True(element.IsInitialized, locator);
+            }
         }
 
         /// <summary>

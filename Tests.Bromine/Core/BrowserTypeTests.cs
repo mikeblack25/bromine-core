@@ -8,6 +8,7 @@ using Tests.Bromine.Common;
 
 using Xunit;
 using Xunit.Abstractions;
+
 using DriverOptions = Bromine.Models.DriverOptions;
 
 namespace Tests.Bromine.Core
@@ -20,6 +21,7 @@ namespace Tests.Bromine.Core
         /// <inheritdoc />
         public BrowserTypeTests(ITestOutputHelper output)
         {
+            Output = output;
         }
 
         /// <summary>
@@ -134,12 +136,13 @@ namespace Tests.Bromine.Core
         {
             var browserOptions = new BrowserOptions(driverOptions);
 
-            Browser = new Browser(browserOptions);
+            Browser = new Browser(browserOptions, "BrowserTypeTests", Output);
 
             Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
 
         private Browser Browser { get; set; }
+        private ITestOutputHelper Output { get; }
 
         private const string RemoteAddress = "localhost:4444";
     }
