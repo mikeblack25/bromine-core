@@ -30,7 +30,7 @@ namespace Bromine.Core
         /// Launch a Chrome browser with the default configuration and console logging for Xunit.
         /// </summary>
         /// <param name="output"><see cref="ITestOutputHelper"/></param>
-        public Browser(ITestOutputHelper output) : this(new BrowserOptions(), string.Empty, output)
+        public Browser(ITestOutputHelper output) : this(new BrowserOptions(), output)
         {
         }
 
@@ -38,13 +38,12 @@ namespace Bromine.Core
         /// Provides methods of interacting with the web browser.
         /// </summary>
         /// <param name="options">Provides advanced browser and driver options.</param>
-        /// <param name="logFileName">Level of information to log.</param>
         /// <param name="output"><see cref="ITestOutputHelper"/></param>
-        public Browser(BrowserOptions options, string logFileName = "", ITestOutputHelper output = null)
+        public Browser(BrowserOptions options, ITestOutputHelper output = null)
         {
             BrowserOptions = options;
 
-            Log = new Log(logFileName, output);
+            Log = new Log(output);
             Verify = new Verify(Log);
             ConditionalVerify = new ConditionalVerify(Log);
             SoftVerify = new SoftVerify(Log);

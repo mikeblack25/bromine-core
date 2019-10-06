@@ -136,7 +136,7 @@ namespace Tests.Bromine.Core
         {
             var browserOptions = new BrowserOptions(driverOptions);
 
-            Browser = new Browser(browserOptions, "BrowserTypeTests", Output);
+            Browser = new Browser(browserOptions, Output);
 
             Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }

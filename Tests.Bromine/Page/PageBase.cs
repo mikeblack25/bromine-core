@@ -27,7 +27,7 @@ namespace Tests.Bromine.Page
         public void InitializePages(BrowserType browser, bool isHeadless = false, ITestOutputHelper output = null)
         {
             var browserOptions = new BrowserOptions(browser, isHeadless);
-            Browser = new Browser(browserOptions, string.Empty, output);
+            Browser = new Browser(browserOptions, output);
 
             InitializePages();
         }

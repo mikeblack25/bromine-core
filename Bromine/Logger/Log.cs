@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
 using log4net;
 using log4net.Appender;
@@ -19,14 +20,13 @@ namespace Bromine.Logger
     public class Log : IDisposable
     {
         /// <inheritdoc />
-        public Log(ITestOutputHelper outputHelper) : this(string.Empty, outputHelper)
+        public Log(ITestOutputHelper output = null)
         {
-        }
+            Output = output;
 
-        /// <inheritdoc />
-        public Log(string filePath = "", ITestOutputHelper outputHelper = null)
-        {
-            OutputHelper = outputHelper;
+            var test = (ITest)Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Output);
+            TestName = test.DisplayName;
+            LogName = $@"{LogsPath}\{TestName}{LogExtension}";
 
             Repo = LogManager.GetRepository();    
             Root.Level = Level.All;
@@ -36,13 +36,13 @@ namespace Bromine.Logger
                 ConversionPattern = LogPattern
             };
 
-            FilePath = filePath.Contains(":") ? filePath : $@"{GetResultsPath()}\{filePath}";
+            CreateLogsDirectory();
+            CreateImagesDirectory();
+            CreateDomDirectory();
 
-            CreateResultsDirectory();
+            InitializeRollingFileAppender();
 
-            if (!string.IsNullOrWhiteSpace(filePath)) { InitializeRollingFileAppender(); }
-
-            if (outputHelper != null)
+            if (output != null)
             {
                 InitializeXunitAppender();
 
@@ -53,10 +53,32 @@ namespace Bromine.Logger
         }
 
         /// <summary>
+        /// Name of the test currently being executed.
+        /// </summary>
+        public string TestName { get; }
+
+        /// <summary>
+        /// Fully qualified path to the log file.
+        /// </summary>
+        public string LogName { get; }
+
+        /// <summary>
         /// Path to log files.
         /// NOTE: FileLoggers must be initialized on construction.
         /// </summary>
-        public string FilePath { get; }
+        public string LogsPath { get; set; }
+
+        /// <summary>
+        /// Path to images.
+        /// NOTE: FileLoggers must be initialized on construction.
+        /// </summary>
+        public string ImagesPath { get; set; }
+
+        /// <summary>
+        /// Path to DOM captures.
+        /// NOTE: FileLoggers must be initialized on construction.
+        /// </summary>
+        public string DomPath { get; set; }
 
         /// <summary>
         /// Number of errors that have been logged.
@@ -124,7 +146,7 @@ namespace Bromine.Logger
             RollingFileAppender = new RollingFileAppender
             {
                 AppendToFile = true,
-                File = FilePath,
+                File = LogName,
                 Layout = Layout,
                 MaxSizeRollBackups = 5,
                 RollingStyle = RollingFileAppender.RollingMode.Size,
@@ -141,7 +163,7 @@ namespace Bromine.Logger
         {
             Layout.ActivateOptions();
 
-            XunitAppender = new XunitAppender(OutputHelper, LogPattern)
+            XunitAppender = new XunitAppender(Output, LogPattern)
             {
                 Layout = Layout
             };
@@ -156,8 +178,11 @@ namespace Bromine.Logger
         /// </summary>
         public void ClearRollingFileAppender()
         {
-            ReleaseRollingFileLock();
-            File.WriteAllText(FilePath, string.Empty);
+            if (RollingFileAppender != null)
+            {
+                ReleaseRollingFileLock();
+                File.WriteAllText($@"{LogsPath}\{LogName}", string.Empty);
+            }
         }
 
         /// <summary>
@@ -165,9 +190,12 @@ namespace Bromine.Logger
         /// </summary>
         public void ReleaseRollingFileLock()
         {
-            RollingFileAppender.ImmediateFlush = true;
-            RollingFileAppender.LockingModel = new FileAppender.MinimalLock();
-            RollingFileAppender.ActivateOptions();
+            if (RollingFileAppender != null)
+            {
+                RollingFileAppender.ImmediateFlush = true;
+                RollingFileAppender.LockingModel = new FileAppender.MinimalLock();
+                RollingFileAppender.ActivateOptions();
+            }
         }
 
         /// <summary>
@@ -178,11 +206,29 @@ namespace Bromine.Logger
             Stop();
         }
 
-        private void CreateResultsDirectory()
+        private void CreateLogsDirectory()
         {
-            if (!Directory.Exists(GetResultsPath()))
+            LogsPath = $@"{AppDomain.CurrentDomain.BaseDirectory}\Logs";
+            CreateDirectory(LogsPath);
+        }
+
+        private void CreateImagesDirectory()
+        {
+            ImagesPath = $@"{AppDomain.CurrentDomain.BaseDirectory}\Images";
+            CreateDirectory(ImagesPath);
+        }
+
+        private void CreateDomDirectory()
+        {
+            DomPath = $@"{AppDomain.CurrentDomain.BaseDirectory}\Dom";
+            CreateDirectory(DomPath);
+        }
+
+        private void CreateDirectory(string path)
+        {
+            if (!Directory.Exists(path))
             {
-                Directory.CreateDirectory(GetResultsPath());
+                Directory.CreateDirectory(path);
             }
         }
 
@@ -190,12 +236,11 @@ namespace Bromine.Logger
         private Hierarchy Hierarchy => (Hierarchy)Repo;
         private log4net.Repository.Hierarchy.Logger Root => Hierarchy.Root;
         private PatternLayout Layout { get; }
-        private ITestOutputHelper OutputHelper { get; }
+        private ITestOutputHelper Output { get; }
 
         private static readonly ILog Logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string GetResultsPath(string directory = Results) => $@"{AppDomain.CurrentDomain.BaseDirectory}\{directory}";
-        private const string Results = "Results";
-        private string LogPattern => "%date %-5level %message%newline";
+        private string LogPattern => " %date %-5level %message%newline";
+        private const string LogExtension = ".md";
     }
 }

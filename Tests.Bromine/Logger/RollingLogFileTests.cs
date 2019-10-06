@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Bromine.Logger;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Logger
 {
@@ -14,6 +15,12 @@ namespace Tests.Bromine.Logger
     /// </summary>
     public class RollingLogFileTests : IDisposable
     {
+        /// <inheritdoc />
+        public RollingLogFileTests(ITestOutputHelper output)
+        {
+            Output = output;
+        }
+
         /// <summary>
         /// Verify Log.Message logs to a rolling log file.
         /// </summary>
@@ -24,7 +31,7 @@ namespace Tests.Bromine.Logger
             // ReSharper disable once PossibleNullReferenceException
             TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
-            Log = new Log(TestName);
+            Log = new Log(Output);
             Log.ClearRollingFileAppender();
 
             Log.Message(Message);
@@ -37,10 +44,8 @@ namespace Tests.Bromine.Logger
         public void LogErrorTest()
         {
             Message = "This is an ERROR message.";
-            // ReSharper disable once PossibleNullReferenceException
-            TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
-            Log = new Log(TestName);
+            Log = new Log(Output);
             Log.ClearRollingFileAppender();
 
             Log.Error(Message);
@@ -56,7 +61,7 @@ namespace Tests.Bromine.Logger
             // ReSharper disable once PossibleNullReferenceException
             TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
-            Log = new Log(TestName);
+            Log = new Log(Output);
             Log.ClearRollingFileAppender();
 
             Log.Debug(Message);
@@ -81,9 +86,9 @@ namespace Tests.Bromine.Logger
             MessageCount = 0;
             var builder = new StringBuilder();
 
-            if (File.Exists(Log.FilePath))
+            if (File.Exists(Log.LogName))
             {
-                using (var reader = new StreamReader(Log.FilePath))
+                using (var reader = new StreamReader(Log.LogName))
                 {
                     var line = string.Empty;
 
@@ -102,5 +107,6 @@ namespace Tests.Bromine.Logger
         private string Message { get; set; }
         private string TestName { get; set; }
         private Log Log { get; set; }
+        private ITestOutputHelper Output { get; }
     }
 }
