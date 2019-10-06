@@ -28,8 +28,6 @@ namespace Tests.Bromine.Logger
         public void LogMessageTest()
         {
             Message = "This is an INFO message";
-            // ReSharper disable once PossibleNullReferenceException
-            TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
             Log = new Log(Output);
             Log.ClearRollingFileAppender();
@@ -58,8 +56,6 @@ namespace Tests.Bromine.Logger
         public void LogDebugTest()
         {
             Message = "This is a DEBUG message.";
-            // ReSharper disable once PossibleNullReferenceException
-            TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
             Log = new Log(Output);
             Log.ClearRollingFileAppender();
@@ -72,10 +68,8 @@ namespace Tests.Bromine.Logger
         /// </summary>
         public void Dispose()
         {
-            Log.ReleaseRollingFileLock();
-            var uniqueMessageCount = Regex.Matches(ReadLogFromFile(), Message).Count;
-
             Log.Stop();
+            var uniqueMessageCount = Regex.Matches(ReadLogFromFile(), Message).Count;
 
             Assert.Equal(1, uniqueMessageCount);
             Assert.Equal(1, MessageCount);
@@ -90,7 +84,7 @@ namespace Tests.Bromine.Logger
             {
                 using (var reader = new StreamReader(Log.LogName))
                 {
-                    var line = string.Empty;
+                    string line;
 
                     while ((line = reader.ReadLine()) != null)
                     {

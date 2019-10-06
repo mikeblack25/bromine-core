@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using Bromine.Core.ElementInteraction;
-
+using Bromine.Logger;
 using OpenQA.Selenium;
 
 namespace Bromine.Core.ElementLocator
@@ -17,9 +17,11 @@ namespace Bromine.Core.ElementLocator
         /// Construct a Find object to locate elements.
         /// </summary>
         /// <param name="driver">Driver used to navigate.</param>
-        public SeleniumFind(Driver driver)
+        /// <param name="log">Logging support.</param>
+        public SeleniumFind(Driver driver, Log log)
         {
             Driver = driver;
+            Log = log;
         }
 
         /// <summary>
@@ -182,7 +184,7 @@ namespace Bromine.Core.ElementLocator
 
                 foreach (var element in elements)
                 {
-                    elementsList.Add(new Element(element, locator, locatorStrategy));
+                    elementsList.Add(new Element(element, Log, locator, locatorStrategy));
                 }
             }
             catch (Exception e)
@@ -251,5 +253,6 @@ namespace Bromine.Core.ElementLocator
         }
 
         private Driver Driver { get; }
+        private Log Log { get; }
     }
 }

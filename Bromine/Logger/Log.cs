@@ -19,26 +19,50 @@ namespace Bromine.Logger
     /// </summary>
     public class Log : IDisposable
     {
-        /// <inheritdoc />
-        public Log(ITestOutputHelper output = null)
+        /// <summary>
+        /// Provides log support functionality using the log4net library. 
+        /// </summary>
+        /// <param name="testName">Name of the executing test.</param>
+        /// <param name="logExtension">Extension for logs.</param>
+        public Log(string testName, string logExtension) : this(null)
+        {
+            TestName = testName;
+            Extension = logExtension;
+        }
+
+        /// <summary>
+        /// Provides log support functionality using the log4net library with xUnit.net.
+        /// </summary>
+        /// <param name="output">Console log utility for xUnit.net.</param>
+        /// <param name="logExtension">Extension to use for log files.</param>
+        public Log(ITestOutputHelper output, string logExtension = MdExtension)
         {
             Output = output;
+            Extension = logExtension;
 
-            var test = (ITest)Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Output);
-            TestName = test.DisplayName;
-            LogName = $@"{LogsPath}\{TestName}{LogExtension}";
+            CreateLogsDirectory();
+            CreateImagesDirectory();
+            CreateDomDirectory();
 
-            Repo = LogManager.GetRepository();    
+            if (Output != null)
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                var test = (ITest) Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Output);
+                TestName = test.DisplayName;
+            }
+
+            LogName = $@"{LogsPath}\{TestName}{Extension}";
+
+            Repo = LogManager.GetRepository();
+
+            Hierarchy = (Hierarchy)Repo;
+            Root = Hierarchy.Root;
             Root.Level = Level.All;
 
             Layout = new PatternLayout
             {
                 ConversionPattern = LogPattern
             };
-
-            CreateLogsDirectory();
-            CreateImagesDirectory();
-            CreateDomDirectory();
 
             InitializeRollingFileAppender();
 
@@ -53,6 +77,21 @@ namespace Bromine.Logger
         }
 
         /// <summary>
+        /// .md
+        /// </summary>
+        public const string MdExtension = ".md";
+
+        /// <summary>
+        /// .txt
+        /// </summary>
+        public const string TxtExtension = ".txt";
+
+        /// <summary>
+        /// .log
+        /// </summary>
+        public const string LogExtension = ".log";
+
+        /// <summary>
         /// Name of the test currently being executed.
         /// </summary>
         public string TestName { get; }
@@ -61,6 +100,11 @@ namespace Bromine.Logger
         /// Fully qualified path to the log file.
         /// </summary>
         public string LogName { get; }
+
+        /// <summary>
+        /// Log extension for the current test.
+        /// </summary>
+        public string Extension { get; }
 
         /// <summary>
         /// Path to log files.
@@ -108,7 +152,7 @@ namespace Bromine.Logger
         /// </summary>
         public void Stop()
         {
-            Repo.ResetConfiguration();
+            Repo.Shutdown();
         }
 
         /// <summary>
@@ -117,7 +161,7 @@ namespace Bromine.Logger
         /// <param name="message">Info message to log.</param>
         public void Message(string message)
         {
-            Logger.Info(message);
+            _logger.Info(message);
         }
 
         /// <summary>
@@ -126,7 +170,7 @@ namespace Bromine.Logger
         /// <param name="message">Error message to log.</param>
         public void Error(string message)
         {
-            Logger.Error(message);
+            _logger.Error(message);
             ErrorCount++;
         }
 
@@ -136,7 +180,7 @@ namespace Bromine.Logger
         /// <param name="message">Debug message to log.</param>
         public void Debug(string message)
         {
-            Logger.Debug(message);
+            _logger.Debug(message);
         }
 
         private void InitializeRollingFileAppender()
@@ -163,10 +207,7 @@ namespace Bromine.Logger
         {
             Layout.ActivateOptions();
 
-            XunitAppender = new XunitAppender(Output, LogPattern)
-            {
-                Layout = Layout
-            };
+            XunitAppender = new XunitAppender(Output, LogPattern);
 
             XunitAppender.ActivateOptions();
 
@@ -181,7 +222,7 @@ namespace Bromine.Logger
             if (RollingFileAppender != null)
             {
                 ReleaseRollingFileLock();
-                File.WriteAllText($@"{LogsPath}\{LogName}", string.Empty);
+                File.WriteAllText(LogName, string.Empty);
             }
         }
 
@@ -233,14 +274,13 @@ namespace Bromine.Logger
         }
 
         private ILoggerRepository Repo { get; }
-        private Hierarchy Hierarchy => (Hierarchy)Repo;
-        private log4net.Repository.Hierarchy.Logger Root => Hierarchy.Root;
+        private Hierarchy Hierarchy { get; }
+        private log4net.Repository.Hierarchy.Logger Root { get; }
         private PatternLayout Layout { get; }
         private ITestOutputHelper Output { get; }
 
-        private static readonly ILog Logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ILog _logger = LogManager.GetLogger(typeof(Log));
 
         private string LogPattern => " %date %-5level %message%newline";
-        private const string LogExtension = ".md";
     }
 }

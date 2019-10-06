@@ -19,7 +19,6 @@ namespace Tests.Bromine.Logger
         public XunitLogTests(ITestOutputHelper output)
         {
             Output = output;
-            Appenders = new List<LogAppenders> { LogAppenders.Xunit };
         }
 
         /// <summary>
@@ -29,8 +28,6 @@ namespace Tests.Bromine.Logger
         public void LogMessageTest()
         {
             Message = "This is an INFO message";
-            // ReSharper disable once PossibleNullReferenceException
-            TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
             Log = new Log(Output);
 
@@ -44,8 +41,6 @@ namespace Tests.Bromine.Logger
         public void LogErrorTest()
         {
             Message = "This is an ERROR message.";
-            // ReSharper disable once PossibleNullReferenceException
-            TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
             Log = new Log(Output);
 
@@ -59,8 +54,6 @@ namespace Tests.Bromine.Logger
         public void LogDebugTest()
         {
             Message = "This is a DEBUG message.";
-            // ReSharper disable once PossibleNullReferenceException
-            TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
             Log = new Log(Output);
 
@@ -78,7 +71,6 @@ namespace Tests.Bromine.Logger
         }
 
         private string Message { get; set; }
-        private string TestName { get; set; }
         private Log Log { get; set; }
         private List<LogAppenders> Appenders { get; }
         private ITestOutputHelper Output { get; }

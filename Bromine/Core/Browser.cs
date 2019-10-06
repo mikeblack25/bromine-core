@@ -56,8 +56,8 @@ namespace Bromine.Core
                 EnableImplicitWait(options.Driver.SecondsToWait);
             }
 
-            Find = new Find(Driver);
-            SeleniumFind = new SeleniumFind(Driver);
+            Find = new Find(Driver, Log);
+            SeleniumFind = new SeleniumFind(Driver, Log);
             Navigate = new Navigate(Driver);
             Window = new Window(Driver);
             ElementStyle = new ElementStyle(this);
