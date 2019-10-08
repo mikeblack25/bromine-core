@@ -6,14 +6,21 @@ using System.Text.RegularExpressions;
 using Bromine.Logger;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Tests.Bromine.Logger
 {
     /// <summary>
     /// Tests to verify the rolling log file works as expected.
     /// </summary>
-    public class RollingLogFileTests : IDisposable
+    public class AllLoggingTests : IDisposable
     {
+        /// <inheritdoc />
+        public AllLoggingTests(ITestOutputHelper output)
+        {
+            Output = output;
+        }
+
         /// <summary>
         /// Verify Log.Message logs to a rolling log file.
         /// </summary>
@@ -22,7 +29,7 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is an INFO message";
 
-            Log = new Log("RollingLogFileTests.LogMessageTest", Log.MdExtension);
+            Log = new Log(Output);
             //Log.ClearRollingFileAppender();
 
             Log.Message(Message);
@@ -36,7 +43,7 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is an ERROR message.";
 
-            Log = new Log("RollingLogFileTests.LogErrorTest", Log.MdExtension);
+            Log = new Log(Output);
             //Log.ClearRollingFileAppender();
 
             Log.Error(Message);
@@ -50,7 +57,7 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is a DEBUG message.";
 
-            Log = new Log("RollingLogFileTests.LogDebugTest", Log.MdExtension);
+            Log = new Log(Output);
             //Log.ClearRollingFileAppender();
 
             Log.Debug(Message);
@@ -94,5 +101,6 @@ namespace Tests.Bromine.Logger
         private string Message { get; set; }
         private string TestName { get; set; }
         private Log Log { get; set; }
+        private ITestOutputHelper Output { get; }
     }
 }

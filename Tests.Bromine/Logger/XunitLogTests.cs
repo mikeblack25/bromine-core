@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 
-using Bromine.Constants;
 using Bromine.Logger;
 
 using Xunit;
@@ -29,7 +27,7 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is an INFO message";
 
-            Log = new Log(Output);
+            Log = new Log(Output, string.Empty);
 
             Log.Message(Message);
         }
@@ -42,7 +40,7 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is an ERROR message.";
 
-            Log = new Log(Output);
+            Log = new Log(Output, string.Empty);
 
             Log.Error(Message);
         }
@@ -55,7 +53,7 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is a DEBUG message.";
 
-            Log = new Log(Output);
+            Log = new Log(Output, string.Empty);
 
             Log.Debug(Message);
         }
@@ -66,13 +64,10 @@ namespace Tests.Bromine.Logger
         public void Dispose()
         {
             Log.Stop();
-
-            Assert.Single(Log.XunitAppender.Logs);
         }
 
         private string Message { get; set; }
         private Log Log { get; set; }
-        private List<LogAppenders> Appenders { get; }
         private ITestOutputHelper Output { get; }
     }
 }
