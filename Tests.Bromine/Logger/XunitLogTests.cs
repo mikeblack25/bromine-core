@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 
-using Bromine.Constants;
 using Bromine.Logger;
 
 using Xunit;
@@ -19,7 +17,6 @@ namespace Tests.Bromine.Logger
         public XunitLogTests(ITestOutputHelper output)
         {
             Output = output;
-            Appenders = new List<LogAppenders> { LogAppenders.Xunit };
         }
 
         /// <summary>
@@ -29,10 +26,8 @@ namespace Tests.Bromine.Logger
         public void LogMessageTest()
         {
             Message = "This is an INFO message";
-            // ReSharper disable once PossibleNullReferenceException
-            TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
-            Log = new Log(Output);
+            Log = new XunitConsoleLog(Output);
 
             Log.Message(Message);
         }
@@ -44,27 +39,10 @@ namespace Tests.Bromine.Logger
         public void LogErrorTest()
         {
             Message = "This is an ERROR message.";
-            // ReSharper disable once PossibleNullReferenceException
-            TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
 
-            Log = new Log(Output);
+            Log = new XunitConsoleLog(Output);
 
             Log.Error(Message);
-        }
-
-        /// <summary>
-        /// Verify Log.Error logs to the console when using Xunit.
-        /// </summary>
-        [Fact]
-        public void LogDebugTest()
-        {
-            Message = "This is a DEBUG message.";
-            // ReSharper disable once PossibleNullReferenceException
-            TestName = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}.txt";
-
-            Log = new Log(Output);
-
-            Log.Debug(Message);
         }
 
         /// <summary>
@@ -72,15 +50,11 @@ namespace Tests.Bromine.Logger
         /// </summary>
         public void Dispose()
         {
-            Log.Stop();
-
-            Assert.Single(Log.XunitAppender.Logs);
+            Log.Dispose();
         }
 
         private string Message { get; set; }
-        private string TestName { get; set; }
-        private Log Log { get; set; }
-        private List<LogAppenders> Appenders { get; }
+        private XunitConsoleLog Log { get; set; }
         private ITestOutputHelper Output { get; }
     }
 }

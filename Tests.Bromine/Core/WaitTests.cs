@@ -22,21 +22,12 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyWaitForCondition()
         {
-            Browser.Verify.Empty(Browser.Log.XunitAppender.Logs);
-            Browser.Verify.False(Browser.Wait.For.Condition(() => false));
-            Browser.Verify.NotEmpty(Browser.Log.XunitAppender.Logs);
-
             var startTime = DateTime.Now;
             const int timeToWait = 5;
 
             Browser.Wait.For.Condition(() => false, timeToWait);
 
             Browser.Verify.InRange(DateTime.Now, startTime.AddSeconds(timeToWait - 1), startTime.AddSeconds(timeToWait + 1));
-
-            var exceptionCount = Browser.Log.ErrorCount;
-
-            Browser.Verify.True(Browser.Wait.For.Condition(() => true));
-            Browser.Verify.Equal(exceptionCount, Browser.Log.ErrorCount);
         }
     }
 }

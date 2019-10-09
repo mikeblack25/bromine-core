@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Drawing;
 
 using Bromine.Core.ElementLocator;
+using Bromine.Logger;
 
 using OpenQA.Selenium;
 
-// ReSharper disable once CheckNamespace
 namespace Bromine.Core.ElementInteraction
 {
     /// <summary>
@@ -19,11 +19,13 @@ namespace Bromine.Core.ElementInteraction
         /// Create an Element which can interact with web applications.
         /// </summary>
         /// <param name="element">Requested element.</param>
+        /// <param name="logManager"><see cref="Logger.LogManager"/></param>
         /// <param name="locatorString">Locator string used to find the requested element.</param>
         /// <param name="locatorType">Type of locator used to find the requested element.</param>
-        internal Element(IWebElement element, string locatorString = "", LocatorStrategy locatorType = 0) : this()
+        internal Element(IWebElement element, LogManager logManager, string locatorString = "", LocatorStrategy locatorType = 0) : this()
         {
             WebElement = element;
+            LogManager = logManager;
 
             if (!string.IsNullOrEmpty(locatorString) && locatorType != 0)
             {
@@ -35,6 +37,11 @@ namespace Bromine.Core.ElementInteraction
         }
 
         /// <summary>
+        /// Details about the location strategy used for the requested element.
+        /// </summary>
+        public CallingInformation Information { get; }
+
+        /// <summary>
         /// Flag to determine if the element has been created correctly.
         /// </summary>
         public bool IsInitialized { get; }
@@ -42,57 +49,141 @@ namespace Bromine.Core.ElementInteraction
         /// <summary>
         /// Element TagName value.
         /// </summary>
-        public string TagName => WebElement?.TagName;
+        public string TagName
+        {
+            get
+            {
+                if (WebElement != null)
+                {
+                    return WebElement.TagName;
+                }
+
+                LogManager.Error("Unable to find the tag for the requested element");
+
+                return string.Empty;
+            }
+        }
 
         /// <summary>
         /// Element Text value.
         /// </summary>
-        public string Text => WebElement?.Text;
+        public string Text
+        {
+            get
+            {
+                if (WebElement != null)
+                {
+                    return WebElement.Text;
+                }
+
+                LogManager.Error("Unable to find the text for the requested element");
+
+                return string.Empty;
+            }
+        }
 
         /// <summary>
         /// Element Enabled status. This can be used to determine if an element can be interacted with.
         /// </summary>
-        public bool Enabled => WebElement.Enabled;
+        public bool Enabled
+        {
+            get
+            {
+                if (WebElement != null)
+                {
+                    return WebElement.Enabled;
+                }
+
+                LogManager.Error("Unable to find the enabled property for the requested element");
+
+                return false;
+            }
+        }
 
         /// <summary>
         /// Element selected status.
         /// </summary>
-        public bool Selected => WebElement.Selected;
+        public bool Selected
+        {
+            get
+            {
+                if (WebElement != null)
+                {
+                    return WebElement.Selected;
+                }
+
+                LogManager.Error("Unable to find the selected property for the requested element");
+
+                return false;
+            }
+        }
 
         /// <summary>
         /// Element location in the rendered DOM.
         /// </summary>
-        public Point Location => WebElement.Location;
+        public Point Location
+        {
+            get
+            {
+                if (WebElement != null)
+                {
+                    return WebElement.Location;
+                }
+
+                LogManager.Error("Unable to find the location for the requested element");
+
+                return new Point();
+            }
+        }
 
         /// <summary>
         /// Element size.
         /// </summary>
-        public Size Size => WebElement.Size;
+        public Size Size
+        {
+            get
+            {
+                if (WebElement != null)
+                {
+                    return WebElement.Size;
+                }
+
+                LogManager.Error("Unable to find the size for the requested element");
+
+                return new Size();
+            }
+        }
 
         /// <summary>
         /// Element displayed status. This is helpful as some interactions require an element to be in view.
         /// </summary>
-        public bool Displayed => WebElement.Displayed;
+        public bool Displayed
+        {
+            get
+            {
+                if (WebElement != null)
+                {
+                    return WebElement.Displayed;
+                }
 
-        /// <summary>
-        /// Details about the location strategy used for the requested element.
-        /// </summary>
-        public CallingInformation Information { get; }
+                LogManager.Error("Unable to find the displayed property for the requested element");
+
+                return false;
+            }
+        }
 
         /// <summary>
         /// Clear the element content. This is usually used on a user editable field element.
         /// </summary>
         public void Clear()
         {
-            if (!IsInitialized) { return; }
-
-            try
+            if (WebElement != null)
             {
                 WebElement.Clear();
             }
-            catch (Exception ex)
+            else
             {
-                Exceptions.Add(ex);
+                LogManager.Error("Unable to clear the requested element");
             }
         }
 
@@ -101,15 +192,13 @@ namespace Bromine.Core.ElementInteraction
         /// </summary>
         public void Click()
         {
-            if (!IsInitialized) { return; }
-
-            try
+            if (WebElement != null)
             {
                 WebElement.Click();
             }
-            catch (Exception ex)
+            else
             {
-                Exceptions.Add(ex);
+                LogManager.Error("Unable to click the requested element");
             }
         }
 
@@ -118,21 +207,19 @@ namespace Bromine.Core.ElementInteraction
         /// Note: This requires first locating an element and then calling this.
         /// </summary>
         /// <returns></returns>
-        public Element GetParent()
+        public Element ParentElement
         {
-            if (IsInitialized)
+            get
             {
-                try
+                if (WebElement != null)
                 {
-                    return new Element(WebElement.FindElement(By.XPath("..")), "..", LocatorStrategy.XPath);
+                    return new Element(WebElement.FindElement(By.XPath("..")), LogManager, "..", LocatorStrategy.XPath);
                 }
-                catch (Exception ex)
-                {
-                    Exceptions.Add(ex);
-                }
-            }
 
-            return new Element();
+                LogManager.Error("Unable to find the displayed property for the requested element");
+
+                return new Element();
+            }
         }
 
         /// <summary>
@@ -143,46 +230,36 @@ namespace Bromine.Core.ElementInteraction
         /// <returns></returns>
         public string GetAttribute(string attributeName)
         {
-            var attribute = string.Empty;
-
-            if (IsInitialized)
+            if (WebElement != null)
             {
-                try
-                {
-                    attribute = WebElement.GetAttribute(attributeName);
-                }
-                catch (Exception ex)
-                {
-                    Exceptions.Add(ex);
-                }
+                return WebElement.GetAttribute(attributeName);
             }
+            else
+            {
+                LogManager.Error($"Unable to find the attribute {attributeName} for the requested element");
 
-            return attribute;
+                return string.Empty;
+            }
         }
 
         /// <summary>
         /// Get the CSS value for the requested element by property name.
         /// Note: This requires first locating an element and then calling this.
         /// </summary>
-        /// <param name="propertyName">CSS value for the requested element.</param>
+        /// <param name="cssValue">CSS value for the requested element.</param>
         /// <returns></returns>
-        public string GetCssValue(string propertyName)
+        public string GetCssValue(string cssValue)
         {
-            var cssValue = string.Empty;
-
-            if (IsInitialized)
+            if (WebElement != null)
             {
-                try
-                {
-                    cssValue = WebElement.GetCssValue(propertyName);
-                }
-                catch (Exception ex)
-                {
-                    Exceptions.Add(ex);
-                }
+                return WebElement.GetCssValue(cssValue);
             }
+            else
+            {
+                LogManager.Error($"Unable to find the CSS value {cssValue} for the requested element");
 
-            return cssValue;
+                return string.Empty;
+            }
         }
 
         /// <summary>
@@ -193,19 +270,16 @@ namespace Bromine.Core.ElementInteraction
         /// <returns></returns>
         public string GetProperty(string propertyName)
         {
-            if (IsInitialized)
+            if (WebElement != null)
             {
-                try
-                {
-                    return WebElement.GetProperty(propertyName);
-                }
-                catch (Exception ex)
-                {
-                    Exceptions.Add(ex);
-                }
+                return WebElement.GetProperty(propertyName);
             }
+            else
+            {
+                LogManager.Error($"Unable to find the property {propertyName} for the requested element");
 
-            return propertyName;
+                return string.Empty;
+            }
         }
 
         /// <summary>
@@ -214,16 +288,13 @@ namespace Bromine.Core.ElementInteraction
         /// <param name="text">Text to update to the requested element.</param>
         public void SendKeys(string text)
         {
-            if (IsInitialized)
+            if (WebElement != null)
             {
-                try
-                {
-                    WebElement.SendKeys(text);
-                }
-                catch (Exception ex)
-                {
-                    Exceptions.Add(ex);
-                }
+                WebElement.SendKeys(text);
+            }
+            else
+            {
+                LogManager.Error($"Unable to send keys {text} to the requested element");
             }
         }
 
@@ -232,7 +303,14 @@ namespace Bromine.Core.ElementInteraction
         /// </summary>
         public void Submit()
         {
-            WebElement.Submit();
+            if (WebElement != null)
+            {
+                WebElement.Submit();
+            }
+            else
+            {
+                LogManager.Error("Unable to submit to the requested element");
+            }
         }
 
         /// <summary>
@@ -240,7 +318,7 @@ namespace Bromine.Core.ElementInteraction
         /// </summary>
         /// <param name="by">Locator strategy to use to find a requested element.</param>
         /// <returns></returns>
-        internal Element FindElement(By by) => new Element(WebElement.FindElement(by));
+        internal Element FindElement(By by) => new Element(WebElement.FindElement(by), LogManager);
 
         /// <summary>
         /// Find elements by the requested locator strategy.
@@ -255,7 +333,7 @@ namespace Bromine.Core.ElementInteraction
 
             foreach (var element in elements)
             {
-                list.Add(new Element(element));
+                list.Add(new Element(element, LogManager));
             }
 
             return list;
@@ -266,7 +344,6 @@ namespace Bromine.Core.ElementInteraction
         /// </summary>
         internal Element()
         {
-            Exceptions = new List<Exception>();
             var stackTrace = new StackTrace();
 
             Information = new CallingInformation
@@ -279,7 +356,6 @@ namespace Bromine.Core.ElementInteraction
         }
 
         internal readonly IWebElement WebElement;
-        // ReSharper disable once CollectionNeverQueried.Local
-        private List<Exception> Exceptions { get; }
+        internal LogManager LogManager { get; }
     }
 }
