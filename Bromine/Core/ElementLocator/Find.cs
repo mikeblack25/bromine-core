@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 
 using Bromine.Core.ElementInteraction;
+using Bromine.Logger;
 
 namespace Bromine.Core.ElementLocator
 {
@@ -16,9 +17,10 @@ namespace Bromine.Core.ElementLocator
         /// Construct a Find object to locate elements.
         /// </summary>
         /// <param name="driver">Driver used to navigate.</param>
-        public Find(Driver driver)
+        /// <param name="logManager"><see cref="LogManager"/></param>
+        public Find(Driver driver, LogManager logManager)
         {
-            SeleniumFind = new SeleniumFind(driver);
+            SeleniumFind = new SeleniumFind(driver, logManager);
         }
 
         /// <summary>

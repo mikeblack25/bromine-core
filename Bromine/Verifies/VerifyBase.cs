@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Bromine.Logger;
 
 using Xunit;
+using Xunit.Sdk;
 
 namespace Bromine.Verifies
 {
@@ -15,10 +16,27 @@ namespace Bromine.Verifies
     public abstract class VerifyBase
     {
         /// <inheritdoc />
-        protected VerifyBase(Log log)
+        protected VerifyBase(LogManager logManager)
         {
-            Log = log;
+            LogManager = logManager;
         }
+
+        /// <summary>
+        /// Event fired when a verify statement fails.
+        /// </summary>
+        internal event VerifyFailedDelegate VerifyFailed;
+
+        /// <summary>
+        /// Delegate to invoke when a verify statement fails.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="args"></param>
+        internal delegate void VerifyFailedDelegate(Exception e, VerifyFailedEvent args);
+
+        /// <summary>
+        /// Type of Verify.
+        /// </summary>
+        public abstract string Type { get; }
 
         /// <summary>
         /// Verifies that all items in the collection pass when executed against
@@ -31,9 +49,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage($"Does {collection} conform to All {action}?");
                 Assert.All(collection, action);
             }
-            catch (Exception e)
+            catch (AllException e)
             {
                 HandleException(e, message);
             }
@@ -45,16 +64,16 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="collection">The collection.</param>
         /// <param name="action">The action to test each item against.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void Collection(IEnumerable<object> collection, Action<object> action, string message = "")
+        public void Collection(IEnumerable<object> collection, params Action<object>[] action)
         {
             try
             {
+                BuildMessage($"Does {collection} conform to {action}");
                 Assert.Collection(collection, action);
             }
-            catch (Exception e)
+            catch (CollectionException e)
             {
-                HandleException(e, message);
+                HandleException(e);
             }
         }
 
@@ -68,9 +87,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage($"Does {actualString} contain {expectedSubString}?");
                 Assert.Contains(expectedSubString, actualString);
             }
-            catch (Exception e)
+            catch (ContainsException e)
             {
                 HandleException(e, message);
             }
@@ -79,16 +99,17 @@ namespace Bromine.Verifies
         /// <summary>
         /// Verifies that a string does not contain a given sub-string, using the current culture.
         /// </summary>
-        /// <param name="expectedSubString">The sub-string which is expected not to be in the string.</param>
+        /// <param name="notExpectedSubString">The sub-string which is expected not to be in the string.</param>
         /// <param name="actualString">The string to be inspected.</param>
         /// <param name="message">Message to display if the expectation fails.</param>
-        public void DoesNotContain(string expectedSubString, string actualString, string message = "")
+        public void DoesNotContain(string notExpectedSubString, string actualString, string message = "")
         {
             try
             {
-                Assert.DoesNotContain(expectedSubString, actualString);
+                BuildMessage($"Is '{notExpectedSubString}' not found in '{actualString}'?");
+                Assert.DoesNotContain(notExpectedSubString, actualString);
             }
-            catch (Exception e)
+            catch (DoesNotContainException e)
             {
                 HandleException(e, message);
             }
@@ -98,15 +119,16 @@ namespace Bromine.Verifies
         /// Verifies that a string does not match a regular expression.
         /// </summary>
         /// <param name="expectedRegexPattern">The regex pattern expected not to match.</param>
-        /// <param name="actualString">The string to be inspected.</param>
+        /// <param name="doesNotMatchString">The string to be inspected.</param>
         /// <param name="message">Message to display if the expectation fails.</param>
-        public void DoesNotMatch(string expectedRegexPattern, string actualString, string message = "")
+        public void DoesNotMatch(string expectedRegexPattern, string doesNotMatchString, string message = "")
         {
             try
             {
-                Assert.DoesNotMatch(expectedRegexPattern, actualString);
+                BuildMessage($"Does '{doesNotMatchString}' match the '{expectedRegexPattern}' regex?");
+                Assert.DoesNotMatch(expectedRegexPattern, doesNotMatchString);
             }
-            catch (Exception e)
+            catch (DoesNotMatchException e)
             {
                 HandleException(e, message);
             }
@@ -121,9 +143,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage($"Is {collection} empty?");
                 Assert.Empty(collection);
             }
-            catch (Exception e)
+            catch (EmptyException e)
             {
                 HandleException(e, message);
             }
@@ -139,9 +162,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage($"Does {actualString} end with {expectedEndString}?");
                 Assert.EndsWith(expectedEndString, actualString);
             }
-            catch (Exception e)
+            catch (EndsWithException e)
             {
                 HandleException(e, message);
             }
@@ -157,9 +181,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage($"Does {expected} equal {actual}?");
                 Assert.Equal(expected, actual);
             }
-            catch (Exception e)
+            catch (EqualException e)
             {
                 HandleException(e, message);
             }
@@ -175,9 +200,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage($"Does {expected} equal {actual}?");
                 Assert.Equal(expected, actual);
             }
-            catch (Exception e)
+            catch (EqualException e)
             {
                 HandleException(e, message);
             }
@@ -192,9 +218,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage("Is False?");
                 Assert.False(condition);
             }
-            catch (Exception e)
+            catch (FalseException e)
             {
                 HandleException(e, message);
             }
@@ -211,9 +238,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage($"Is {actual} between {low} and {high}?");
                 Assert.InRange(actual, low, high);
             }
-            catch (Exception e)
+            catch (InRangeException e)
             {
                 HandleException(e, message);
             }
@@ -230,78 +258,10 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage($"Is {actual} between {low} and {high}?");
                 Assert.InRange(actual, low, high);
             }
-            catch (Exception e)
-            {
-                HandleException(e, message);
-            }
-        }
-
-        /// <summary>
-        /// Verifies that an object reference is not null.
-        /// </summary>
-        /// <param name="condition">The object to be validated.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void NotNull(object condition, string message = "")
-        {
-            try
-            {
-                Assert.NotNull(condition);
-            }
-            catch (Exception e)
-            {
-                HandleException(e, message);
-            }
-        }
-
-        /// <summary>
-        /// Verifies that an object reference is null.
-        /// </summary>
-        /// <param name="condition">The object to be inspected.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void Null(object condition, string message = "")
-        {
-            try
-            {
-                Assert.Null(condition);
-            }
-            catch (Exception e)
-            {
-                HandleException(e, message);
-            }
-        }
-
-        /// <summary>
-        /// Verifies that two objects are not equal, using a default comparer.
-        /// </summary>
-        /// <param name="expected">The expected object.</param>
-        /// <param name="actual">The actual object.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void NotEqual(object expected, object actual, string message = "")
-        {
-            try
-            {
-                Assert.NotEqual(expected, actual);
-            }
-            catch (Exception e)
-            {
-                HandleException(e, message);
-            }
-        }
-
-        /// <summary>
-        /// Verifies that a collection is not empty.
-        /// </summary>
-        /// <param name="collection">The collection to be inspected.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void NotEmpty(IEnumerable<object> collection, string message = "")
-        {
-            try
-            {
-                Assert.NotEmpty(collection);
-            }
-            catch (Exception e)
+            catch (InRangeException e)
             {
                 HandleException(e, message);
             }
@@ -318,9 +278,83 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage($"Is {actual} outside of {low} and {high}?");
                 Assert.NotInRange(actual, low, high);
             }
-            catch (Exception e)
+            catch (NotInRangeException e)
+            {
+                HandleException(e, message);
+            }
+        }
+
+        /// <summary>
+        /// Verifies that an object reference is not null.
+        /// </summary>
+        /// <param name="condition">The object to be validated.</param>
+        /// <param name="message">Message to display if the expectation fails.</param>
+        public void NotNull(object condition, string message = "")
+        {
+            try
+            {
+                BuildMessage($"Is {condition} not null?");
+                Assert.NotNull(condition);
+            }
+            catch (NotNullException e)
+            {
+                HandleException(e, message);
+            }
+        }
+
+        /// <summary>
+        /// Verifies that an object reference is null.
+        /// </summary>
+        /// <param name="condition">The object to be inspected.</param>
+        /// <param name="message">Message to display if the expectation fails.</param>
+        public void Null(object condition, string message = "")
+        {
+            try
+            {
+                BuildMessage($"Is {condition} null?");
+                Assert.Null(condition);
+            }
+            catch (NullException e)
+            {
+                HandleException(e, message);
+            }
+        }
+
+        /// <summary>
+        /// Verifies that two objects are not equal, using a default comparer.
+        /// </summary>
+        /// <param name="expected">The expected object.</param>
+        /// <param name="actual">The actual object.</param>
+        /// <param name="message">Message to display if the expectation fails.</param>
+        public void NotEqual(object expected, object actual, string message = "")
+        {
+            try
+            {
+                BuildMessage($"Is {expected} not equal to {actual}?");
+                Assert.NotEqual(expected, actual);
+            }
+            catch (NotEqualException e)
+            {
+                HandleException(e, message);
+            }
+        }
+
+        /// <summary>
+        /// Verifies that a collection is not empty.
+        /// </summary>
+        /// <param name="collection">The collection to be inspected.</param>
+        /// <param name="message">Message to display if the expectation fails.</param>
+        public void NotEmpty(IEnumerable<object> collection, string message = "")
+        {
+            try
+            {
+                BuildMessage($"Is {collection} not empty?");
+                Assert.NotEmpty(collection);
+            }
+            catch (NotEmptyException e)
             {
                 HandleException(e, message);
             }
@@ -335,31 +369,41 @@ namespace Bromine.Verifies
         {
             try
             {
+                BuildMessage("Is True?");
                 Assert.True(condition);
             }
-            catch (Exception e)
+            catch (TrueException e)
             {
                 HandleException(e, message);
             }
         }
 
-        internal virtual void HandleException(Exception exception, string message = "")
-        {
-            Log.Error(exception.Message);
+        internal abstract void HandleException(Exception exception, string message = "");
 
-            throw BuildException(exception, message);
+        internal virtual void LogErrorMessage(Exception exception, string message = "")
+        {
+            if (message != string.Empty)
+            {
+                LogManager.Error(message);
+            }
+            LogManager.Error(exception.Message);
         }
 
-        internal Exception BuildException(Exception exception, string message = "")
+        internal LogManager LogManager { get; }
+
+        /// <summary>
+        /// Invoke the Verify Failed event.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="args"></param>
+        protected void OnVerifyFailed(Exception e, VerifyFailedEvent args)
         {
-            if (string.IsNullOrEmpty(message)) { message = exception.Message; }
-
-            var errorMessage = $"{message} {Environment.NewLine} {exception.Message}";
-            var e = new Exception(errorMessage.Trim(), exception.InnerException);
-
-            return e;
+            VerifyFailed?.Invoke(e, args);
         }
 
-        internal Log Log { get; }
+        private void BuildMessage(string message)
+        {
+            LogManager.Message($"{message}".TrimEnd());
+        }
     }
 }

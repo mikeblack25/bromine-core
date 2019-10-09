@@ -82,7 +82,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
 
                 return false;
             }
