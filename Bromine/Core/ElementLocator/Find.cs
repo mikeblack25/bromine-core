@@ -17,10 +17,10 @@ namespace Bromine.Core.ElementLocator
         /// Construct a Find object to locate elements.
         /// </summary>
         /// <param name="driver">Driver used to navigate.</param>
-        /// <param name="log">Logging support.</param>
-        public Find(Driver driver, Log log)
+        /// <param name="logManager"><see cref="LogManager"/></param>
+        public Find(Driver driver, LogManager logManager)
         {
-            SeleniumFind = new SeleniumFind(driver, log);
+            SeleniumFind = new SeleniumFind(driver, logManager);
         }
 
         /// <summary>

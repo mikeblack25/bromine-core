@@ -13,7 +13,7 @@ namespace Tests.Bromine.Logger
         /// <inheritdoc />
         public AllLoggingTests(ITestOutputHelper output)
         {
-            Output = output;
+            LogManager = new LogManager(output, string.Empty, LogType.XunitConsole, LogType.Text);
         }
 
         /// <summary>
@@ -22,11 +22,8 @@ namespace Tests.Bromine.Logger
         [Fact]
         public void LogMessageTest()
         {
-            Message = "This is an INFO message";
-
-            Log = new Log(Output);
-
-            Log.Message(Message);
+            Message = InfoMessageString;
+            LogManager.Message(Message);
         }
 
         /// <summary>
@@ -35,26 +32,8 @@ namespace Tests.Bromine.Logger
         [Fact]
         public void LogErrorTest()
         {
-            Message = "This is an ERROR message.";
-
-            Log = new Log(Output);
-
-            Log.Error(Message);
+            Message = ErrorMessageString;
+            LogManager.Error(Message);
         }
-
-        /// <summary>
-        /// Verify Log.Error logs to a rolling log file.
-        /// </summary>
-        [Fact]
-        public void LogDebugTest()
-        {
-            Message = "This is a DEBUG message.";
-
-            Log = new Log(Output);
-
-            Log.Debug(Message);
-        }
-
-        private ITestOutputHelper Output { get; }
     }
 }

@@ -2,6 +2,7 @@
 
 using Bromine.Constants;
 using Bromine.Core;
+using Bromine.Logger;
 using Bromine.Models;
 
 using Tests.Bromine.Page.Google;
@@ -27,7 +28,7 @@ namespace Tests.Bromine.Page
         public void InitializePages(BrowserType browser, bool isHeadless = false, ITestOutputHelper output = null)
         {
             var browserOptions = new BrowserOptions(browser, isHeadless);
-            Browser = new Browser(browserOptions, output);
+            Browser = new Browser(browserOptions, output, LogType.XunitConsole, LogType.Text);
 
             InitializePages();
         }

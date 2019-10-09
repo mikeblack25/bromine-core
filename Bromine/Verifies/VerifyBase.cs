@@ -16,9 +16,9 @@ namespace Bromine.Verifies
     public abstract class VerifyBase
     {
         /// <inheritdoc />
-        protected VerifyBase(Log log)
+        protected VerifyBase(LogManager logManager)
         {
-            Log = log;
+            LogManager = logManager;
         }
 
         /// <summary>
@@ -384,12 +384,12 @@ namespace Bromine.Verifies
         {
             if (message != string.Empty)
             {
-                Log.Error(message);
+                LogManager.Error(message);
             }
-            Log.Error(exception.Message);
+            LogManager.Error(exception.Message);
         }
 
-        internal Log Log { get; }
+        internal LogManager LogManager { get; }
 
         /// <summary>
         /// Invoke the Verify Failed event.
@@ -403,7 +403,7 @@ namespace Bromine.Verifies
 
         private void BuildMessage(string message)
         {
-            Log.Message($"{message}".TrimEnd());
+            LogManager.Message($"{message}".TrimEnd());
         }
     }
 }

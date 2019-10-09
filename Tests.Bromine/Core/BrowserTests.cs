@@ -3,6 +3,7 @@ using System.IO;
 
 using Bromine.Constants;
 using Bromine.Core;
+using Bromine.Logger;
 using Bromine.Models;
 
 using Tests.Bromine.Common;
@@ -53,10 +54,9 @@ namespace Tests.Bromine.Core
 
             Dispose(); // Close the default driver created on startup.
             DeleteDirectory(testDirectory); // Clear the initial directory to create one during the Browser init.
-
-            var browser = new Browser(browserOptions);
-
             DeleteInitialImage(name);
+
+            var browser = new Browser(browserOptions, Output, LogType.XunitConsole, LogType.Text);
 
             browser.Navigate.ToUrl(TestSites.AmazonUrl);
             browser.TakeVisibleScreenShot(name);
@@ -122,12 +122,12 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyTakeVisibleScreenShotError()
         {
-            Browser.Verify.Equal(0, Browser.Log.ErrorCount);
+            Browser.Verify.Equal(0, Browser.LogManager.XunitConsoleLog.ErrorCount);
 
             Browser.Navigate.ToUrl(TestSites.AmazonUrl);
             Browser.TakeVisibleScreenShot(@"-\\\\--");
 
-            Browser.Verify.Equal(1, Browser.Log.ErrorCount);
+            Browser.Verify.Equal(1, Browser.LogManager.XunitConsoleLog.ErrorCount);
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 
 using Bromine.Constants;
 using Bromine.Core;
+using Bromine.Logger;
 using Bromine.Models;
 
 using Tests.Bromine.Common;
@@ -127,7 +128,7 @@ namespace Tests.Bromine.Core
         {
             var browserOptions = new BrowserOptions(browser, isHeadless, 5, RemoteAddress);
 
-            Browser = new Browser(browserOptions);
+            Browser = new Browser(browserOptions, Output, LogType.XunitConsole, LogType.Text);
 
             Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
@@ -136,7 +137,7 @@ namespace Tests.Bromine.Core
         {
             var browserOptions = new BrowserOptions(driverOptions);
 
-            Browser = new Browser(browserOptions, Output);
+            Browser = new Browser(browserOptions, Output, LogType.XunitConsole, LogType.Text);
 
             Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }

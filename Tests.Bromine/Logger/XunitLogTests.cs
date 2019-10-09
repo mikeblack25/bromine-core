@@ -27,7 +27,7 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is an INFO message";
 
-            Log = new Log(Output, string.Empty);
+            Log = new XunitConsoleLog(Output);
 
             Log.Message(Message);
         }
@@ -40,22 +40,9 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is an ERROR message.";
 
-            Log = new Log(Output, string.Empty);
+            Log = new XunitConsoleLog(Output);
 
             Log.Error(Message);
-        }
-
-        /// <summary>
-        /// Verify Log.Error logs to the console when using Xunit.
-        /// </summary>
-        [Fact]
-        public void LogDebugTest()
-        {
-            Message = "This is a DEBUG message.";
-
-            Log = new Log(Output, string.Empty);
-
-            Log.Debug(Message);
         }
 
         /// <summary>
@@ -67,7 +54,7 @@ namespace Tests.Bromine.Logger
         }
 
         private string Message { get; set; }
-        private Log Log { get; set; }
+        private XunitConsoleLog Log { get; set; }
         private ITestOutputHelper Output { get; }
     }
 }

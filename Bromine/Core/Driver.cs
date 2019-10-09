@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-
 using Bromine.Constants;
 using Bromine.Logger;
 
@@ -27,11 +26,11 @@ namespace Bromine.Core
         /// Initialize an IWebDriver for the given browser and desired configuration.
         /// </summary>
         /// <param name="options">Object to bass desired browser driver configuration.</param>
-        /// <param name="log"><see cref="Log"/>.</param>
-        public Driver(DriverOptions options, Log log)
+        /// <param name="logManager"><see cref="LogManager"/>.</param>
+        public Driver(DriverOptions options, LogManager logManager)
         {
             Options = options;
-            Log = log;
+            LogManager = logManager;
 
             WebDriver = InitializeDriver();
         }
@@ -57,15 +56,8 @@ namespace Bromine.Core
         /// </summary>
         public Screenshot ScreenShot => WebDriver.TakeScreenshot();
 
-        /// <summary>
-        /// <see cref="Log"/>
-        /// </summary>
-        public Log Log { get; }
-
-        /// <summary>
-        /// Selenium WebDriver. <see cref="IWebDriver"/>
-        /// </summary>
         internal IWebDriver WebDriver { get; }
+        internal LogManager LogManager { get; }
 
         /// <summary>
         /// Initialize the browser from the class instance of <see cref="Options"/>.
@@ -93,7 +85,7 @@ namespace Bromine.Core
                 default:
                 {
                     var exception = new Exception($"{Options.Browser} is not a supported Browser type");
-                    Log.Error(exception.Message);
+                    LogManager.Error(exception.Message);
 
                     throw exception;
                 }
@@ -108,16 +100,47 @@ namespace Bromine.Core
         {
             try
             {
-                WebDriver?.Close();
+                SessionId sessionId = null;
+
+                switch (Options.Browser)
+                {
+                    case BrowserType.Chrome:
+                    {
+                        sessionId = (WebDriver as ChromeDriver)?.SessionId;
+                        break;
+                    }
+                    case BrowserType.Edge:
+                    {
+                        sessionId = (WebDriver as EdgeDriver)?.SessionId;
+                        break;
+                    }
+                    case BrowserType.Firefox:
+                    {
+                        sessionId = (WebDriver as FirefoxDriver)?.SessionId;
+                        break;
+                    }
+                    case BrowserType.InternetExplorer:
+                    {
+                        sessionId = (WebDriver as InternetExplorerDriver)?.SessionId;
+                        break;
+                    }
+                }
+
+                if (sessionId != null)
+                {
+                    WebDriver.Close();
+                }
+
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                LogManager.Error(e.Message);
             }
             finally
             {
                 WebDriver?.Quit();
                 DriverService?.Dispose();
+                LogManager?.Dispose();
             }
         }
 
@@ -136,7 +159,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                LogManager.Error(e.Message);
                 Dispose();
 
                 throw;
@@ -175,7 +198,7 @@ namespace Bromine.Core
             }
 
             var exception = new Exception("StartChromeDriverService should only be called when !Options.UseDefaultDriverPath");
-            Log.Error(exception.Message);
+            LogManager.Error(exception.Message);
 
             throw exception;
         }
@@ -194,7 +217,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                LogManager.Error(e.Message);
                 Dispose();
 
                 throw;
@@ -239,7 +262,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                LogManager.Error(e.Message);
                 Dispose();
 
                 throw;
@@ -274,7 +297,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                LogManager.Error(e.Message);
                 Dispose();
 
                 throw;

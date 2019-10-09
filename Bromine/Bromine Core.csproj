@@ -82,7 +82,7 @@
     <Compile Include="Core\ElementInteraction\CallingInformation.cs" />
     <Compile Include="Core\ElementLocator\LocatorStrategy.cs" />
     <Compile Include="Core\ElementLocator\Find.cs" />
-    <Compile Include="Logger\Log.cs" />
+    <Compile Include="Logger\LogBase.cs" />
     <Compile Include="Core\Navigate.cs" />
     <Compile Include="Core\ElementLocator\SeleniumFind.cs" />
     <Compile Include="Core\Page.cs" />
@@ -93,6 +93,9 @@
     <Compile Include="Core\ElementInteraction\ElementStyle.cs" />
     <Compile Include="Core\ElementInteraction\CssFormatExtensions.cs" />
     <Compile Include="IBrowser.cs" />
+    <Compile Include="Logger\LogManager.cs" />
+    <Compile Include="Logger\TextLog.cs" />
+    <Compile Include="Logger\XunitConsoleLog.cs" />
     <Compile Include="Models\BrowserOptions.cs" />
     <Compile Include="Models\DriverOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

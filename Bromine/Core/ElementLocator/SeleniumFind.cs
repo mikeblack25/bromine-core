@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Bromine.Core.ElementInteraction;
 using Bromine.Logger;
+
 using OpenQA.Selenium;
 
 namespace Bromine.Core.ElementLocator
@@ -17,11 +18,11 @@ namespace Bromine.Core.ElementLocator
         /// Construct a Find object to locate elements.
         /// </summary>
         /// <param name="driver">Driver used to navigate.</param>
-        /// <param name="log">Logging support.</param>
-        public SeleniumFind(Driver driver, Log log)
+        /// <param name="logManager"><see cref="Logger.LogManager"/></param>
+        public SeleniumFind(Driver driver, LogManager logManager)
         {
             Driver = driver;
-            Log = log;
+            LogManager = logManager;
         }
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
 
                 return new Element();
             }
@@ -77,7 +78,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
 
                 return new Element();
             }
@@ -103,7 +104,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
 
                 return new Element();
             }
@@ -129,7 +130,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
 
                 return new Element();
             }
@@ -155,7 +156,7 @@ namespace Bromine.Core.ElementLocator
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
 
                 return new Element();
             }
@@ -184,12 +185,12 @@ namespace Bromine.Core.ElementLocator
 
                 foreach (var element in elements)
                 {
-                    elementsList.Add(new Element(element, Log, locator, locatorStrategy));
+                    elementsList.Add(new Element(element, LogManager, locator, locatorStrategy));
                 }
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
             }
 
             return elementsList;
@@ -253,6 +254,6 @@ namespace Bromine.Core.ElementLocator
         }
 
         private Driver Driver { get; }
-        private Log Log { get; }
+        private LogManager LogManager { get; }
     }
 }

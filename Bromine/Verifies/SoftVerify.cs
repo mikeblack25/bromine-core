@@ -13,7 +13,7 @@ namespace Bromine.Verifies
     public class SoftVerify : VerifyBase
     {
         /// <inheritdoc />
-        public SoftVerify(Log log) : base(log)
+        public SoftVerify(LogManager logManager) : base(logManager)
         {
         }
 

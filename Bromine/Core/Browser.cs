@@ -13,61 +13,49 @@ using OpenQA.Selenium;
 
 using Xunit.Abstractions;
 
+using LogType = Bromine.Logger.LogType;
+
 namespace Bromine.Core
 {
     /// <inheritdoc cref="IBrowser" />
     public class Browser : IBrowser
     {
         /// <summary>
-        /// Launch a Chrome browser with the default configuration.
-        /// NOTE: No logging is supported in this configuration.
+        /// Launch a Chrome browser with the default configuration and the requested loggers.
         /// </summary>
-        public Browser() : this(new BrowserOptions())
+        public Browser(params LogType[] loggers) : this(new BrowserOptions(), string.Empty, loggers)
         {
         }
 
         /// <summary>
-        /// Launch a Chrome browser with the default configuration and console logging for Xunit.
-        /// </summary>
-        /// <param name="output"><see cref="ITestOutputHelper"/></param>
-        public Browser(ITestOutputHelper output) : this(new BrowserOptions(), output)
-        {
-        }
-
-        /// <summary>
-        /// Provides methods of interacting with the web browser.
+        /// Launch a requested browser and configuration and log with the provided loggers.
         /// </summary>
         /// <param name="options">Provides advanced browser and driver options.</param>
-        /// <param name="output"><see cref="ITestOutputHelper"/></param>
-        public Browser(BrowserOptions options, ITestOutputHelper output = null)
+        /// <param name="fileName">File name for the log file.</param>
+        /// <param name="loggers"></param>
+        public Browser(BrowserOptions options, string fileName = "", params LogType[] loggers)
         {
             BrowserOptions = options;
 
-            Log = new Log(output);
-            Verify = new Verify(Log);
-            ConditionalVerify = new ConditionalVerify(Log);
-            SoftVerify = new SoftVerify(Log);
+            Initialize(fileName, null, loggers);
+        }
 
-            Verify.VerifyFailed += VerifyOnVerifyFailed;
+        /// <summary>
+        /// Launch a requested browser and configuration and log with the provided loggers.
+        /// Xunit console logging is provided through this constructor.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="output"></param>
+        /// <param name="loggers"></param>
+        public Browser(BrowserOptions options, ITestOutputHelper output, params LogType[] loggers)
+        {
+            BrowserOptions = options;
 
-            Driver = new Driver(BrowserOptions.Driver, Log);
-            if (BrowserOptions.Driver.ImplicitWaitEnabled)
-            {
-                EnableImplicitWait(options.Driver.SecondsToWait);
-            }
-
-            Find = new Find(Driver, Log);
-            SeleniumFind = new SeleniumFind(Driver, Log);
-            Navigate = new Navigate(Driver);
-            Window = new Window(Driver);
-            ElementStyle = new ElementStyle(this);
-            Wait = new Wait(this);
-
-            InitializeScreenShotDirectory(options.Driver.ScreenShotPath);
+            Initialize(string.Empty, output, loggers);
         }
 
         /// <inheritdoc />
-        public Log Log { get; }
+        public LogManager LogManager { get; private set; }
 
         /// <inheritdoc />
         public string Url => Driver.WebDriver.Url;
@@ -85,7 +73,7 @@ namespace Bromine.Core
         public ICookieJar Cookies => Driver.WebDriver.Manage().Cookies;
 
         /// <inheritdoc />
-        public IWindow Window { get; }
+        public IWindow Window { get; private set; }
 
         /// <inheritdoc />
         public Point Position => Driver.WebDriver.Manage().Window.Position;
@@ -94,22 +82,22 @@ namespace Bromine.Core
         public Size Size => Driver.WebDriver.Manage().Window.Size;
 
         /// <inheritdoc />
-        public Find Find { get; }
+        public Find Find { get; private set; }
 
         /// <inheritdoc />
-        public SeleniumFind SeleniumFind { get; }
+        public SeleniumFind SeleniumFind { get; private set; }
 
         /// <inheritdoc />
-        public Navigate Navigate { get; }
+        public Navigate Navigate { get; private set; }
 
         /// <inheritdoc />
         public BrowserOptions BrowserOptions { get; }
 
         /// <inheritdoc />
-        public ElementStyle ElementStyle { get; }
+        public ElementStyle ElementStyle { get; private set; }
 
         /// <inheritdoc />
-        public Wait Wait { get; }
+        public Wait Wait { get; private set; }
 
         /// <inheritdoc />
         public string ScreenShotDirectory { get; private set; }
@@ -131,7 +119,7 @@ namespace Bromine.Core
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.Message);
+                    LogManager.Error(e.Message);
 
                     return null;
                 }
@@ -163,15 +151,15 @@ namespace Bromine.Core
         public string Information => Driver.WebDriver.GetType().ToString();
 
         /// <inheritdoc />
-        public Verify Verify { get; }
+        public Verify Verify { get; private set; }
 
         /// <inheritdoc />
-        public ConditionalVerify ConditionalVerify { get; }
+        public ConditionalVerify ConditionalVerify { get; private set; }
 
         /// <inheritdoc />
-        public SoftVerify SoftVerify { get; }
+        public SoftVerify SoftVerify { get; private set; }
 
-        internal Driver Driver { get; }
+        internal Driver Driver { get; private set; }
 
         /// <inheritdoc />
         public void TakeElementScreenShot(string name, Element element)
@@ -209,7 +197,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                LogManager.Error(e.Message);
             }
         }
 
@@ -226,20 +214,45 @@ namespace Bromine.Core
         public void Dispose()
         {
             var didSoftVerifyFail = SoftVerify.HasFailure;
-            Driver?.Dispose();
 
             if (didSoftVerifyFail)
             {
                 Verify.False(true, "One or more Verify statements failed. See the logs for more details.");
             }
 
-            if (Log.ErrorCount > 0)
+            if (LogManager.XunitConsoleLog.ErrorCount > 0)
             {
-                Log.Message("REVIEW: One or more errors occured during execution.");
+                LogManager.Message("REVIEW: One or more errors occured during execution.");
             }
 
-            Log.Dispose();
+            Driver?.Dispose();
+            LogManager?.Dispose();
+        }
 
+        private void Initialize(string fileName, ITestOutputHelper output, params LogType[] loggers)
+        {
+            LogManager = new LogManager(output, fileName, loggers);
+
+            Verify = new Verify(LogManager);
+            ConditionalVerify = new ConditionalVerify(LogManager);
+            SoftVerify = new SoftVerify(LogManager);
+
+            Verify.VerifyFailed += VerifyOnVerifyFailed;
+
+            Driver = new Driver(BrowserOptions.Driver, LogManager);
+            if (BrowserOptions.Driver.ImplicitWaitEnabled)
+            {
+                EnableImplicitWait(BrowserOptions.Driver.SecondsToWait);
+            }
+
+            Find = new Find(Driver, LogManager);
+            SeleniumFind = new SeleniumFind(Driver, LogManager);
+            Navigate = new Navigate(Driver);
+            Window = new Window(Driver);
+            ElementStyle = new ElementStyle(this);
+            Wait = new Wait(this);
+
+            InitializeScreenShotDirectory(BrowserOptions.Driver.ScreenShotPath);
         }
 
         private void EnableImplicitWait(int secondsToWait)
