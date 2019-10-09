@@ -147,7 +147,7 @@ namespace Tests.Bromine.Core.ElementLocator
         /// </summary>
         public override void Dispose()
         {
-            Assert.Equal(0, Browser.LogManager.XunitConsoleLog.ErrorCount);
+            Browser.Verify.Equal(0, Browser.LogManager.XunitConsoleLog.ErrorCount);
 
             Browser?.Dispose();
         }
