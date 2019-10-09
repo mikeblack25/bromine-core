@@ -12,49 +12,17 @@ namespace Tests.Bromine.Logger
     /// <summary>
     /// Tests to verify the rolling log file works as expected.
     /// </summary>
-    public class RollingLogFileTests : IDisposable
+    public class LogBase : IDisposable
     {
         /// <summary>
-        /// Verify Log.Message logs to a rolling log file.
+        /// Message to log.
         /// </summary>
-        [Fact]
-        public void LogMessageTest()
-        {
-            Message = "This is an INFO message";
-
-            Log = new Log("RollingLogFileTests.LogMessageTest", Log.MdExtension);
-            //Log.ClearRollingFileAppender();
-
-            Log.Message(Message);
-        }
+        public string Message { get; set; }
 
         /// <summary>
-        /// Verify Log.Error logs to a rolling log file.
+        /// Log instance.
         /// </summary>
-        [Fact]
-        public void LogErrorTest()
-        {
-            Message = "This is an ERROR message.";
-
-            Log = new Log("RollingLogFileTests.LogErrorTest", Log.MdExtension);
-            //Log.ClearRollingFileAppender();
-
-            Log.Error(Message);
-        }
-
-        /// <summary>
-        /// Verify Log.Error logs to a rolling log file.
-        /// </summary>
-        [Fact]
-        public void LogDebugTest()
-        {
-            Message = "This is a DEBUG message.";
-
-            Log = new Log("RollingLogFileTests.LogDebugTest", Log.MdExtension);
-            //Log.ClearRollingFileAppender();
-
-            Log.Debug(Message);
-        }
+        public Log Log { get; set; }
 
         /// <summary>
         /// Release the RollingFileLock and assert Message is found in the log 1 time.
@@ -68,7 +36,11 @@ namespace Tests.Bromine.Logger
             Assert.Equal(1, MessageCount);
         }
 
-        private string ReadLogFromFile()
+        /// <summary>
+        /// Read the log for the current test.
+        /// </summary>
+        /// <returns></returns>
+        public string ReadLogFromFile()
         {
             MessageCount = 0;
             var builder = new StringBuilder();
@@ -91,8 +63,5 @@ namespace Tests.Bromine.Logger
         }
 
         private int MessageCount { get; set; }
-        private string Message { get; set; }
-        private string TestName { get; set; }
-        private Log Log { get; set; }
     }
 }

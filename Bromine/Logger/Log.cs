@@ -2,14 +2,6 @@ using System;
 using System.IO;
 using System.Reflection;
 
-using log4net;
-using log4net.Appender;
-using log4net.Config;
-using log4net.Core;
-using log4net.Layout;
-using log4net.Repository;
-using log4net.Repository.Hierarchy;
-
 using Xunit.Abstractions;
 
 namespace Bromine.Logger
@@ -31,7 +23,7 @@ namespace Bromine.Logger
 
             CreateDirectories();
 
-            InitializeLog4Net();
+            InitializeFileLogger();
         }
 
         /// <summary>
@@ -53,7 +45,7 @@ namespace Bromine.Logger
                 TestName = test.DisplayName;
             }
 
-            InitializeLog4Net();
+            InitializeFileLogger();
         }
 
         /// <summary>
@@ -110,30 +102,15 @@ namespace Bromine.Logger
         public int ErrorCount { get; private set; }
 
         /// <summary>
-        /// File appender to write a log file.
-        /// </summary>
-        public FileAppender FileAppender { get; private set; }
-
-        /// <summary>
-        /// Stop / Pause logging.
-        /// </summary>
-        public void Stop()
-        {
-            Repo?.ResetConfiguration();
-        }
-
-        /// <summary>
         /// Add an info message to the log.
         /// </summary>
         /// <param name="message">Info message to log.</param>
         public void Message(string message)
         {
-            lock (Lock)
-            {
-                _logger?.Info(message);
-            }
+            var formattedMessage = FormattedLogMessage(message, "INFO");
+            Writer?.WriteLineAsync(formattedMessage);
 
-            Output?.WriteLine(FormattedLogMessage(message, "INFO"));
+            Output?.WriteLine(formattedMessage);
         }
 
         /// <summary>
@@ -142,13 +119,10 @@ namespace Bromine.Logger
         /// <param name="message">Error message to log.</param>
         public void Error(string message)
         {
-            lock (Lock)
-            {
-                _logger?.Error(message);
-            }
+            var formattedMessage = FormattedLogMessage(message, "ERROR");
+            Writer?.WriteLineAsync(formattedMessage);
 
-            Output?.WriteLine(FormattedLogMessage(message, "ERROR"));
-            ErrorCount++;
+            Output?.WriteLine(formattedMessage);
         }
 
         /// <summary>
@@ -157,30 +131,10 @@ namespace Bromine.Logger
         /// <param name="message">Debug message to log.</param>
         public void Debug(string message)
         {
-            lock (Lock)
-            {
-                _logger?.Debug(message);
-            }
+            var formattedMessage = FormattedLogMessage(message, "DEBUG");
+            Writer?.WriteLineAsync(formattedMessage);
 
-            Output?.WriteLine(FormattedLogMessage(message, "DEBUG"));
-        }
-
-        private void InitializeFileAppender()
-        {
-            Layout.ActivateOptions();
-            FileAppender = new FileAppender
-            {
-                Name = "FileAppender",
-                AppendToFile = false,
-                File = LogName,
-                ImmediateFlush = true,
-                Layout = Layout,
-                LockingModel = new FileAppender.MinimalLock(),
-                Threshold = Level.All
-            };
-
-            Hierarchy.Root.AddAppender(FileAppender);
-            Hierarchy.Configured = true;
+            Output?.WriteLine(formattedMessage);
         }
 
         /// <summary>
@@ -188,22 +142,10 @@ namespace Bromine.Logger
         /// </summary>
         public void ClearFile()
         {
-            if (FileAppender != null)
+            if (Writer != null)
             {
-                ReleaseFileLock();
                 File.WriteAllText(LogName, string.Empty);
             }
-        }
-
-        /// <summary>
-        /// Release the file log on the rolling log file.
-        /// </summary>
-        public void ReleaseFileLock()
-        {
-            if (FileAppender == null) { return; }
-
-            FileAppender.LockingModel = new FileAppender.MinimalLock();
-            FileAppender.ActivateOptions();
         }
 
         /// <summary>
@@ -211,7 +153,7 @@ namespace Bromine.Logger
         /// </summary>
         public void Dispose()
         {
-            FileAppender?.Close();
+            Writer?.Dispose();
         }
 
         private void CreateDirectories()
@@ -221,21 +163,11 @@ namespace Bromine.Logger
             CreateDomDirectory();
         }
 
-        private void InitializeLog4Net()
+        private void InitializeFileLogger()
         {
             if (string.IsNullOrWhiteSpace(Extension)) { return; }
 
-            Repo = LogManager.GetRepository();
-            Hierarchy = (Hierarchy) Repo;
-            Root = Hierarchy.Root;
-            Root.Level = Level.All;
-
-            Layout = new PatternLayout
-            {
-                ConversionPattern = LogPattern
-            };
-
-            InitializeFileAppender();
+            Writer = new StreamWriter(LogName, false);
         }
 
         private void CreateLogsDirectory()
@@ -264,17 +196,9 @@ namespace Bromine.Logger
             }
         }
 
-        private ILoggerRepository Repo { get; set; }
-        private Hierarchy Hierarchy { get; set; }
-        private log4net.Repository.Hierarchy.Logger Root { get; set; }
-        private PatternLayout Layout { get; set; }
         private ITestOutputHelper Output { get; }
+        private StreamWriter Writer { get; set; }
 
-        private readonly ILog _logger = LogManager.GetLogger(typeof(Log));
-
-        private static string LogPattern => " %date [%thread] %-5level %message%newline";
         private static string FormattedLogMessage(string message, string type) => $"{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.ffff")} {type} {message}";
-
-        private static readonly object Lock = new object();
     }
 }

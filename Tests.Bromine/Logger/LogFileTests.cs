@@ -1,21 +1,16 @@
-﻿using Bromine.Logger;
+﻿using System.Reflection;
+
+using Bromine.Logger;
 
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Tests.Bromine.Logger
 {
     /// <summary>
     /// Tests to verify the rolling log file works as expected.
     /// </summary>
-    public class AllLoggingTests : LogBase
+    public class LogFileTests : LogBase
     {
-        /// <inheritdoc />
-        public AllLoggingTests(ITestOutputHelper output)
-        {
-            Output = output;
-        }
-
         /// <summary>
         /// Verify Log.Message logs to a rolling log file.
         /// </summary>
@@ -24,7 +19,7 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is an INFO message";
 
-            Log = new Log(Output);
+            Log = new Log(MethodBase.GetCurrentMethod().Name, Log.MdExtension);
 
             Log.Message(Message);
         }
@@ -37,7 +32,7 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is an ERROR message.";
 
-            Log = new Log(Output);
+            Log = new Log(MethodBase.GetCurrentMethod().Name, Log.MdExtension);
 
             Log.Error(Message);
         }
@@ -50,11 +45,9 @@ namespace Tests.Bromine.Logger
         {
             Message = "This is a DEBUG message.";
 
-            Log = new Log(Output);
+            Log = new Log(MethodBase.GetCurrentMethod().Name, Log.MdExtension);
 
             Log.Debug(Message);
         }
-
-        private ITestOutputHelper Output { get; }
     }
 }

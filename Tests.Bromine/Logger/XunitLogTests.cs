@@ -63,7 +63,7 @@ namespace Tests.Bromine.Logger
         /// </summary>
         public void Dispose()
         {
-            Log.Stop();
+            Log.Dispose();
         }
 
         private string Message { get; set; }

@@ -78,8 +78,9 @@
     <Compile Include="Common\Category.cs" />
     <Compile Include="Common\TestSites.cs" />
     <Compile Include="Logger\AllLoggingTests.cs" />
+    <Compile Include="Logger\LogBase.cs" />
     <Compile Include="Logger\XunitLogTests.cs" />
-    <Compile Include="Logger\RollingLogFileTests.cs" />
+    <Compile Include="Logger\LogFileTests.cs" />
     <Compile Include="Core\ElementInteraction\ElementExtensionTests.cs" />
     <Compile Include="Core\ElementInteraction\ElementStyleTests.cs" />
     <Compile Include="Core\BrowserTypeTests.cs" />
