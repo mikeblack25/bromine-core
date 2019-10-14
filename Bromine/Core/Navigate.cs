@@ -25,12 +25,12 @@ namespace Bromine.Core
             try
             {
                 Driver.WebDriver.Navigate().GoToUrl(url);
-                Driver.Log.Message($"Navigate to {url}");
+                Driver.LogManager.Message($"Navigate to {url}");
 
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
             }
         }
 
@@ -76,7 +76,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Driver.LogManager.Error(e.Message);
             }
         }
 

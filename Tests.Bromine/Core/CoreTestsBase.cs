@@ -5,6 +5,8 @@ using System.Reflection;
 using Bromine;
 using Bromine.Core;
 using Bromine.Core.ElementInteraction;
+using Bromine.Logger;
+using Bromine.Models;
 
 using Xunit.Abstractions;
 
@@ -21,7 +23,9 @@ namespace Tests.Bromine.Core
         /// </summary>
         protected CoreTestsBase(ITestOutputHelper output = null)
         {
-            Browser = new Browser(output);
+            Output = output;
+
+            Browser = new Browser(new BrowserOptions(), Output, LogType.XunitConsole, LogType.Text);
         }
 
         /// <summary>
@@ -45,6 +49,8 @@ namespace Tests.Bromine.Core
         internal string Amazon => "Amazon";
 
         internal Element CartButton => Browser.SeleniumFind.ElementById("nav-cart");
+
+        internal ITestOutputHelper Output { get; }
 
         /// <summary>
         /// Dispose of the Browser.

@@ -2,12 +2,14 @@
 
 using Bromine.Constants;
 using Bromine.Core;
+using Bromine.Logger;
 using Bromine.Models;
 
 using Tests.Bromine.Common;
 
 using Xunit;
 using Xunit.Abstractions;
+
 using DriverOptions = Bromine.Models.DriverOptions;
 
 namespace Tests.Bromine.Core
@@ -20,6 +22,7 @@ namespace Tests.Bromine.Core
         /// <inheritdoc />
         public BrowserTypeTests(ITestOutputHelper output)
         {
+            Output = output;
         }
 
         /// <summary>
@@ -57,7 +60,7 @@ namespace Tests.Bromine.Core
         /// </summary>
         /// <param name="browser">Browser to launch.</param>
         [Trait(Category.Browser, Category.Edge)]
-        [Theory]
+        [Theory(Skip = "Current Version Mismatch")]
         [InlineData(BrowserType.Edge)]
         public void InitializeEdgeBrowserTest(BrowserType browser)
         {
@@ -99,7 +102,7 @@ namespace Tests.Bromine.Core
         /// </summary>
         /// <param name="browser">Browser to launch.</param>
         [Trait(Category.Browser, Category.InternetExplorer)]
-        [Theory]
+        [Theory(Skip = "Current Version Mismatch")]
         [InlineData(BrowserType.InternetExplorer)]
         public void InitializeInternetExplorerBrowserTest(BrowserType browser)
         {
@@ -125,7 +128,7 @@ namespace Tests.Bromine.Core
         {
             var browserOptions = new BrowserOptions(browser, isHeadless, 5, RemoteAddress);
 
-            Browser = new Browser(browserOptions);
+            Browser = new Browser(browserOptions, Output, LogType.XunitConsole, LogType.Text);
 
             Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
@@ -134,12 +137,13 @@ namespace Tests.Bromine.Core
         {
             var browserOptions = new BrowserOptions(driverOptions);
 
-            Browser = new Browser(browserOptions);
+            Browser = new Browser(browserOptions, Output, LogType.XunitConsole, LogType.Text);
 
             Browser.Navigate.ToUrl(TestSites.GoogleUrl);
         }
 
         private Browser Browser { get; set; }
+        private ITestOutputHelper Output { get; }
 
         private const string RemoteAddress = "localhost:4444";
     }
