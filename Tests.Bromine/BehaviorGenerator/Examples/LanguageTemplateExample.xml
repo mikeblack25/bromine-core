@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<LanguageTemplate xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <HasAttribute>{0} has the attribute {1}</HasAttribute>
+  <HasAttributes>(0} has the attributes {1}</HasAttributes>
+  <NavigationUrl>{0} is navigate to</NavigationUrl>
+  <Click>{0} is clicked</Click>
+  <IsEnabled>{0} is enabled</IsEnabled>
+  <IsDisabled>{0} is disabled</IsDisabled>
+  <Text>the text of {0} is equal to {1}</Text>
+  <TextContains>the text of {0} contains {1}</TextContains>
+  <TextStartsWith>the text of {0} starts with {1}</TextStartsWith>
+  <TextEndsWith>the text of {0} ends with {1}</TextEndsWith>
+  <IsVisible>{0} is visible</IsVisible>
+  <IsNotVisible>{0} is not visible</IsNotVisible>
+  <Options>{0} contains the following options</Options>
+  <EnterText>{1} is entered into {0}</EnterText>
+  <Image>{0} has the expected image</Image>
+</LanguageTemplate>

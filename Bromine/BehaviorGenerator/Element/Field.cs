@@ -14,11 +14,10 @@ namespace Bromine.BehaviorGenerator.Element
         }
 
         /// <summary>
-        /// 
+        /// Enter the given text in the element.
         /// </summary>
         public void EnterText(string textToEnter)
         {
-
         }
     }
 }

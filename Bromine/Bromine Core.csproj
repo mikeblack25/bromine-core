@@ -82,6 +82,7 @@
     <Compile Include="BehaviorGenerator\Element\Dropdown.cs" />
     <Compile Include="BehaviorGenerator\Element\Link.cs" />
     <Compile Include="BehaviorGenerator\Element\Frame.cs" />
+    <Compile Include="BehaviorGenerator\Models\LanguageTemplate.cs" />
     <Compile Include="BehaviorGenerator\Template\SpecFlow.cs" />
     <Compile Include="BehaviorGenerator\Element\Base\VisibleElementBase.cs" />
     <Compile Include="BehaviorGenerator\Element\Base\ElementBase.cs" />
