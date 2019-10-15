@@ -4,12 +4,12 @@ using Bromine.BehaviorGenerator.Element.Base;
 namespace Bromine.BehaviorGenerator.Element
 {
     /// <summary>
-    /// 
+    /// Button element.
     /// </summary>
-    public class ButtonElementBase : NavigationElementBase
+    public class ButtonElementStateBase : StateElementBase
     {
         /// <inheritdoc />
-        public ButtonElementBase(string format, params GherkinActions[] actions) : base(format, actions)
+        public ButtonElementStateBase(string format, params GherkinActions[] actions) : base(format, actions)
         {
         }
     }

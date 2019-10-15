@@ -4,7 +4,7 @@ using Bromine.BehaviorGenerator.Element.Base;
 namespace Bromine.BehaviorGenerator.Element
 {
     /// <summary>
-    /// 
+    /// Label element.
     /// </summary>
     public class LabelElement : VisibleElementBase
     {

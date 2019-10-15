@@ -4,7 +4,7 @@ using Bromine.BehaviorGenerator.Element.Base;
 namespace Bromine.BehaviorGenerator.Element
 {
     /// <summary>
-    /// 
+    /// Field Element. A field is an element that accepts input (SendKeys in Selenium.
     /// </summary>
     public class FieldElement : VisibleElementBase
     {
@@ -16,6 +16,9 @@ namespace Bromine.BehaviorGenerator.Element
         /// <summary>
         /// 
         /// </summary>
-        public string SendKeys { get; set; }
+        public void EnterText(string textToEnter)
+        {
+
+        }
     }
 }

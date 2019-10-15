@@ -4,7 +4,7 @@ using Bromine.BehaviorGenerator.Element.Base;
 namespace Bromine.BehaviorGenerator.Element
 {
     /// <summary>
-    /// 
+    /// Frame element.
     /// </summary>
     public class FrameElement : ElementBase
     {
@@ -12,6 +12,5 @@ namespace Bromine.BehaviorGenerator.Element
         public FrameElement(string format, params GherkinActions[] actions) : base(format, actions)
         {
         }
-
     }
 }

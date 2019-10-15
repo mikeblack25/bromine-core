@@ -4,22 +4,22 @@ using Bromine.BehaviorGenerator.Element.Base;
 namespace Bromine.BehaviorGenerator.Element
 {
     /// <summary>
-    /// 
+    /// Image element.
     /// </summary>
-    public class ImageElement : NavigationElementBase
+    public class ImageElementState : StateElementBase
     {
 
         /// <inheritdoc />
-        public ImageElement(string format, params GherkinActions[] actions) : base(format, actions)
+        public ImageElementState(string format, params GherkinActions[] actions) : base(format, actions)
         {
         }
 
         /// <summary>
-        /// 
+        /// Is the image the expected image?
         /// </summary>
-        public void Image()
+        public bool Image()
         {
-
+            return false;
         }
     }
 }

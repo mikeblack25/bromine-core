@@ -4,7 +4,7 @@ using Bromine.BehaviorGenerator.Element.Base;
 namespace Bromine.BehaviorGenerator.Element
 {
     /// <summary>
-    /// 
+    /// Link element.
     /// </summary>
     public class LinkElement : VisibleElementBase
     {

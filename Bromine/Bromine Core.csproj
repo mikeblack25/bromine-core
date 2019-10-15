@@ -77,13 +77,13 @@
   <ItemGroup>
     <Compile Include="BehaviorGenerator\Element\Field.cs" />
     <Compile Include="BehaviorGenerator\Element\Label.cs" />
-    <Compile Include="BehaviorGenerator\Element\Base\NavigationBase.cs" />
+    <Compile Include="BehaviorGenerator\Element\Base\StateElementBase.cs" />
     <Compile Include="BehaviorGenerator\Element\Image.cs" />
     <Compile Include="BehaviorGenerator\Element\Dropdown.cs" />
     <Compile Include="BehaviorGenerator\Element\Link.cs" />
     <Compile Include="BehaviorGenerator\Element\Frame.cs" />
     <Compile Include="BehaviorGenerator\Template\SpecFlow.cs" />
-    <Compile Include="BehaviorGenerator\Element\Base\VisibleBase.cs" />
+    <Compile Include="BehaviorGenerator\Element\Base\VisibleElementBase.cs" />
     <Compile Include="BehaviorGenerator\Element\Base\ElementBase.cs" />
     <Compile Include="BehaviorGenerator\Element\Button.cs" />
     <Compile Include="BehaviorGenerator\Constants\GherkinActions.cs" />
