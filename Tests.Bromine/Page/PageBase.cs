@@ -6,6 +6,7 @@ using Bromine.Logger;
 using Bromine.Models;
 
 using Tests.Bromine.Page.Google;
+using Tests.Bromine.Page.GridTesting;
 
 using Xunit.Abstractions;
 
