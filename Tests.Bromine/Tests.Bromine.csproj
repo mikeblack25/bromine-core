@@ -89,10 +89,10 @@
     <Compile Include="Core\ElementLocator\FindTests.cs" />
     <Compile Include="Core\ElementLocator\SeleniumFindTests.cs" />
     <Compile Include="Core\WaitTests.cs" />
-    <Compile Include="Page\Google\Home.cs" />
-    <Compile Include="Page\Google\HomeTests.cs" />
-    <Compile Include="Page\GridTesting\CnnTest.cs" />
-    <Compile Include="Page\GridTesting\GridTesting.cs" />
+    <Compile Include="Page\GoogleHome.cs" />
+    <Compile Include="Page\PageTests\GoogleTests.cs" />
+    <Compile Include="Page\PageTests\CnnTest.cs" />
+    <Compile Include="Page\CnnHome.cs" />
     <Compile Include="Page\PageBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\BrowserTests.cs" />
