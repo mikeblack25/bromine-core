@@ -5,9 +5,6 @@ using Bromine.Core;
 using Bromine.Logger;
 using Bromine.Models;
 
-using Tests.Bromine.Page.Google;
-using Tests.Bromine.Page.GridTesting;
-
 using Xunit.Abstractions;
 
 namespace Tests.Bromine.Page
@@ -20,7 +17,7 @@ namespace Tests.Bromine.Page
     {
         /// <summary>
         /// Initialize all page objects and inject the desired Browser into all derived Page Objects.
-        /// In this example we only have the <see cref="Home"/> Page Object.
+        /// In this example we only have the <see cref="GoogleHome"/> Page Object.
         /// Other pages can be added in the same way.
         /// </summary>
         /// <param name="browser"><see cref="BrowserType"/></param>
@@ -36,7 +33,8 @@ namespace Tests.Bromine.Page
 
         private void InitializePages()
         {
-            Home = new Home(Browser);
+            GoogleHome = new GoogleHome(Browser);
+            CnnHome = new CnnHome(Browser);
         }
 
         /// <summary>
@@ -45,9 +43,14 @@ namespace Tests.Bromine.Page
         public Browser Browser { get; private set; }
 
         /// <summary>
-        /// <see cref="Google.Home"/>
+        /// <see cref="Bromine.Page.GoogleHome"/>
         /// </summary>
-        public Home Home { get; private set; }
+        public GoogleHome GoogleHome { get; private set; }
+
+        /// <summary>
+        /// <see cref="CnnHome"/>
+        /// </summary>
+        public CnnHome CnnHome { get; private set; }
 
         /// <summary>
         /// Dispose of Browser resources.

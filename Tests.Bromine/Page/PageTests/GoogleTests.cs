@@ -3,7 +3,7 @@
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Tests.Bromine.Page.Google
+namespace Tests.Bromine.Page.PageTests
 {
     /// <summary>
     /// Home tests to show how tests can be structured to leverage common setup and teardown to simplify the test flow.
@@ -11,12 +11,12 @@ namespace Tests.Bromine.Page.Google
     public class HomeTests : PageBase
     {
         /// <summary>
-        /// Navigate to <see cref="Home.Url"/>
+        /// Navigate to <see cref="GoogleHome.Url"/>
         /// </summary>
         public HomeTests(ITestOutputHelper output)
         {
             InitializePages(BrowserType.Chrome, false, output);
-            Home.Navigate();
+            GoogleHome.Navigate();
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Tests.Bromine.Page.Google
         [Fact]
         public void ClickAboutLink()
         {
-            Home.AboutLink.Click();
+            GoogleHome.AboutLink.Click();
 
             Browser.Verify.Contains("https://about.google", Browser.Url);
         }
@@ -36,7 +36,7 @@ namespace Tests.Bromine.Page.Google
         [Fact]
         public void ClickStoreLink()
         {
-            Home.StoreLink.Click();
+            GoogleHome.StoreLink.Click();
 
             Browser.Verify.Contains("https://store.google", Browser.Url);
         }
@@ -47,7 +47,7 @@ namespace Tests.Bromine.Page.Google
         [Fact]
         public void ClickGmailLink()
         {
-            Home.GmailLink.Click();
+            GoogleHome.GmailLink.Click();
 
             Browser.Verify.Contains("https://www.google.com/gmail", Browser.Url);
         }
@@ -58,7 +58,7 @@ namespace Tests.Bromine.Page.Google
         [Fact]
         public void ClickImagesLink()
         {
-            Home.ImagesLink.Click();
+            GoogleHome.ImagesLink.Click();
 
             Browser.Verify.Contains("https://www.google.com/imghp", Browser.Url);
         }
@@ -69,7 +69,7 @@ namespace Tests.Bromine.Page.Google
         [Fact]
         public void GoogleImageAttribute()
         {
-            var googleImage = Home.GoogleImage;
+            var googleImage = GoogleHome.GoogleImage;
 
             Browser.Verify.Contains("Google", googleImage.GetAttribute("alt"));
         }
@@ -80,7 +80,7 @@ namespace Tests.Bromine.Page.Google
         [Fact]
         public void GoogleSearch()
         {
-            Home.Search("cat");
+            GoogleHome.Search("cat");
 
             Browser.Verify.Contains("q=cat", Browser.Url);
         }

@@ -3,17 +3,15 @@ using Bromine.Core.ElementInteraction;
 
 using OpenQA.Selenium;
 
-namespace Tests.Bromine.Page.Google
+namespace Tests.Bromine.Page
 {
     /// <summary>
     /// Representation of the Google Homepage https://www.google.com.
     /// </summary>
-    public class Home : global::Bromine.Core.Page
+    public class GoogleHome : global::Bromine.Core.Page
     {
         /// <inheritdoc />
-        public Home(Browser browser) : base(browser)
-        {
-        }
+        public GoogleHome(Browser browser) : base(browser) { }
 
 #pragma warning disable 1591
         public Element AboutLink => Browser.SeleniumFind.ElementByText("About");

@@ -3,7 +3,7 @@
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Tests.Bromine.Page.GridTesting
+namespace Tests.Bromine.Page.PageTests
 {
     /// <summary>
     /// Test to check the Health page URL from CNN.com.
@@ -16,6 +16,7 @@ namespace Tests.Bromine.Page.GridTesting
         public CnnTest(ITestOutputHelper output)
         {
             InitializePages(BrowserType.Chrome, false, output);
+            Browser.Window.Maximize();
 
             Browser.Navigate.ToUrl("https://www.cnn.com");
         }
@@ -26,9 +27,9 @@ namespace Tests.Bromine.Page.GridTesting
         [Fact]
         public void ClickHealthLink()
         {
-            Browser.Wait.For.DisplayedElement(GridTesting.HealthLink);
+            Browser.Wait.For.DisplayedElement(CnnHome.HealthLink);
 
-            GridTesting.HealthLink.Click();
+            CnnHome.HealthLink.Click();
 
             Browser.Verify.Contains("https://www.cnn.com/health", Browser.Url);
         }

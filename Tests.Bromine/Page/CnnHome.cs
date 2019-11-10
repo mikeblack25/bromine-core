@@ -1,15 +1,15 @@
 ﻿using Bromine.Core;
 using Bromine.Core.ElementInteraction;
 
-namespace Tests.Bromine.Page.GridTesting
+namespace Tests.Bromine.Page
 {
     /// <summary>
     /// Testing of the CNN page.
     /// </summary>
-    public class GridTesting : global::Bromine.Core.Page
+    public class CnnHome : global::Bromine.Core.Page
     {
         /// <inheritdoc />
-        public GridTesting(Browser browser) : base(browser) { }
+        public CnnHome(Browser browser) : base(browser) { }
 
 #pragma warning disable 1591
         public Element HealthLink => Browser.SeleniumFind.ElementByText("Health");
