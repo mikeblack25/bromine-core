@@ -91,7 +91,9 @@
     <Compile Include="Core\WaitTests.cs" />
     <Compile Include="Page\CalJobsHome.cs" />
     <Compile Include="Page\GoogleHome.cs" />
+    <Compile Include="Page\GoogleSearchHome.cs" />
     <Compile Include="Page\PageTests\CalJobsTest.cs" />
+    <Compile Include="Page\PageTests\GoogleSearchHomeTest.cs" />
     <Compile Include="Page\PageTests\GoogleTests.cs" />
     <Compile Include="Page\PageTests\CnnTest.cs" />
     <Compile Include="Page\CnnHome.cs" />

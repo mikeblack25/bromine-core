@@ -36,6 +36,7 @@ namespace Tests.Bromine.Page
             GoogleHome = new GoogleHome(Browser);
             CnnHome = new CnnHome(Browser);
             CalJobsHome = new CalJobsHome(Browser);
+            GoogleSearchHome = new GoogleSearchHome(Browser);
         }
 
         /// <summary>
@@ -57,6 +58,11 @@ namespace Tests.Bromine.Page
         /// <see cref="Bromine.Page.CalJobsHome"/>
         /// </summary>
         public CalJobsHome CalJobsHome { get; private set; }
+
+        /// <summary>
+        /// <see cref="Bromine.Page.GoogleSearchHome"/>
+        /// </summary>
+        public GoogleSearchHome GoogleSearchHome { get; private set; }
 
         /// <summary>
         /// Dispose of Browser resources.
