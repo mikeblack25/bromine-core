@@ -18,7 +18,7 @@ namespace Tests.Bromine.Page.PageTests
             InitializePages(BrowserType.Chrome, false, output);
             Browser.Window.Maximize();
 
-            Browser.Navigate.ToUrl("https://www.cnn.com");
+            CnnHome.Navigate();
         }
 
         /// <summary>
