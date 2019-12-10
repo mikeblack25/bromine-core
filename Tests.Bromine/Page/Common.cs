@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using Bromine;
-using Bromine.Core.ElementInteraction;
+using Bromine.Core.Element;
 
 namespace Tests.Bromine.Page
 {

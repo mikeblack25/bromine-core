@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-
-using Bromine.Core.ElementInteraction;
-using Bromine.Core.ElementLocator;
-
+using Bromine.Core.Element;
 using Tests.Bromine.Common;
 
 using Xunit;
@@ -29,7 +26,7 @@ namespace Tests.Bromine.Core.ElementInteraction
         [Fact]
         public void VerifyFindElementsOfElement()
         {
-            _elementsOfElement = _element.FindElements(LocatorStrategy.Css, "div");
+            _elementsOfElement = _element.FindElements(Strategy.Css, "div");
         }
 
         /// <summary>
@@ -38,7 +35,7 @@ namespace Tests.Bromine.Core.ElementInteraction
         [Fact]
         public void VerifyFindElementOfElement()
         {
-            _elementsOfElement = new List<Element> {_element.FindElement(LocatorStrategy.Css, "div")};
+            _elementsOfElement = new List<Element> {_element.FindElement(Strategy.Css, "div")};
         }
 
         /// <summary>

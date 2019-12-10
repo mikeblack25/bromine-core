@@ -1,4 +1,4 @@
-﻿namespace Bromine.Core.ElementInteraction
+﻿namespace Bromine.Constants
 {
     /// <summary>
     /// Format extension methods for CSS.

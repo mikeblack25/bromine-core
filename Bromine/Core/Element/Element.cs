@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-using Bromine.Core.ElementLocator;
 using Bromine.Logger;
 
 using OpenQA.Selenium;
 
-namespace Bromine.Core.ElementInteraction
+namespace Bromine.Core.Element
 {
     /// <summary>
     /// Provides ability to interact with elements.
@@ -21,7 +20,7 @@ namespace Bromine.Core.ElementInteraction
         /// <param name="log"><see cref="Log"/></param>
         /// <param name="locatorString">Locator string used to find the requested element.</param>
         /// <param name="locatorType">Type of locator used to find the requested element.</param>
-        internal Element(IWebElement element, Log log, string locatorString = "", LocatorStrategy locatorType = 0) : this()
+        internal Element(IWebElement element, Log log, string locatorString = "", Strategy locatorType = 0) : this()
         {
             WebElement = element;
             Log = log;
@@ -29,7 +28,7 @@ namespace Bromine.Core.ElementInteraction
             if (!string.IsNullOrEmpty(locatorString) && locatorType != 0)
             {
                 Information.LocatorString = locatorString;
-                Information.LocatorStrategy = locatorType;
+                Information.Strategy = locatorType;
             }
 
             if (element != null)
@@ -41,7 +40,7 @@ namespace Bromine.Core.ElementInteraction
         /// <summary>
         /// Details about the location strategy used for the requested element.
         /// </summary>
-        public CallingInformation Information { get; }
+        public Information Information { get; }
 
         /// <summary>
         /// Flag to determine if the element has been created correctly.
@@ -346,7 +345,7 @@ namespace Bromine.Core.ElementInteraction
         /// </summary>
         internal Element()
         {
-            Information = new CallingInformation
+            Information = new Information
             {
                 CalledTimestamp = DateTime.Now
             };

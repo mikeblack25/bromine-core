@@ -2,8 +2,7 @@
 
 using Bromine.Constants;
 using Bromine.Core;
-using Bromine.Core.ElementInteraction;
-using Bromine.Core.ElementLocator;
+using Bromine.Core.Element;
 using Bromine.Logger;
 using Bromine.Models;
 
@@ -31,31 +30,31 @@ namespace Tests.Bromine.Core.ElementLocator
         }
 
         /// <summary>
-        /// Call <see cref="Find.Element"/> with all supported <see cref="LocatorStrategy"/>.
-        /// Is <see cref="LocatorStrategy"/> as expected?
+        /// Call <see cref="Find.Element"/> with all supported <see cref="Strategy"/>.
+        /// Is <see cref="Strategy"/> as expected?
         /// Is the element count as expected?
         /// </summary>
         [Fact]
         public void FindByStrategyTest()
         {
             var locator = CommonPage.EnableButtonId;
-            VerifyStrategy(locator, LocatorStrategy.Id);
+            VerifyStrategy(locator, Strategy.Id);
             VerifyElementCount(locator.Information.LocatorString, 1);
 
             locator = CommonPage.EnableButtonClass;
-            VerifyStrategy(locator, LocatorStrategy.Class);
+            VerifyStrategy(locator, Strategy.Class);
             VerifyElementCount(locator.Information.LocatorString, 1);
 
             locator = CommonPage.EnableButtonCss;
-            VerifyStrategy(locator, LocatorStrategy.Css);
+            VerifyStrategy(locator, Strategy.Css);
             VerifyElementCount(locator.Information.LocatorString, 1);
 
             locator = CommonPage.EnableButtonText;
-            VerifyStrategy(locator, LocatorStrategy.Text);
+            VerifyStrategy(locator, Strategy.Text);
             VerifyElementCount(locator.Information.LocatorString, 1);
 
             locator = CommonPage.EnableButtonPartialText;
-            VerifyStrategy(locator, LocatorStrategy.PartialText);
+            VerifyStrategy(locator, Strategy.PartialText);
             VerifyElementCount(locator.Information.LocatorString, 4);
         }
 
@@ -68,7 +67,7 @@ namespace Tests.Bromine.Core.ElementLocator
         /// <see cref="SeleniumFind.ElementByPartialText"/>
         /// Is the element <see cref="Element.IsInitialized"/> property false?
         /// Is the element <see cref="Element.WebElement"/> property null?
-        /// Does <see cref="SeleniumFind.Element"/> returns null when an undefined <see cref="LocatorStrategy"/> is provided?
+        /// Does <see cref="SeleniumFind.Element"/> returns null when an undefined <see cref="Strategy"/> is provided?
         /// </summary>
         [Fact]
         public void SeleniumFindInvalidStrategy()
@@ -79,7 +78,7 @@ namespace Tests.Bromine.Core.ElementLocator
             VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumText);
             VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumPartialText);
 
-            Browser.Verify.Null(SeleniumFind.Element(LocatorStrategy.Undefined, string.Empty));
+            Browser.Verify.Null(SeleniumFind.Element(Strategy.Undefined, string.Empty));
     }
 
         /// <summary>
@@ -92,7 +91,7 @@ namespace Tests.Bromine.Core.ElementLocator
         {
             var element = CommonPage.EnabledButtonElementClasses;
 
-            Log.Message($"Find.ElementByClasses by {element.Information.LocatorString} and {element.Information.LocatorStrategy}");
+            Log.Message($"Find.ElementByClasses by {element.Information.LocatorString} and {element.Information.Strategy}");
             Browser.SoftVerify.True(element.Displayed);
             Browser.SoftVerify.Equal(1, CommonPage.EnabledButtonElementsClasses.Count);
         }
@@ -105,7 +104,7 @@ namespace Tests.Bromine.Core.ElementLocator
         {
             var element = CommonPage.EnabledButtonChildElement;
 
-            Log.Message($"Find.ChildElement by {element.Information.LocatorString} and {element.Information.LocatorStrategy}");
+            Log.Message($"Find.ChildElement by {element.Information.LocatorString} and {element.Information.Strategy}");
             Browser.SoftVerify.True(element.Displayed);
             Browser.SoftVerify.True(CommonPage.EnabledButtonChildElementParentElement.Displayed);
             Browser.SoftVerify.True(CommonPage.EnabledButtonDescendentCssElement.Displayed);
@@ -113,10 +112,10 @@ namespace Tests.Bromine.Core.ElementLocator
             Browser.SoftVerify.Equal(2, CommonPage.EnabledButtonDescendentCssElements.Count);
         }
 
-        private void VerifyStrategy(Element element, LocatorStrategy expectedStrategy)
+        private void VerifyStrategy(Element element, Strategy expectedStrategy)
         {
-            Log.Message($"Find.Element by {element.Information.LocatorString} and {element.Information.LocatorStrategy}");
-            Browser.SoftVerify.Equal(expectedStrategy, element.Information.LocatorStrategy);
+            Log.Message($"Find.Element by {element.Information.LocatorString} and {element.Information.Strategy}");
+            Browser.SoftVerify.Equal(expectedStrategy, element.Information.Strategy);
         }
 
         private void VerifyInvalidElement(Element element)

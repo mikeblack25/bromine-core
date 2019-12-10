@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Linq;
-
-using Bromine.Core.ElementLocator;
-
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 
-namespace Bromine.Core.ElementInteraction
+namespace Bromine.Core.Element
 {
     /// <summary>
     /// Add style to WebElements.
@@ -22,16 +19,16 @@ namespace Bromine.Core.ElementInteraction
         }
 
         /// <summary>
-        /// Add a border to an element located by the given locatorStrategy and locator string.
+        /// Add a border to an element located by the given strategy and locator string.
         /// </summary>
-        /// <param name="locatorStrategy">How will the element be found?</param>
+        /// <param name="strategy">How will the element be found?</param>
         /// <param name="locator">String used to locate the element.</param>
         /// <param name="color">Element border color.</param>
-        public void AddBorder(LocatorStrategy locatorStrategy, string locator, string color)
+        public void AddBorder(Strategy strategy, string locator, string color)
         {
             try
             {
-                Driver.ExecuteJavaScript(ElementBorderScript(locatorStrategy, locator, color));
+                Driver.ExecuteJavaScript(ElementBorderScript(strategy, locator, color));
             }
             catch (Exception e)
             {
@@ -40,7 +37,7 @@ namespace Bromine.Core.ElementInteraction
         }
 
         /// <summary>
-        /// Add a border to an element located by the given locatorStrategy and locator string.
+        /// Add a border to an element located by the given strategy and locator string.
         /// </summary>
         /// <param name="element">Element to add a border around.</param>
         /// <param name="color">Element border color.</param>
@@ -48,7 +45,7 @@ namespace Bromine.Core.ElementInteraction
         {
             try
             {
-                Driver.ExecuteJavaScript(ElementBorderScript(LocatorStrategyFromCss(element.Information.LocatorStrategy, element.Information.LocatorString), RemoveLocatorPrefix(element.Information.LocatorString), color));
+                Driver.ExecuteJavaScript(ElementBorderScript(LocatorStrategyFromCss(element.Information.Strategy, element.Information.LocatorString), RemoveLocatorPrefix(element.Information.LocatorString), color));
             }
             catch (Exception e)
             {
@@ -57,16 +54,16 @@ namespace Bromine.Core.ElementInteraction
         }
 
         /// <summary>
-        /// Add Borders to elements located by the given locatorStrategy and locator string.
+        /// Add Borders to elements located by the given strategy and locator string.
         /// </summary>
-        /// <param name="locatorStrategy">How will the element be found?</param>
+        /// <param name="strategy">How will the element be found?</param>
         /// <param name="locator">String used to locate the element.</param>
         /// <param name="color">Element border color.</param>
-        public void AddBorders(LocatorStrategy locatorStrategy, string locator, string color)
+        public void AddBorders(Strategy strategy, string locator, string color)
         {
             try
             {
-                Driver.ExecuteJavaScript(ElementsBorderScript(locatorStrategy, locator, color));
+                Driver.ExecuteJavaScript(ElementsBorderScript(strategy, locator, color));
             }
             catch (Exception e)
             {
@@ -75,7 +72,7 @@ namespace Bromine.Core.ElementInteraction
         }
 
         /// <summary>
-        /// Add Borders to elements located by the given locatorStrategy and locator string.
+        /// Add Borders to elements located by the given strategy and locator string.
         /// </summary>
         /// <param name="element">Element to add a border around.</param>
         /// <param name="color">Element border color.</param>
@@ -83,7 +80,7 @@ namespace Bromine.Core.ElementInteraction
         {
             try
             {
-                Driver.ExecuteJavaScript(ElementsBorderScript(LocatorStrategyFromCss(element.Information.LocatorStrategy, element.Information.LocatorString), RemoveLocatorPrefix(element.Information.LocatorString), color));
+                Driver.ExecuteJavaScript(ElementsBorderScript(LocatorStrategyFromCss(element.Information.Strategy, element.Information.LocatorString), RemoveLocatorPrefix(element.Information.LocatorString), color));
             }
             catch (Exception e)
             {
@@ -98,15 +95,15 @@ namespace Bromine.Core.ElementInteraction
         /// <returns></returns>
         public string GetStyleAttribute(Element element) => element.GetAttribute("style");
 
-        private LocatorStrategy LocatorStrategyFromCss(LocatorStrategy locatorStrategy, string locator)
+        private Strategy LocatorStrategyFromCss(Strategy locatorStrategy, string locator)
         {
             var firstChar = locator.First();
 
-            if (locatorStrategy == LocatorStrategy.Css)
+            if (locatorStrategy == Strategy.Css)
             {
-                if (firstChar == '#') { return LocatorStrategy.Id; }
+                if (firstChar == '#') { return Strategy.Id; }
 
-                if (firstChar == '.') { return LocatorStrategy.Class; }
+                if (firstChar == '.') { return Strategy.Class; }
             }
 
             return locatorStrategy;
@@ -129,27 +126,27 @@ namespace Bromine.Core.ElementInteraction
             return locator;
         }
 
-        private string GetLocatorStrategyForJsScript(LocatorStrategy locatorStrategy)
+        private string GetLocatorStrategyForJsScript(Strategy locatorStrategy)
         {
             var locatorString = string.Empty;
 
             switch (locatorStrategy)
             {
-                case LocatorStrategy.Class:
+                case Strategy.Class:
                 {
                     locatorString = "getElementsByClassName";
 
                     break;
                 }
-                case LocatorStrategy.Id:
+                case Strategy.Id:
                 {
                     locatorString = "getElementById";
 
                     break;
                 }
-                case LocatorStrategy.Css:
-                case LocatorStrategy.PartialText:
-                case LocatorStrategy.Text:
+                case Strategy.Css:
+                case Strategy.PartialText:
+                case Strategy.Text:
                 {
                     Browser.Log.Error($"{locatorStrategy} is not a valid location strategy here");
 
@@ -160,8 +157,8 @@ namespace Bromine.Core.ElementInteraction
             return locatorString;
         }
 
-        private string ElementBorderScript(LocatorStrategy locatorStrategy, string locator, string color) => $"document.{GetLocatorStrategyForJsScript(locatorStrategy)}(\"{locator}\").style.borderColor = \"{color}\"";
-        private string ElementsBorderScript(LocatorStrategy locatorStrategy, string locator, string color) => "{\n  var x = document." + $"{GetLocatorStrategyForJsScript(locatorStrategy)}" + "(\"" + $"{locator}\");\n  var i;\n  for (i = 0; i < x.length; i++) " + "{\n    " + "x[i].style.borderColor = \"" + $"{color}" + "\";\n  }\n}";
+        private string ElementBorderScript(Strategy locatorStrategy, string locator, string color) => $"document.{GetLocatorStrategyForJsScript(locatorStrategy)}(\"{locator}\").style.borderColor = \"{color}\"";
+        private string ElementsBorderScript(Strategy locatorStrategy, string locator, string color) => "{\n  var x = document." + $"{GetLocatorStrategyForJsScript(locatorStrategy)}" + "(\"" + $"{locator}\");\n  var i;\n  for (i = 0; i < x.length; i++) " + "{\n    " + "x[i].style.borderColor = \"" + $"{color}" + "\";\n  }\n}";
 
         private Browser Browser { get; }
         private IWebDriver Driver => Browser.Driver.WebDriver;

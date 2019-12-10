@@ -3,8 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-using Bromine.Core.ElementInteraction;
-using Bromine.Core.ElementLocator;
+using Bromine.Core.Element;
 using Bromine.Logger;
 using Bromine.Models;
 using Bromine.Verifies;
@@ -162,7 +161,7 @@ namespace Bromine.Core
         internal Driver Driver { get; private set; }
 
         /// <inheritdoc />
-        public void TakeElementScreenShot(string name, Element element)
+        public void TakeElementScreenShot(string name, Element.Element element)
         {
             TakeRegionScreenShot(name, new Rectangle(element.Location, element.Size));
         }

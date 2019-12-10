@@ -2,7 +2,7 @@ using System;
 
 using Bromine;
 using Bromine.Core;
-using Bromine.Core.ElementInteraction;
+using Bromine.Core.Element;
 using Bromine.Logger;
 using Bromine.Models;
 

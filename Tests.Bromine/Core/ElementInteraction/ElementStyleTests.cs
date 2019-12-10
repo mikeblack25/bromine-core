@@ -1,5 +1,5 @@
-﻿using Bromine.Core.ElementInteraction;
-using Bromine.Core.ElementLocator;
+﻿using Bromine.Constants;
+using Bromine.Core.Element;
 
 using Tests.Bromine.Common;
 
@@ -29,11 +29,11 @@ namespace Tests.Bromine.Core.ElementInteraction
         [Theory]
         public void AddBorder(string locator, string color)
         {
-            Browser.Verify.DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
+            Browser.Verify.DoesNotContain(color.ToLower(), GetStyle(locator, Strategy.Id).ToLower());
 
-            Browser.ElementStyle.AddBorder(LocatorStrategy.Id, locator, color);
+            Browser.ElementStyle.AddBorder(Strategy.Id, locator, color);
 
-            Browser.Verify.Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
+            Browser.Verify.Contains(color.ToLower(), GetStyle(locator, Strategy.Id).ToLower());
         }
 
         /// <summary>
@@ -47,11 +47,11 @@ namespace Tests.Bromine.Core.ElementInteraction
         {
             var element = Browser.Find.Element(locator.Id());
 
-            Browser.Verify.DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
+            Browser.Verify.DoesNotContain(color.ToLower(), GetStyle(locator, Strategy.Id).ToLower());
 
             Browser.ElementStyle.AddBorder(element, color);
 
-            Browser.Verify.Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Id).ToLower());
+            Browser.Verify.Contains(color.ToLower(), GetStyle(locator, Strategy.Id).ToLower());
         }
 
         /// <summary>
@@ -63,11 +63,11 @@ namespace Tests.Bromine.Core.ElementInteraction
         [Theory]
         public void AddBorders(string locator, string color)
         {
-            Browser.Verify.DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
+            Browser.Verify.DoesNotContain(color.ToLower(), GetStyle(locator, Strategy.Class).ToLower());
 
-            Browser.ElementStyle.AddBorders(LocatorStrategy.Class, locator, color);
+            Browser.ElementStyle.AddBorders(Strategy.Class, locator, color);
 
-            Browser.Verify.Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
+            Browser.Verify.Contains(color.ToLower(), GetStyle(locator, Strategy.Class).ToLower());
         }
 
         /// <summary>
@@ -81,22 +81,22 @@ namespace Tests.Bromine.Core.ElementInteraction
         {
             var element = Browser.Find.Element(locator.Class());
 
-            Browser.Verify.DoesNotContain(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
+            Browser.Verify.DoesNotContain(color.ToLower(), GetStyle(locator, Strategy.Class).ToLower());
 
             Browser.ElementStyle.AddBorders(element, color);
 
-            Browser.Verify.Contains(color.ToLower(), GetStyle(locator, LocatorStrategy.Class).ToLower());
+            Browser.Verify.Contains(color.ToLower(), GetStyle(locator, Strategy.Class).ToLower());
         }
 
-        private string GetStyle(string locator, LocatorStrategy locatorStrategy)
+        private string GetStyle(string locator, Strategy locatorStrategy)
         {
             Element element = null;
 
-            if (locatorStrategy == LocatorStrategy.Class)
+            if (locatorStrategy == Strategy.Class)
             {
                 element = Browser.Find.Element(locator.Class());
             }
-            else if (locatorStrategy == LocatorStrategy.Id)
+            else if (locatorStrategy == Strategy.Id)
             {
                 element = Browser.Find.Element(locator.Id());
             }

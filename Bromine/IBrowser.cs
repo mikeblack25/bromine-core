@@ -2,8 +2,7 @@ using System;
 using System.Drawing;
 
 using Bromine.Core;
-using Bromine.Core.ElementInteraction;
-using Bromine.Core.ElementLocator;
+using Bromine.Core.Element;
 using Bromine.Logger;
 using Bromine.Models;
 using Bromine.Verifies;

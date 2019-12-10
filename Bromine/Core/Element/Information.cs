@@ -1,13 +1,11 @@
 ﻿using System;
 
-using Bromine.Core.ElementLocator;
-
-namespace Bromine.Core.ElementInteraction
+namespace Bromine.Core.Element
 {
     /// <summary>
     /// Provide details about how and when the element was requested.
     /// </summary>
-    public class CallingInformation
+    public class Information
     {
         /// <summary>
         /// Timestamp the element was requested.
@@ -22,6 +20,6 @@ namespace Bromine.Core.ElementInteraction
         /// <summary>
         /// Locator strategy used to find the requested element.
         /// </summary>
-        public LocatorStrategy LocatorStrategy { get; set; }
+        public Strategy Strategy { get; set; }
     }
 }

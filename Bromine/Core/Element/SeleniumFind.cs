@@ -2,16 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Bromine.Core.ElementInteraction;
 using Bromine.Logger;
 
 using OpenQA.Selenium;
 
-namespace Bromine.Core.ElementLocator
+namespace Bromine.Core.Element
 {
     /// <summary>
     /// Find elements using Selenium location strategies.
-    /// <see cref="LocatorStrategy"/> for supported location strategies.
+    /// <see cref="Strategy"/> for supported location strategies.
     /// </summary>
     public class SeleniumFind
     {
@@ -35,7 +34,7 @@ namespace Bromine.Core.ElementLocator
         {
             var elements = ElementsById(id);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: id, locatorType: LocatorStrategy.Id);
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: id, locatorType: Strategy.Id);
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="id">ID to locate an element.</param>
         /// <returns></returns>
-        public List<Element> ElementsById(string id) => Elements(LocatorStrategy.Id, id);
+        public List<Element> ElementsById(string id) => Elements(Strategy.Id, id);
 
         /// <summary>
         /// Find Element by Class identifier.
@@ -54,7 +53,7 @@ namespace Bromine.Core.ElementLocator
         {
             var elements = ElementsByClass(className);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: className, locatorType: LocatorStrategy.Class);
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: className, locatorType: Strategy.Class);
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="className">Class name to locate elements.</param>
         /// <returns></returns>
-        public List<Element> ElementsByClass(string className) => Elements(LocatorStrategy.Class, className);
+        public List<Element> ElementsByClass(string className) => Elements(Strategy.Class, className);
 
         /// <summary>
         /// Find Element by CSS selector.
@@ -73,7 +72,7 @@ namespace Bromine.Core.ElementLocator
         {
             var elements = ElementsByCssSelector(cssSelector);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: cssSelector, locatorType: LocatorStrategy.Css);
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: cssSelector, locatorType: Strategy.Css);
         }
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="cssSelector">Locate element by CSS selector.</param>
         /// <returns></returns>
-        public List<Element> ElementsByCssSelector(string cssSelector) => Elements(LocatorStrategy.Css, cssSelector);
+        public List<Element> ElementsByCssSelector(string cssSelector) => Elements(Strategy.Css, cssSelector);
 
         /// <summary>
         /// Find Element by text.
@@ -92,7 +91,7 @@ namespace Bromine.Core.ElementLocator
         {
             var elements = ElementsByText(text);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: text, locatorType: LocatorStrategy.Text);
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: text, locatorType: Strategy.Text);
         }
 
         /// <summary>
@@ -100,7 +99,7 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="text">Element text of the HTML element to find.</param>
         /// <returns></returns>
-        public List<Element> ElementsByText(string text) => Elements(LocatorStrategy.Text, text);
+        public List<Element> ElementsByText(string text) => Elements(Strategy.Text, text);
 
         /// <summary>
         /// Find Element by partial text.
@@ -111,7 +110,7 @@ namespace Bromine.Core.ElementLocator
         {
             var elements = ElementsByPartialText(partialText);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: partialText, locatorType: LocatorStrategy.PartialText);
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: partialText, locatorType: Strategy.PartialText);
         }
 
         /// <summary>
@@ -119,54 +118,54 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="partialText">Partial text of the HTML element to find.</param>
         /// <returns></returns>
-        public List<Element> ElementsByPartialText(string partialText) => Elements(LocatorStrategy.PartialText, partialText);
+        public List<Element> ElementsByPartialText(string partialText) => Elements(Strategy.PartialText, partialText);
 
         /// <summary>
-        /// Locate elements by locatorStrategy and locator string.
+        /// Locate elements by strategy and locator string.
         /// </summary>
-        /// <param name="locatorStrategy">How will elements be found?</param>
+        /// <param name="strategy">How will elements be found?</param>
         /// <param name="locator">String to locate elements based on the provided locationStrategy.</param>
         /// <returns></returns>
-        public List<Element> Elements(LocatorStrategy locatorStrategy, string locator)
+        public List<Element> Elements(Strategy strategy, string locator)
         {
             var elementsList = new List<Element>();
 
             try
             {
-                var elements = Driver.WebDriver.FindElements(Element(locatorStrategy, locator));
+                var elements = Driver.WebDriver.FindElements(Element(strategy, locator));
 
-                switch (locatorStrategy)
+                switch (strategy)
                 {
-                    case LocatorStrategy.Class:
-                    case LocatorStrategy.Css:
-                    case LocatorStrategy.Id:
+                    case Strategy.Class:
+                    case Strategy.Css:
+                    case Strategy.Id:
                     {
                         foreach (var element in elements)
                         {
-                            elementsList.Add(new Element(element, Log, locator, locatorStrategy));
+                            elementsList.Add(new Element(element, Log, locator, strategy));
                         }
 
                         break;
                     }
-                    case LocatorStrategy.Text:
-                    case LocatorStrategy.PartialText:
+                    case Strategy.Text:
+                    case Strategy.PartialText:
                     {
                         var containsList = new List<Element>();
-                        elements = Driver.WebDriver.FindElements(Element(LocatorStrategy.Css, "*"));
+                        elements = Driver.WebDriver.FindElements(Element(Strategy.Css, "*"));
 
                         foreach (var element in elements)
                         {
                             if (element.Text.Equals(locator))
                             {
-                                elementsList.Add(new Element(element, Log, locator, locatorStrategy));
+                                elementsList.Add(new Element(element, Log, locator, strategy));
                             }
                             else if (element.Text.Contains(locator))
                             {
-                                containsList.Add(new Element(element, Log, locator, locatorStrategy));
+                                containsList.Add(new Element(element, Log, locator, strategy));
                             }
                         }
 
-                        if (locatorStrategy == LocatorStrategy.PartialText)
+                        if (strategy == Strategy.PartialText)
                         {
                             elementsList = containsList;
                         }
@@ -185,33 +184,33 @@ namespace Bromine.Core.ElementLocator
         }
 
         /// <summary>
-        /// Get By object based on the locatorStrategy and locator string.
+        /// Get By object based on the strategy and locator string.
         /// </summary>
-        /// <param name="locatorStrategy">How will the element be located?</param>
+        /// <param name="strategy">How will the element be located?</param>
         /// <param name="locator">String used to find the element.</param>
         /// <returns></returns>
-        internal static By Element(LocatorStrategy locatorStrategy, string locator)
+        internal static By Element(Strategy strategy, string locator)
         {
             // ReSharper disable once SwitchStatementMissingSomeCases
-            switch (locatorStrategy)
+            switch (strategy)
             {
-                case LocatorStrategy.Class:
+                case Strategy.Class:
                 {
                     return By.ClassName(locator);
                 }
-                case LocatorStrategy.Css:
+                case Strategy.Css:
                 {
                     return By.CssSelector(locator);
                 }
-                case LocatorStrategy.Id:
+                case Strategy.Id:
                 {
                     return By.Id(locator);
                 }
-                case LocatorStrategy.PartialText:
+                case Strategy.PartialText:
                 {
                     return By.PartialLinkText(locator);
                 }
-                case LocatorStrategy.Text:
+                case Strategy.Text:
                 {
                     return By.LinkText(locator);
                 }

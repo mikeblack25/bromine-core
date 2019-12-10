@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Bromine.Core.ElementInteraction;
-
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
@@ -50,7 +48,7 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="element">Element to wait for.</param>
         /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
-        public void DisplayedElement(Element element, int timeToWait = 1) => Condition(() => element.Displayed, timeToWait);
+        public void DisplayedElement(Element.Element element, int timeToWait = 1) => Condition(() => element.Displayed, timeToWait);
 
         /// <summary>
         /// Wait for the given URL to be loaded.

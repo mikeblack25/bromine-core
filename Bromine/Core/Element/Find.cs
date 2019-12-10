@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Text;
 
-using Bromine.Core.ElementInteraction;
+using Bromine.Constants;
 using Bromine.Logger;
 
-namespace Bromine.Core.ElementLocator
+namespace Bromine.Core.Element
 {
     /// <summary>
     /// Find elements on the current page / screen.
@@ -25,7 +25,7 @@ namespace Bromine.Core.ElementLocator
 
         /// <summary>
         /// Find Element by a valid locator strategy.
-        /// <see cref="LocatorStrategy"/> for supported options.
+        /// <see cref="Strategy"/> for supported options.
         /// </summary>
         /// <param name="locator">String to locate an element.</param>
         /// <returns></returns>
@@ -38,7 +38,7 @@ namespace Bromine.Core.ElementLocator
 
         /// <summary>
         /// Find Elements by a valid locator strategy.
-        /// <see cref="LocatorStrategy"/> for supported options.
+        /// <see cref="Strategy"/> for supported options.
         /// </summary>
         /// <param name="locator">String to locate an element.</param>
         /// <returns></returns>
