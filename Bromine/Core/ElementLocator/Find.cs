@@ -17,15 +17,15 @@ namespace Bromine.Core.ElementLocator
         /// Construct a Find object to locate elements.
         /// </summary>
         /// <param name="driver">Driver used to navigate.</param>
-        /// <param name="logManager"><see cref="LogManager"/></param>
-        public Find(Driver driver, LogManager logManager)
+        /// <param name="log"><see cref="Log"/></param>
+        public Find(Driver driver, Log log)
         {
-            SeleniumFind = new SeleniumFind(driver, logManager);
+            SeleniumFind = new SeleniumFind(driver, log);
         }
 
         /// <summary>
-        /// Find Element by a valid locator strategy (excluding Js and XPath).
-        /// <see cref="LocatorStrategy"/>
+        /// Find Element by a valid locator strategy.
+        /// <see cref="LocatorStrategy"/> for supported options.
         /// </summary>
         /// <param name="locator">String to locate an element.</param>
         /// <returns></returns>
@@ -37,24 +37,26 @@ namespace Bromine.Core.ElementLocator
         }
 
         /// <summary>
-        /// Find Elements by a valid locator strategy (excluding Js and XPath).
-        /// <see cref="LocatorStrategy"/>
+        /// Find Elements by a valid locator strategy.
+        /// <see cref="LocatorStrategy"/> for supported options.
         /// </summary>
         /// <param name="locator">String to locate an element.</param>
         /// <returns></returns>
         public List<Element> Elements(string locator)
         {
-            var elements = SeleniumFind.ElementsByCssSelector(locator);
+            var elements = SeleniumFind.ElementsById(locator);
 
             if (elements.Count > 0) { return elements; }
 
-            elements = SeleniumFind.ElementsById(locator);
+            if (!locator.Contains(" "))
+            {
+                elements = SeleniumFind.ElementsByClass(locator);
 
-            if (elements.Count > 0) { return elements; }
-
-            elements = SeleniumFind.ElementsByClass(locator);
-
-            if (elements.Count > 0) { return elements; }
+                if (elements.Count > 0)
+                {
+                    return elements;
+                }
+            }
 
             elements = SeleniumFind.ElementsByText(locator);
 
@@ -64,7 +66,7 @@ namespace Bromine.Core.ElementLocator
 
             if (elements.Count > 0) { return elements; }
 
-            return SeleniumFind.ElementsByTag(locator);
+            return SeleniumFind.ElementsByCssSelector(locator);
         }
 
         /// <summary>

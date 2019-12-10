@@ -35,7 +35,7 @@ namespace Bromine.Core.ElementInteraction
             }
             catch (Exception e)
             {
-                Browser.LogManager.Error(e.Message);
+                Browser.Log.Error(e.Message);
             }
         }
 
@@ -52,7 +52,7 @@ namespace Bromine.Core.ElementInteraction
             }
             catch (Exception e)
             {
-                Browser.LogManager.Error(e.Message);
+                Browser.Log.Error(e.Message);
             }
         }
 
@@ -70,7 +70,7 @@ namespace Bromine.Core.ElementInteraction
             }
             catch (Exception e)
             {
-                Browser.LogManager.Error(e.Message);
+                Browser.Log.Error(e.Message);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Bromine.Core.ElementInteraction
             }
             catch (Exception e)
             {
-                Browser.LogManager.Error(e.Message);
+                Browser.Log.Error(e.Message);
             }
         }
 
@@ -148,13 +148,10 @@ namespace Bromine.Core.ElementInteraction
                     break;
                 }
                 case LocatorStrategy.Css:
-                case LocatorStrategy.Js:
                 case LocatorStrategy.PartialText:
-                case LocatorStrategy.Tag:
                 case LocatorStrategy.Text:
-                case LocatorStrategy.XPath:
                 {
-                    Browser.LogManager.Error($"{locatorStrategy} is not a valid location strategy here");
+                    Browser.Log.Error($"{locatorStrategy} is not a valid location strategy here");
 
                     break;
                 }

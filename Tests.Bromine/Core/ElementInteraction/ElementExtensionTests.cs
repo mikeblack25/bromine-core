@@ -29,7 +29,7 @@ namespace Tests.Bromine.Core.ElementInteraction
         [Fact]
         public void VerifyFindElementsOfElement()
         {
-            _elementsOfElement = _element.FindElements(LocatorStrategy.Tag, "div");
+            _elementsOfElement = _element.FindElements(LocatorStrategy.Css, "div");
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Tests.Bromine.Core.ElementInteraction
         [Fact]
         public void VerifyFindElementOfElement()
         {
-            _elementsOfElement = new List<Element> {_element.FindElement(LocatorStrategy.Tag, "div")};
+            _elementsOfElement = new List<Element> {_element.FindElement(LocatorStrategy.Css, "div")};
         }
 
         /// <summary>

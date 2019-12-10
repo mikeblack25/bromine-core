@@ -33,7 +33,7 @@ namespace Bromine.Core
                 }
                 catch (Exception e)
                 {
-                    Driver.LogManager.Error(e.Message);
+                    Driver.Log.Error(e.Message);
                 }            
             }
         } 
@@ -52,7 +52,7 @@ namespace Bromine.Core
                 }
                 catch (Exception e)
                 {
-                    Driver.LogManager.Error(e.Message);
+                    Driver.Log.Error(e.Message);
                 }
             }
         }
@@ -68,7 +68,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.LogManager.Error(e.Message);
+                Driver.Log.Error(e.Message);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.LogManager.Error(e.Message);
+                Driver.Log.Error(e.Message);
             }
         }
 
@@ -98,7 +98,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.LogManager.Error(e.Message);
+                Driver.Log.Error(e.Message);
             }
         }
 

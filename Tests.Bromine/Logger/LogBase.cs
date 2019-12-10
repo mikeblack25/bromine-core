@@ -22,18 +22,18 @@ namespace Tests.Bromine.Logger
         /// <summary>
         /// Log instance.
         /// </summary>
-        public LogManager LogManager { get; set; }
+        public Log Log { get; set; }
 
         /// <summary>
         /// Release the RollingFileLock and assert Message is found in the log 1 time.
         /// </summary>
         public void Dispose()
         {
-            LogManager.Dispose();
+            Log.Dispose();
 
-            if (LogManager.TextLog != null)
+            if (Log.TextLog != null)
             {
-                VerifyLogMessages(LogManager.TextLog);
+                VerifyLogMessages(Log.TextLog);
             }
         }
 

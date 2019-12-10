@@ -93,7 +93,7 @@
     <Compile Include="Core\ElementInteraction\ElementStyle.cs" />
     <Compile Include="Core\ElementInteraction\CssFormatExtensions.cs" />
     <Compile Include="IBrowser.cs" />
-    <Compile Include="Logger\LogManager.cs" />
+    <Compile Include="Logger\Log.cs" />
     <Compile Include="Logger\TextLog.cs" />
     <Compile Include="Logger\XunitConsoleLog.cs" />
     <Compile Include="Models\BrowserOptions.cs" />

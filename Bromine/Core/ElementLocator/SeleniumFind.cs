@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Bromine.Core.ElementInteraction;
 using Bromine.Logger;
@@ -18,11 +19,11 @@ namespace Bromine.Core.ElementLocator
         /// Construct a Find object to locate elements.
         /// </summary>
         /// <param name="driver">Driver used to navigate.</param>
-        /// <param name="logManager"><see cref="Logger.LogManager"/></param>
-        public SeleniumFind(Driver driver, LogManager logManager)
+        /// <param name="log"><see cref="Log"/></param>
+        public SeleniumFind(Driver driver, Log log)
         {
             Driver = driver;
-            LogManager = logManager;
+            Log = log;
         }
 
         /// <summary>
@@ -30,7 +31,12 @@ namespace Bromine.Core.ElementLocator
         /// </summary>
         /// <param name="id">ID to locate an element.</param>
         /// <returns></returns>
-        public Element ElementById(string id) => ElementsById(id)[0];
+        public Element ElementById(string id)
+        {
+            var elements = ElementsById(id);
+
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: id, locatorType: LocatorStrategy.Id);
+        }
 
         /// <summary>
         /// Find Elements by ID.
@@ -46,16 +52,9 @@ namespace Bromine.Core.ElementLocator
         /// <returns></returns>
         public Element ElementByClass(string className)
         {
-            try
-            {
-                return ElementsByClass(className)[0];
-            }
-            catch (Exception e)
-            {
-                Driver.LogManager.Error(e.Message);
+            var elements = ElementsByClass(className);
 
-                return new Element();
-            }
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: className, locatorType: LocatorStrategy.Class);
         }
 
         /// <summary>
@@ -72,16 +71,9 @@ namespace Bromine.Core.ElementLocator
         /// <returns></returns>
         public Element ElementByCssSelector(string cssSelector)
         {
-            try
-            {
-                return ElementsByCssSelector(cssSelector)[0];
-            }
-            catch (Exception e)
-            {
-                Driver.LogManager.Error(e.Message);
+            var elements = ElementsByCssSelector(cssSelector);
 
-                return new Element();
-            }
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: cssSelector, locatorType: LocatorStrategy.Css);
         }
 
         /// <summary>
@@ -98,16 +90,9 @@ namespace Bromine.Core.ElementLocator
         /// <returns></returns>
         public Element ElementByText(string text)
         {
-            try
-            {
-                return ElementsByText(text)[0];
-            }
-            catch (Exception e)
-            {
-                Driver.LogManager.Error(e.Message);
+            var elements = ElementsByText(text);
 
-                return new Element();
-            }
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: text, locatorType: LocatorStrategy.Text);
         }
 
         /// <summary>
@@ -124,16 +109,9 @@ namespace Bromine.Core.ElementLocator
         /// <returns></returns>
         public Element ElementByPartialText(string partialText)
         {
-            try
-            {
-                return ElementsByPartialText(partialText)[0];
-            }
-            catch (Exception e)
-            {
-                Driver.LogManager.Error(e.Message);
+            var elements = ElementsByPartialText(partialText);
 
-                return new Element();
-            }
+            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: partialText, locatorType: LocatorStrategy.PartialText);
         }
 
         /// <summary>
@@ -142,32 +120,6 @@ namespace Bromine.Core.ElementLocator
         /// <param name="partialText">Partial text of the HTML element to find.</param>
         /// <returns></returns>
         public List<Element> ElementsByPartialText(string partialText) => Elements(LocatorStrategy.PartialText, partialText);
-
-        /// <summary>
-        /// Find Element by tag name.
-        /// </summary>
-        /// <param name="tag">HTML tag of the element to find.</param>
-        /// <returns></returns>
-        public Element ElementByTag(string tag)
-        {
-            try
-            {
-                return ElementsByTag(tag)[0];
-            }
-            catch (Exception e)
-            {
-                Driver.LogManager.Error(e.Message);
-
-                return new Element();
-            }
-        }
-
-        /// <summary>
-        /// Find Elements by tag name.
-        /// </summary>
-        /// <param name="tag">HTML tag of the element to find.</param>
-        /// <returns></returns>
-        public List<Element> ElementsByTag(string tag) => Elements(LocatorStrategy.Tag, tag);
 
         /// <summary>
         /// Locate elements by locatorStrategy and locator string.
@@ -183,14 +135,50 @@ namespace Bromine.Core.ElementLocator
             {
                 var elements = Driver.WebDriver.FindElements(Element(locatorStrategy, locator));
 
-                foreach (var element in elements)
+                switch (locatorStrategy)
                 {
-                    elementsList.Add(new Element(element, LogManager, locator, locatorStrategy));
+                    case LocatorStrategy.Class:
+                    case LocatorStrategy.Css:
+                    case LocatorStrategy.Id:
+                    {
+                        foreach (var element in elements)
+                        {
+                            elementsList.Add(new Element(element, Log, locator, locatorStrategy));
+                        }
+
+                        break;
+                    }
+                    case LocatorStrategy.Text:
+                    case LocatorStrategy.PartialText:
+                    {
+                        var containsList = new List<Element>();
+                        elements = Driver.WebDriver.FindElements(Element(LocatorStrategy.Css, "*"));
+
+                        foreach (var element in elements)
+                        {
+                            if (element.Text.Equals(locator))
+                            {
+                                elementsList.Add(new Element(element, Log, locator, locatorStrategy));
+                            }
+                            else if (element.Text.Contains(locator))
+                            {
+                                containsList.Add(new Element(element, Log, locator, locatorStrategy));
+                            }
+                        }
+
+                        if (locatorStrategy == LocatorStrategy.PartialText)
+                        {
+                            elementsList = containsList;
+                        }
+
+                        break;
+                    }
+                        
                 }
             }
             catch (Exception e)
             {
-                Driver.LogManager.Error(e.Message);
+                Driver.Log.Error(e.Message);
             }
 
             return elementsList;
@@ -204,56 +192,37 @@ namespace Bromine.Core.ElementLocator
         /// <returns></returns>
         internal static By Element(LocatorStrategy locatorStrategy, string locator)
         {
-            By byObj = null;
-
+            // ReSharper disable once SwitchStatementMissingSomeCases
             switch (locatorStrategy)
             {
                 case LocatorStrategy.Class:
-                    {
-                        byObj = By.ClassName(locator);
-
-                        break;
-                    }
+                {
+                    return By.ClassName(locator);
+                }
                 case LocatorStrategy.Css:
-                    {
-                        byObj = By.CssSelector(locator);
-
-                        break;
-                    }
+                {
+                    return By.CssSelector(locator);
+                }
                 case LocatorStrategy.Id:
-                    {
-                        byObj = By.Id(locator);
-
-                        break;
-                    }
+                {
+                    return By.Id(locator);
+                }
                 case LocatorStrategy.PartialText:
-                    {
-                        byObj = By.PartialLinkText(locator);
-                        break;
-                    }
-                case LocatorStrategy.Tag:
-                    {
-                        byObj = By.TagName(locator);
-
-                        break;
-                    }
+                {
+                    return By.PartialLinkText(locator);
+                }
                 case LocatorStrategy.Text:
-                    {
-                        byObj = By.LinkText(locator);
-
-                        break;
-                    }
-                case LocatorStrategy.Js:
-                case LocatorStrategy.XPath:
-                    {
-                        break;
-                    }
+                {
+                    return By.LinkText(locator);
+                }
+                default:
+                {
+                    return null;
+                }
             }
-
-            return byObj;
         }
 
         private Driver Driver { get; }
-        private LogManager LogManager { get; }
+        private Log Log { get; }
     }
 }

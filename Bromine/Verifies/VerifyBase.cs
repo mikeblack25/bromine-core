@@ -16,9 +16,9 @@ namespace Bromine.Verifies
     public abstract class VerifyBase
     {
         /// <inheritdoc />
-        protected VerifyBase(LogManager logManager)
+        protected VerifyBase(Log log)
         {
-            LogManager = logManager;
+            Log = log;
         }
 
         /// <summary>
@@ -228,6 +228,16 @@ namespace Bromine.Verifies
         }
 
         /// <summary>
+        /// Fail with the given message.
+        /// </summary>
+        /// <param name="message"></param>
+        public void Fail(string message = "")
+        {
+            Log.Error(message);
+            Assert.False(true);
+        }
+
+        /// <summary>
         /// Verifies that a value is within a given range.
         /// </summary>
         /// <param name="actual">The actual value to be evaluated.</param>
@@ -384,12 +394,12 @@ namespace Bromine.Verifies
         {
             if (message != string.Empty)
             {
-                LogManager.Error(message);
+                Log.Error(message);
             }
-            LogManager.Error(exception.Message);
+            Log.Error(exception.Message);
         }
 
-        internal LogManager LogManager { get; }
+        internal Log Log { get; }
 
         /// <summary>
         /// Invoke the Verify Failed event.
@@ -403,7 +413,7 @@ namespace Bromine.Verifies
 
         private void BuildMessage(string message)
         {
-            LogManager.Message($"{message}".TrimEnd());
+            Log.Message($"{message}".TrimEnd());
         }
     }
 }

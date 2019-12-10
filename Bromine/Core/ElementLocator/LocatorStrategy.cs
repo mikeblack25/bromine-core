@@ -6,14 +6,12 @@
     public enum LocatorStrategy
     {
 #pragma warning disable 1591
-        Id = 1,
+        Undefined = 0,
+        Id,
         Class,
         Css,
-        Js,
-        Tag,
         Text,
         PartialText,
-        XPath
 #pragma warning restore 1591
     }
 }

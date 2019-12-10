@@ -22,8 +22,8 @@ namespace Tests.Bromine.Verifies
         /// </summary>
         public VerifyTests(ITestOutputHelper output)
         {
-            LogManager = new LogManager(output, string.Empty, LogType.XunitConsole, LogType.Text);
-            Verify = new Verify(LogManager);
+            Log = new Log(output, string.Empty, LogType.XunitConsole, LogType.Text);
+            Verify = new Verify(Log);
         }
 
         /// <summary>
@@ -414,11 +414,11 @@ namespace Tests.Bromine.Verifies
         /// </summary>
         public void Dispose()
         {
-            LogManager.Dispose();
+            Log.Dispose();
         }
 
         private Verify Verify { get; }
-        private LogManager LogManager { get; }
+        private Log Log { get; }
 
         private static string Pattern => new Regex("(?:[a-z][a-z]+)").ToString();
         private static string LoremIpsumDolorSitAmetString => "Lorem ipsum dolor sit amet";

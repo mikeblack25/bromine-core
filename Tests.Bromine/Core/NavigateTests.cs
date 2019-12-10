@@ -29,7 +29,7 @@ namespace Tests.Bromine.Core
         [Fact]
         public void NavigateToFileVerifyBackForwardAndRefreshTest()
         {
-            Browser.Navigate.ToFile($@"{BasePath}\{AmazonHome}"); // VerifyBase Navigate.ToFile().
+            Browser.Navigate.ToFile($@"{PagesBasePath}\{AmazonHome}"); // VerifyBase Navigate.ToFile().
             var originalUrl = Browser.Url;
 
             CartButton.Click();

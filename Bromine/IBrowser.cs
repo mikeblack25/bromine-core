@@ -18,9 +18,9 @@ namespace Bromine
     public interface IBrowser : IDisposable
     {
         /// <summary>
-        /// <see cref="Logger.LogManager"/>
+        /// <see cref="Log"/>
         /// </summary>
-        LogManager LogManager { get; }
+        Log Log { get; }
 
         /// <summary>
         /// Url of the current page.

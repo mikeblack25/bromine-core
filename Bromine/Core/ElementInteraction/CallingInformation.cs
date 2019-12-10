@@ -10,11 +10,6 @@ namespace Bromine.Core.ElementInteraction
     public class CallingInformation
     {
         /// <summary>
-        /// Name of the calling method that requested an element.
-        /// </summary>
-        public string CallingMethod { get; set; }
-
-        /// <summary>
         /// Timestamp the element was requested.
         /// </summary>
         public DateTime CalledTimestamp { get; set; }

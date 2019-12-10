@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 
 using Bromine.Core.ElementLocator;
@@ -19,13 +18,13 @@ namespace Bromine.Core.ElementInteraction
         /// Create an Element which can interact with web applications.
         /// </summary>
         /// <param name="element">Requested element.</param>
-        /// <param name="logManager"><see cref="Logger.LogManager"/></param>
+        /// <param name="log"><see cref="Log"/></param>
         /// <param name="locatorString">Locator string used to find the requested element.</param>
         /// <param name="locatorType">Type of locator used to find the requested element.</param>
-        internal Element(IWebElement element, LogManager logManager, string locatorString = "", LocatorStrategy locatorType = 0) : this()
+        internal Element(IWebElement element, Log log, string locatorString = "", LocatorStrategy locatorType = 0) : this()
         {
             WebElement = element;
-            LogManager = logManager;
+            Log = log;
 
             if (!string.IsNullOrEmpty(locatorString) && locatorType != 0)
             {
@@ -33,7 +32,10 @@ namespace Bromine.Core.ElementInteraction
                 Information.LocatorStrategy = locatorType;
             }
 
-            IsInitialized = true;
+            if (element != null)
+            {
+                IsInitialized = true;
+            }
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace Bromine.Core.ElementInteraction
                     return WebElement.TagName;
                 }
 
-                LogManager.Error("Unable to find the tag for the requested element");
+                Log.Error("Unable to find the tag for the requested element");
 
                 return string.Empty;
             }
@@ -76,7 +78,7 @@ namespace Bromine.Core.ElementInteraction
                     return WebElement.Text;
                 }
 
-                LogManager.Error("Unable to find the text for the requested element");
+                Log.Error("Unable to find the text for the requested element");
 
                 return string.Empty;
             }
@@ -94,7 +96,7 @@ namespace Bromine.Core.ElementInteraction
                     return WebElement.Enabled;
                 }
 
-                LogManager.Error("Unable to find the enabled property for the requested element");
+                Log.Error("Unable to find the enabled property for the requested element");
 
                 return false;
             }
@@ -112,7 +114,7 @@ namespace Bromine.Core.ElementInteraction
                     return WebElement.Selected;
                 }
 
-                LogManager.Error("Unable to find the selected property for the requested element");
+                Log.Error("Unable to find the selected property for the requested element");
 
                 return false;
             }
@@ -130,7 +132,7 @@ namespace Bromine.Core.ElementInteraction
                     return WebElement.Location;
                 }
 
-                LogManager.Error("Unable to find the location for the requested element");
+                Log.Error("Unable to find the location for the requested element");
 
                 return new Point();
             }
@@ -148,7 +150,7 @@ namespace Bromine.Core.ElementInteraction
                     return WebElement.Size;
                 }
 
-                LogManager.Error("Unable to find the size for the requested element");
+                Log.Error("Unable to find the size for the requested element");
 
                 return new Size();
             }
@@ -166,7 +168,7 @@ namespace Bromine.Core.ElementInteraction
                     return WebElement.Displayed;
                 }
 
-                LogManager.Error("Unable to find the displayed property for the requested element");
+                Log.Error("Unable to find the displayed property for the requested element");
 
                 return false;
             }
@@ -183,7 +185,7 @@ namespace Bromine.Core.ElementInteraction
             }
             else
             {
-                LogManager.Error("Unable to clear the requested element");
+                Log.Error("Unable to clear the requested element");
             }
         }
 
@@ -198,7 +200,7 @@ namespace Bromine.Core.ElementInteraction
             }
             else
             {
-                LogManager.Error("Unable to click the requested element");
+                Log.Error("Unable to click the requested element");
             }
         }
 
@@ -213,10 +215,10 @@ namespace Bromine.Core.ElementInteraction
             {
                 if (WebElement != null)
                 {
-                    return new Element(WebElement.FindElement(By.XPath("..")), LogManager, "..", LocatorStrategy.XPath);
+                    return new Element(WebElement.FindElement(By.XPath("..")), Log, "..");
                 }
 
-                LogManager.Error("Unable to find the displayed property for the requested element");
+                Log.Error("Unable to find the displayed property for the requested element");
 
                 return new Element();
             }
@@ -236,7 +238,7 @@ namespace Bromine.Core.ElementInteraction
             }
             else
             {
-                LogManager.Error($"Unable to find the attribute {attributeName} for the requested element");
+                Log.Error($"Unable to find the attribute {attributeName} for the requested element");
 
                 return string.Empty;
             }
@@ -256,7 +258,7 @@ namespace Bromine.Core.ElementInteraction
             }
             else
             {
-                LogManager.Error($"Unable to find the CSS value {cssValue} for the requested element");
+                Log.Error($"Unable to find the CSS value {cssValue} for the requested element");
 
                 return string.Empty;
             }
@@ -276,7 +278,7 @@ namespace Bromine.Core.ElementInteraction
             }
             else
             {
-                LogManager.Error($"Unable to find the property {propertyName} for the requested element");
+                Log.Error($"Unable to find the property {propertyName} for the requested element");
 
                 return string.Empty;
             }
@@ -294,7 +296,7 @@ namespace Bromine.Core.ElementInteraction
             }
             else
             {
-                LogManager.Error($"Unable to send keys {text} to the requested element");
+                Log.Error($"Unable to send keys {text} to the requested element");
             }
         }
 
@@ -309,7 +311,7 @@ namespace Bromine.Core.ElementInteraction
             }
             else
             {
-                LogManager.Error("Unable to submit to the requested element");
+                Log.Error("Unable to submit to the requested element");
             }
         }
 
@@ -318,7 +320,7 @@ namespace Bromine.Core.ElementInteraction
         /// </summary>
         /// <param name="by">Locator strategy to use to find a requested element.</param>
         /// <returns></returns>
-        internal Element FindElement(By by) => new Element(WebElement.FindElement(by), LogManager);
+        internal Element FindElement(By by) => new Element(WebElement.FindElement(by), Log);
 
         /// <summary>
         /// Find elements by the requested locator strategy.
@@ -333,7 +335,7 @@ namespace Bromine.Core.ElementInteraction
 
             foreach (var element in elements)
             {
-                list.Add(new Element(element, LogManager));
+                list.Add(new Element(element, Log));
             }
 
             return list;
@@ -344,11 +346,8 @@ namespace Bromine.Core.ElementInteraction
         /// </summary>
         internal Element()
         {
-            var stackTrace = new StackTrace();
-
             Information = new CallingInformation
             {
-                CallingMethod = stackTrace.GetFrame(2).GetMethod().Name,
                 CalledTimestamp = DateTime.Now
             };
 
@@ -356,6 +355,6 @@ namespace Bromine.Core.ElementInteraction
         }
 
         internal readonly IWebElement WebElement;
-        internal LogManager LogManager { get; }
+        internal Log Log { get; }
     }
 }

@@ -17,9 +17,9 @@ namespace Tests.Bromine.Logger
         [Fact]
         public void LogMessageTest()
         {
-            LogManager = new LogManager(MethodBase.GetCurrentMethod().Name, LogType.Text);
+            Log = new Log(MethodBase.GetCurrentMethod().Name, LogType.Text);
             Message = InfoMessageString;
-            LogManager.Message(Message);
+            Log.Message(Message);
         }
 
         /// <summary>
@@ -28,9 +28,9 @@ namespace Tests.Bromine.Logger
         [Fact]
         public void LogErrorTest()
         {
-            LogManager = new LogManager(MethodBase.GetCurrentMethod().Name, LogType.Text);
+            Log = new Log(MethodBase.GetCurrentMethod().Name, LogType.Text);
             Message = ErrorMessageString;
-            LogManager.Error(ErrorMessageString);
+            Log.Error(ErrorMessageString);
         }
     }
 }

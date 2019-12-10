@@ -122,12 +122,12 @@ namespace Tests.Bromine.Core
         [Fact]
         public void VerifyTakeVisibleScreenShotError()
         {
-            Browser.Verify.Equal(0, Browser.LogManager.XunitConsoleLog.ErrorCount);
+            Browser.Verify.Equal(0, Browser.Log.XunitConsoleLog.ErrorCount);
 
             Browser.Navigate.ToUrl(TestSites.AmazonUrl);
             Browser.TakeVisibleScreenShot(@"-\\\\--");
 
-            Browser.Verify.Equal(1, Browser.LogManager.XunitConsoleLog.ErrorCount);
+            Browser.Verify.Equal(1, Browser.Log.XunitConsoleLog.ErrorCount);
         }
 
         /// <summary>

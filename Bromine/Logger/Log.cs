@@ -8,16 +8,16 @@ namespace Bromine.Logger
     /// <summary>
     /// Manages session loggers and provides common access for common logging methods.
     /// </summary>
-    public class LogManager : IDisposable
+    public class Log : IDisposable
     {
         /// <inheritdoc />
-        public LogManager(string fileName = "", params LogType[] loggers)
+        public Log(string fileName = "", params LogType[] loggers)
         {
             Initialize(fileName, null, loggers);
         }
 
         /// <inheritdoc />
-        public LogManager(ITestOutputHelper output, string fileName = "", params LogType[] loggers)
+        public Log(ITestOutputHelper output, string fileName = "", params LogType[] loggers)
         {
             Initialize(fileName, output, loggers);
         }

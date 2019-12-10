@@ -13,7 +13,7 @@ namespace Tests.Bromine.Logger
         /// <inheritdoc />
         public AllLoggingTests(ITestOutputHelper output)
         {
-            LogManager = new LogManager(output, string.Empty, LogType.XunitConsole, LogType.Text);
+            Log = new Log(output, string.Empty, LogType.XunitConsole, LogType.Text);
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Tests.Bromine.Logger
         public void LogMessageTest()
         {
             Message = InfoMessageString;
-            LogManager.Message(Message);
+            Log.Message(Message);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Tests.Bromine.Logger
         public void LogErrorTest()
         {
             Message = ErrorMessageString;
-            LogManager.Error(Message);
+            Log.Error(Message);
         }
     }
 }

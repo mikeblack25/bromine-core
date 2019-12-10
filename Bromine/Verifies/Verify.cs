@@ -12,7 +12,7 @@ namespace Bromine.Verifies
     public class Verify : VerifyBase
     {
         /// <inheritdoc />
-        public Verify(LogManager logManager) : base(logManager)
+        public Verify(Log log) : base(log)
         {
         }
 

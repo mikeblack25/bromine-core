@@ -55,7 +55,7 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
-        public LogManager LogManager { get; private set; }
+        public Log Log { get; private set; }
 
         /// <inheritdoc />
         public string Url => Driver.WebDriver.Url;
@@ -119,7 +119,7 @@ namespace Bromine.Core
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error(e.Message);
+                    Log.Error(e.Message);
 
                     return null;
                 }
@@ -197,7 +197,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                LogManager.Error(e.Message);
+                Log.Error(e.Message);
             }
         }
 
@@ -213,40 +213,44 @@ namespace Bromine.Core
         /// <inheritdoc />
         public void Dispose()
         {
-            var didSoftVerifyFail = SoftVerify.HasFailure;
-
-            if (didSoftVerifyFail)
+            try
             {
-                Verify.False(true, "One or more Verify statements failed. See the logs for more details.");
-            }
+                var didSoftVerifyFail = SoftVerify.HasFailure;
 
-            if (LogManager.XunitConsoleLog.ErrorCount > 0)
+                if (didSoftVerifyFail)
+                {
+                    Verify.Fail("One or more SoftVerify statements FAILED");
+                }
+                if (Log.XunitConsoleLog.ErrorCount > 0)
+                {
+                    Log.Message("REVIEW: One or more errors occured during execution");
+                }
+            }
+            finally
             {
-                LogManager.Message("REVIEW: One or more errors occured during execution.");
+                Driver?.Dispose();
+                Log?.Dispose();
             }
-
-            Driver?.Dispose();
-            LogManager?.Dispose();
         }
 
         private void Initialize(string fileName, ITestOutputHelper output, params LogType[] loggers)
         {
-            LogManager = new LogManager(output, fileName, loggers);
+            Log = new Log(output, fileName, loggers);
 
-            Verify = new Verify(LogManager);
-            ConditionalVerify = new ConditionalVerify(LogManager);
-            SoftVerify = new SoftVerify(LogManager);
+            Verify = new Verify(Log);
+            ConditionalVerify = new ConditionalVerify(Log);
+            SoftVerify = new SoftVerify(Log);
 
             Verify.VerifyFailed += VerifyOnVerifyFailed;
 
-            Driver = new Driver(BrowserOptions.Driver, LogManager);
+            Driver = new Driver(BrowserOptions.Driver, Log);
             if (BrowserOptions.Driver.ImplicitWaitEnabled)
             {
                 EnableImplicitWait(BrowserOptions.Driver.SecondsToWait);
             }
 
-            Find = new Find(Driver, LogManager);
-            SeleniumFind = new SeleniumFind(Driver, LogManager);
+            Find = new Find(Driver, Log);
+            SeleniumFind = new SeleniumFind(Driver, Log);
             Navigate = new Navigate(Driver);
             Window = new Window(Driver);
             ElementStyle = new ElementStyle(this);

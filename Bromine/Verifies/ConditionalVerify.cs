@@ -16,7 +16,7 @@ namespace Bromine.Verifies
     public class ConditionalVerify : VerifyBase
     {
         /// <inheritdoc />
-        public ConditionalVerify(LogManager logManager) : base(logManager) { }
+        public ConditionalVerify(Log log) : base(log) { }
 
         /// <summary>
         /// ConditionalVerify

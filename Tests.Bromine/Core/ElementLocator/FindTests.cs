@@ -1,63 +1,100 @@
 ﻿using System.Collections.Generic;
-using Tests.Bromine.Common;
+
+using Bromine.Constants;
+using Bromine.Core;
+using Bromine.Core.ElementInteraction;
+using Bromine.Core.ElementLocator;
+using Bromine.Logger;
+using Bromine.Models;
 
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Tests.Bromine.Core.ElementLocator
 {
-    /// <inheritdoc />
     /// <summary>
-    /// Test to verify the Find class is working as expected.
+    /// Tests to verify the behavior of <see cref="Find"/> and <see cref="SeleniumFind"/>.
     /// </summary>
     public class FindTests : CoreTestsBase
     {
-        /// <inheritdoc />
-        public FindTests(ITestOutputHelper output) : base(output)
+        /// <summary>
+        /// Create a headless Chrome browser for all tests.
+        /// Build and navigate to Common.html.
+        /// </summary>
+        public FindTests(ITestOutputHelper output) : base(output, true)
         {
-            Browser.Navigate.ToUrl(TestSites.GoogleUrl);
+            var options = new BrowserOptions(BrowserType.Chrome, true);
+            Browser = new Browser(options, Output, LogType.XunitConsole, LogType.Text);
+
+            CommonPage = new Page.Common(Browser);
+            CommonPage.Navigate();
         }
 
         /// <summary>
-        /// Find element by all supported element location strategies.
+        /// Call <see cref="Find.Element"/> with all supported <see cref="LocatorStrategy"/>.
+        /// Is <see cref="LocatorStrategy"/> as expected?
+        /// Is the element count as expected?
         /// </summary>
         [Fact]
-        public void FindElement()
+        public void FindByStrategyTest()
         {
-            var list = new List<string> { ".gNO89b", "gbqfbb", "gNO89b", "Gmail", "Gmai", "input" };
+            var locator = CommonPage.EnableButtonId;
+            VerifyStrategy(locator, LocatorStrategy.Id);
+            VerifyElementCount(locator.Information.LocatorString, 1);
 
-            foreach (var locator in list)
-            {
-                var element = Browser.Find.Element(locator);
+            locator = CommonPage.EnableButtonClass;
+            VerifyStrategy(locator, LocatorStrategy.Class);
+            VerifyElementCount(locator.Information.LocatorString, 1);
 
-                Browser.SoftVerify.True(element.IsInitialized, locator);
-            }
+            locator = CommonPage.EnableButtonCss;
+            VerifyStrategy(locator, LocatorStrategy.Css);
+            VerifyElementCount(locator.Information.LocatorString, 1);
+
+            locator = CommonPage.EnableButtonText;
+            VerifyStrategy(locator, LocatorStrategy.Text);
+            VerifyElementCount(locator.Information.LocatorString, 1);
+
+            locator = CommonPage.EnableButtonPartialText;
+            VerifyStrategy(locator, LocatorStrategy.PartialText);
+            VerifyElementCount(locator.Information.LocatorString, 4);
         }
 
         /// <summary>
-        /// Find element with all the following classes.
-        /// gb_Oa gb_Fg gb_g gb_Eg gb_Jg gb_Wf
+        /// Call the following with an invalid locator string.
+        /// <see cref="SeleniumFind.ElementById"/>
+        /// <see cref="SeleniumFind.ElementByClass"/>
+        /// <see cref="SeleniumFind.ElementByCssSelector"/>
+        /// <see cref="SeleniumFind.ElementByText"/>
+        /// <see cref="SeleniumFind.ElementByPartialText"/>
+        /// Is the element <see cref="Element.IsInitialized"/> property false?
+        /// Is the element <see cref="Element.WebElement"/> property null?
+        /// Does <see cref="SeleniumFind.Element"/> returns null when an undefined <see cref="LocatorStrategy"/> is provided?
         /// </summary>
         [Fact]
-        public void FindElementByClassesTest()
+        public void SeleniumFindInvalidStrategy()
         {
-            var classes = "gb_Oa gb_Fg gb_g gb_Eg gb_Jg";
+            VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumId);
+            VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumClass);
+            VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumCss);
+            VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumText);
+            VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumPartialText);
 
-            Browser.Wait.For.DisplayedElement(Browser.Find.ElementByClasses(classes), 5);
-
-            Browser.Verify.True(Browser.Find.ElementByClasses(classes).Displayed);
-        }
+            Browser.Verify.Null(SeleniumFind.Element(LocatorStrategy.Undefined, string.Empty));
+    }
 
         /// <summary>
-        /// Find the elements with all the following classes.
-        /// "gb_f gb_g"
+        /// <see cref="Find.ElementByClasses"/>
+        /// Is the expected element displayed?
+        /// Is the expected element count found?
         /// </summary>
         [Fact]
-        public void FindElementsByClassesTest()
+        public void ElementByClassesTest()
         {
-            var elements = Browser.Find.ElementsByClasses("gb_f gb_g");
+            var element = CommonPage.EnabledButtonElementClasses;
 
-            Browser.Verify.Equal(2, elements.Count);
+            Log.Message($"Find.ElementByClasses by {element.Information.LocatorString} and {element.Information.LocatorStrategy}");
+            Browser.SoftVerify.True(element.Displayed);
+            Browser.SoftVerify.Equal(1, CommonPage.EnabledButtonElementsClasses.Count);
         }
 
         /// <summary>
@@ -66,93 +103,37 @@ namespace Tests.Bromine.Core.ElementLocator
         [Fact]
         public void FindChildElementTest()
         {
-            var element = Browser.Find.ChildElement(ParentClassString, InputTagString);
+            var element = CommonPage.EnabledButtonChildElement;
 
-            Browser.Verify.True(element.Displayed);
+            Log.Message($"Find.ChildElement by {element.Information.LocatorString} and {element.Information.LocatorStrategy}");
+            Browser.SoftVerify.True(element.Displayed);
+            Browser.SoftVerify.True(CommonPage.EnabledButtonChildElementParentElement.Displayed);
+            Browser.SoftVerify.True(CommonPage.EnabledButtonDescendentCssElement.Displayed);
+            Browser.SoftVerify.Equal(1, CommonPage.EnabledButtonChildElements.Count);
+            Browser.SoftVerify.Equal(2, CommonPage.EnabledButtonDescendentCssElements.Count);
         }
 
-        /// <summary>
-        /// Find the child element of an element. The parent element is passed as an element, and the child element is located by CSS selector.
-        /// </summary>
-        [Fact]
-        public void FindChildElementByElementTest()
+        private void VerifyStrategy(Element element, LocatorStrategy expectedStrategy)
         {
-            var ele = Browser.Find.Element(ParentClassString);
-            var element = Browser.Find.ChildElement(ele, InputTagString);
-
-            Browser.Verify.True(element.Displayed);
+            Log.Message($"Find.Element by {element.Information.LocatorString} and {element.Information.LocatorStrategy}");
+            Browser.SoftVerify.Equal(expectedStrategy, element.Information.LocatorStrategy);
         }
 
-        /// <summary>
-        /// Find the child elements of an element. Both the parent and child elements are located by CSS selector.
-        /// </summary>
-        [Fact]
-        public void FindChildElementsTest()
+        private void VerifyInvalidElement(Element element)
         {
-            var elements = Browser.Find.ChildElements(ParentClassString, InputTagString);
-
-            Browser.Verify.Equal(2, elements.Count);
+            Browser.SoftVerify.False(element.IsInitialized);
+            Browser.SoftVerify.Null(element.WebElement);
         }
 
-        /// <summary>
-        /// Find the child elements of an element. The parent element is passed as an element, and the child element is located by CSS selector.
-        /// </summary>
-        [Fact]
-        public void FindChildElementsByElementTest()
+        private void VerifyElementCount(string locator, int expectedCount)
         {
-            var ele = Browser.Find.Element(ParentClassString);
-            var elements = Browser.Find.ChildElements(ele, InputTagString);
+            Elements = Browser.Find.Elements(locator);
 
-            Browser.Verify.Equal(2, elements.Count);
+            Browser.SoftVerify.Equal(expectedCount, Elements.Count);
         }
 
-        /// <summary>
-        /// Find element in the DOM by descendent CSS selection. Each element is separated by a space and is a CSS selector.
-        /// The first element is the parent.
-        /// If additional selectors are added they are expected under the previous element in the DOM structure.
-        /// Id -> gbw
-        ///   class -> gb_fe
-        ///     tag -> div
-        ///        attribute -> data-pid=23
-        /// </summary>
-        [Fact]
-        public void FindElementByDescendentCssTest()
-        {
-            const string gmailString = "Gmail";
+        private List<Element> Elements { get; set; }
 
-            var element = Browser.Find.ElementByDescendentCss("#gbw .gb_fe div [data-pid='23']");
-
-            Browser.Verify.Equal(gmailString, element.Text);
-        }
-
-        /// <summary>
-        /// Find elements in the DOM by descendent CSS selection. Each element is separated by a space and is a CSS selector.
-        /// The first element is the parent.
-        /// If additional selectors are added they are expected under the previous element in the DOM structure.
-        /// id -> gbw
-        ///   class -> gb_fe
-        ///     tag -> div
-        /// </summary>
-        [Fact]
-        public void FindElementsByDescendentCssTest()
-        {
-            var elements = Browser.Find.ElementsByDescendentCss("#gbw .gb_fe div");
-
-            Browser.Verify.Equal(2, elements.Count);
-        }
-
-        /// <summary>
-        /// Dispose of the browser when the test is done.
-        /// All tests will ensure there are no errors finding elements.
-        /// </summary>
-        public override void Dispose()
-        {
-            Browser.Verify.Equal(0, Browser.LogManager.XunitConsoleLog.ErrorCount);
-
-            Browser?.Dispose();
-        }
-
-        private static string ParentClassString => ".FPdoLc";
-        private static string InputTagString => "input";
+        private Page.Common CommonPage { get; }
     }
 }

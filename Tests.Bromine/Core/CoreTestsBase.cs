@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Reflection;
 
 using Bromine;
 using Bromine.Core;
@@ -21,11 +19,14 @@ namespace Tests.Bromine.Core
         /// <summary>
         /// Construct a Chrome browser to use for tests.
         /// </summary>
-        protected CoreTestsBase(ITestOutputHelper output = null)
+        protected CoreTestsBase(ITestOutputHelper output = null, bool ignoreBrowserInit = false)
         {
             Output = output;
 
-            Browser = new Browser(new BrowserOptions(), Output, LogType.XunitConsole, LogType.Text);
+            if (!ignoreBrowserInit)
+            {
+                Browser = new Browser(new BrowserOptions(), Output, LogType.XunitConsole, LogType.Text);
+            }
         }
 
         /// <summary>
@@ -34,9 +35,14 @@ namespace Tests.Bromine.Core
         public IBrowser Browser { get; set; }
 
         /// <summary>
+        /// Used to write log messages.
+        /// </summary>
+        public Log Log => Browser.Log;
+
+        /// <summary>
         /// Base path to all static html pages sourced in the Pages folder of the project.
         /// </summary>
-        internal string BasePath => $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)?.Substring(6)}\Pages";
+        internal string PagesBasePath => $@"{AppDomain.CurrentDomain.BaseDirectory}\Pages";
 
         /// <summary>
         /// Amazon home page portion of a URL.
