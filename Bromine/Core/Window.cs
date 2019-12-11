@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 
+using Bromine.Logger;
+
 using OpenQA.Selenium;
 
 namespace Bromine.Core
@@ -13,10 +15,10 @@ namespace Bromine.Core
         /// <summary>
         /// Construct a window object for the given driver.
         /// </summary>
-        /// <param name="driver">Driver used to navigate.</param>
-        public Window(Driver driver)
+        /// <param name="browser">Browser used to navigate.</param>
+        public Window(Browser browser)
         {
-            Driver = driver;
+            Browser = browser;
         }
 
         /// <summary>
@@ -33,7 +35,7 @@ namespace Bromine.Core
                 }
                 catch (Exception e)
                 {
-                    Driver.Log.Error(e.Message);
+                    Log.Error(e.Message);
                 }            
             }
         } 
@@ -52,7 +54,7 @@ namespace Bromine.Core
                 }
                 catch (Exception e)
                 {
-                    Driver.Log.Error(e.Message);
+                    Log.Error(e.Message);
                 }
             }
         }
@@ -68,7 +70,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
             }
         }
 
@@ -83,7 +85,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
             }
         }
 
@@ -98,11 +100,13 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
             }
         }
 
-        private Driver Driver { get; }
-        private IWindow BrowserWindow => Driver.WebDriver.Manage().Window;
+        private Browser Browser { get; }
+        private IWebDriver Driver => Browser.Driver.WebDriver;
+        private Log Log => Browser.Log;
+        private IWindow BrowserWindow => Driver.Manage().Window;
     }
 }

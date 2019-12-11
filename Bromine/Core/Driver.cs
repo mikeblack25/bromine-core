@@ -25,25 +25,13 @@ namespace Bromine.Core
         /// <summary>
         /// Initialize an IWebDriver for the given browser and desired configuration.
         /// </summary>
-        /// <param name="options">Object to bass desired browser driver configuration.</param>
-        /// <param name="log"><see cref="Log"/></param>
-        public Driver(DriverOptions options, Log log)
+        /// <param name="browser"><see cref="Browser"/></param>
+        public Driver(Browser browser)
         {
-            Options = options;
-            Log = log;
+            Browser = browser;
 
             WebDriver = InitializeDriver();
         }
-
-        /// <summary>
-        /// Advanced driver configuration options.
-        /// See the following options for more details.
-        /// <see cref="DriverOptions.Browser"/>
-        /// <see cref="DriverOptions.IsRemoteDriver"/>
-        /// <see cref="DriverOptions.IsHeadless"/>
-        /// <see cref="DriverOptions.HideDriverWindow"/>
-        /// </summary>
-        public DriverOptions Options { get; }
 
         /// <summary>
         /// Service the Chrome driver is running on provided it has been initialized at object construction.
@@ -57,7 +45,6 @@ namespace Bromine.Core
         public Screenshot ScreenShot => WebDriver.TakeScreenshot();
 
         internal IWebDriver WebDriver { get; }
-        internal Log Log { get; }
 
         /// <summary>
         /// Initialize the browser from the class instance of <see cref="Options"/>.
@@ -323,5 +310,9 @@ namespace Bromine.Core
 
         private string DefaultPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private const string HeadlessFlagString = "--headless";
+
+        private Browser Browser { get; }
+        private Log Log => Browser.Log;
+        private DriverOptions Options => Browser.BrowserOptions.Driver;
     }
 }

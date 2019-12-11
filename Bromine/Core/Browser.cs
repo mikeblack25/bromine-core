@@ -242,16 +242,16 @@ namespace Bromine.Core
 
             Verify.VerifyFailed += VerifyOnVerifyFailed;
 
-            Driver = new Driver(BrowserOptions.Driver, Log);
+            Driver = new Driver(this);
             if (BrowserOptions.Driver.ImplicitWaitEnabled)
             {
                 EnableImplicitWait(BrowserOptions.Driver.SecondsToWait);
             }
 
-            Find = new Find(Driver, Log);
-            SeleniumFind = new SeleniumFind(Driver, Log);
-            Navigate = new Navigate(Driver);
-            Window = new Window(Driver);
+            Find = new Find(this);
+            SeleniumFind = new SeleniumFind(this);
+            Navigate = new Navigate(this);
+            Window = new Window(this);
             ElementStyle = new ElementStyle(this);
             Wait = new Wait(this);
 

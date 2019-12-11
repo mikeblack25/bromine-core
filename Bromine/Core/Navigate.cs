@@ -1,5 +1,9 @@
 using System;
 
+using Bromine.Logger;
+
+using OpenQA.Selenium;
+
 namespace Bromine.Core
 {
     /// <summary>
@@ -8,12 +12,12 @@ namespace Bromine.Core
     public class Navigate
     {
         /// <summary>
-        /// Construct a Navigate object for the given driver type.
+        /// Construct a Navigate object for the given browser type.
         /// </summary>
-        /// <param name="driver">Driver used to navigate.</param>
-        public Navigate(Driver driver)
+        /// <param name="browser">Browser used to navigate.</param>
+        public Navigate(Browser browser)
         {
-            Driver = driver;
+            Browser = browser;
         }
 
         /// <summary>
@@ -24,13 +28,13 @@ namespace Bromine.Core
         {
             try
             {
-                Driver.WebDriver.Navigate().GoToUrl(url);
-                Driver.Log.Message($"Navigate to {url}");
+                Nav.GoToUrl(url);
+                Log.Message($"Navigate to {url}");
 
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
             }
         }
 
@@ -42,11 +46,11 @@ namespace Bromine.Core
         {
             try
             {
-                Driver.WebDriver.Navigate().GoToUrl($"file://{path}");
+                Nav.GoToUrl($"file://{path}");
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
             }
         }
 
@@ -57,11 +61,11 @@ namespace Bromine.Core
         {
             try
             {
-                Driver.WebDriver.Navigate().Back();
+                Nav.Back();
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
             }
         }
 
@@ -72,11 +76,11 @@ namespace Bromine.Core
         {
             try
             {
-                Driver.WebDriver.Navigate().Forward();
+                Nav.Forward();
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
             }
         }
 
@@ -87,14 +91,16 @@ namespace Bromine.Core
         {
             try
             {
-                Driver.WebDriver.Navigate().Refresh();
+                Nav.Refresh();
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
             }
         }
 
-        private Driver Driver;
+        private Browser Browser { get; }
+        private INavigation Nav => Browser.Driver.WebDriver.Navigate();
+        private Log Log => Browser.Log;
     }
 }

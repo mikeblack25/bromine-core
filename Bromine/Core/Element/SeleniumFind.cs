@@ -17,12 +17,10 @@ namespace Bromine.Core.Element
         /// <summary>
         /// Construct a Find object to locate elements.
         /// </summary>
-        /// <param name="driver">Driver used to navigate.</param>
-        /// <param name="log"><see cref="Log"/></param>
-        public SeleniumFind(Driver driver, Log log)
+        /// <param name="browser"><see cref="Browser"/></param>
+        public SeleniumFind(Browser browser)
         {
-            Driver = driver;
-            Log = log;
+            Browser = browser;
         }
 
         /// <summary>
@@ -132,7 +130,7 @@ namespace Bromine.Core.Element
 
             try
             {
-                var elements = Driver.WebDriver.FindElements(Element(strategy, locator));
+                var elements = Driver.FindElements(Element(strategy, locator));
 
                 switch (strategy)
                 {
@@ -151,7 +149,7 @@ namespace Bromine.Core.Element
                     case Strategy.PartialText:
                     {
                         var containsList = new List<Element>();
-                        elements = Driver.WebDriver.FindElements(Element(Strategy.Css, "*"));
+                        elements = Driver.FindElements(Element(Strategy.Css, "*"));
 
                         foreach (var element in elements)
                         {
@@ -177,7 +175,7 @@ namespace Bromine.Core.Element
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
             }
 
             return elementsList;
@@ -221,7 +219,8 @@ namespace Bromine.Core.Element
             }
         }
 
-        private Driver Driver { get; }
-        private Log Log { get; }
+        private Browser Browser { get; }
+        private IWebDriver Driver => Browser.Driver.WebDriver;
+        private Log Log => Browser.Log;
     }
 }

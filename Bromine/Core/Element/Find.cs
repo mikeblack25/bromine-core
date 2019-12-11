@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 
 using Bromine.Constants;
-using Bromine.Logger;
 
 namespace Bromine.Core.Element
 {
@@ -16,11 +15,10 @@ namespace Bromine.Core.Element
         /// <summary>
         /// Construct a Find object to locate elements.
         /// </summary>
-        /// <param name="driver">Driver used to navigate.</param>
-        /// <param name="log"><see cref="Log"/></param>
-        public Find(Driver driver, Log log)
+        /// <param name="browser">Browser used to navigate.</param>
+        public Find(Browser browser)
         {
-            SeleniumFind = new SeleniumFind(driver, log);
+            SeleniumFind = new SeleniumFind(browser);
         }
 
         /// <summary>

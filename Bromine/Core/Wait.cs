@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Bromine.Logger;
+
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
@@ -37,7 +39,7 @@ namespace Bromine.Core
         {
             Browser = browser;
 
-            DefaultWait = new DefaultWait<IWebDriver>(Driver.WebDriver)
+            DefaultWait = new DefaultWait<IWebDriver>(Driver)
             {
                 PollingInterval = TimeSpan.FromMilliseconds(250)
             };
@@ -80,7 +82,7 @@ namespace Bromine.Core
             }
             catch (Exception e)
             {
-                Driver.Log.Error(e.Message);
+                Log.Error(e.Message);
 
                 return false;
             }
@@ -89,7 +91,8 @@ namespace Bromine.Core
         private const string PageLoadedScript = "\"return document.readyState\").Equals(\"complete\")";
 
         private Browser Browser { get; }
-        private Driver Driver => Browser.Driver;
+        private IWebDriver Driver => Browser.Driver.WebDriver;
+        private Log Log => Browser.Log;
         private DefaultWait<IWebDriver> DefaultWait { get; }
     }
 }
