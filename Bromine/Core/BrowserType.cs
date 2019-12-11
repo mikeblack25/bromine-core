@@ -1,4 +1,4 @@
-﻿namespace Bromine.Constants
+﻿namespace Bromine.Core
 {
     /// <summary>
     /// Supported web browser types.

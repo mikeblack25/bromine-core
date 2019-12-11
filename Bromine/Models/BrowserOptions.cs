@@ -1,4 +1,4 @@
-﻿using Bromine.Constants;
+﻿using Bromine.Core;
 
 namespace Bromine.Models
 {

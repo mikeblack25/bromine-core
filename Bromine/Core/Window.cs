@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+
 using OpenQA.Selenium;
 
 namespace Bromine.Core

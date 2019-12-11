@@ -1,9 +1,6 @@
 using System;
-using System.Drawing;
 using System.IO;
 using System.Reflection;
-
-using Bromine.Constants;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;

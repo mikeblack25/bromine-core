@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Text;
 
-using Bromine.Constants;
-
 namespace Bromine.Core.Element
 {
     /// <summary>

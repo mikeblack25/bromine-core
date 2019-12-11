@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-using Bromine.Constants;
 using Bromine.Core.Element;
 using Bromine.Models;
 using Bromine.Verifies;

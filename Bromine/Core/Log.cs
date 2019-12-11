@@ -3,8 +3,6 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-using Bromine.Constants;
-
 using Xunit.Abstractions;
 using Xunit.Sdk;
 

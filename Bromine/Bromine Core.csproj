@@ -75,8 +75,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants\BrowserType.cs" />
-    <Compile Include="Constants\LogLevels.cs" />
+    <Compile Include="Core\BrowserType.cs" />
+    <Compile Include="Core\LogLevels.cs" />
     <Compile Include="Core\Browser.cs" />
     <Compile Include="Core\Driver.cs" />
     <Compile Include="Core\Element\Information.cs" />
@@ -91,7 +91,7 @@
     <Compile Include="Core\Element\Element.cs" />
     <Compile Include="Core\Element\ElementExtensions.cs" />
     <Compile Include="Core\Element\ElementStyle.cs" />
-    <Compile Include="Constants\CssFormatExtensions.cs" />
+    <Compile Include="Core\CssFormatExtensions.cs" />
     <Compile Include="IBrowser.cs" />
     <Compile Include="Models\BrowserOptions.cs" />
     <Compile Include="Models\DriverOptions.cs" />
