@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-
-using Bromine.Logger;
-
 using OpenQA.Selenium;
 
 namespace Bromine.Core.Element

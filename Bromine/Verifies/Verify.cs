@@ -1,5 +1,6 @@
 ﻿using System;
-using Bromine.Logger;
+
+using Bromine.Core;
 
 namespace Bromine.Verifies
 {

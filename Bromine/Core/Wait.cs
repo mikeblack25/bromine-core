@@ -1,7 +1,4 @@
 ﻿using System;
-
-using Bromine.Logger;
-
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 

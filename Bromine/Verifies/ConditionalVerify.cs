@@ -1,6 +1,6 @@
 ﻿using System;
 
-using Bromine.Logger;
+using Bromine.Core;
 
 using Xunit;
 

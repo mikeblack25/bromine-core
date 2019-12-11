@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Drawing;
-
-using Bromine.Logger;
-
 using OpenQA.Selenium;
 
 namespace Bromine.Core

@@ -13,7 +13,6 @@ namespace Bromine.Models
         /// <see cref="DriverOptions.IsHeadless"/> false (the UI will show).
         /// <see cref="DriverOptions.SecondsToWait"/> 0 (no implicit wait).
         /// <see cref="DriverOptions.RemoteAddress"/> Browsers will be launched locally.
-        /// <see cref="DriverOptions.ScreenShotPath"/> ScreenShots are stored in in a ScreenShots folder in the executing directory.
         /// <see cref="DriverOptions.UseDefaultDriverPath"/> false.
         /// <see cref="DriverOptions.HideDriverWindow"/> true (drivers may have to be closed manually if not disposed properly).
         /// </summary>
@@ -29,11 +28,10 @@ namespace Bromine.Models
         /// <param name="isHeadless"><see cref="DriverOptions.IsHeadless"/></param>
         /// <param name="secondsToWait"><see cref="DriverOptions.SecondsToWait"/></param>
         /// <param name="remoteAddress"><see cref="DriverOptions.RemoteAddress"/></param>
-        /// <param name="screenShotPath"><see cref="DriverOptions.ScreenShotPath"/></param>
         /// <param name="useDefaultDriverPath"><see cref="DriverOptions.UseDefaultDriverPath"/></param>
         /// <param name="hideDriverWindow"><see cref="DriverOptions.HideDriverWindow"/></param>
-        public BrowserOptions(BrowserType browser, bool isHeadless, int secondsToWait = 0, string remoteAddress = "", string screenShotPath = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true)
-        : this(new DriverOptions(browser, isHeadless, secondsToWait, remoteAddress, screenShotPath, useDefaultDriverPath, hideDriverWindow))
+        public BrowserOptions(BrowserType browser, bool isHeadless = false, int secondsToWait = 0, string remoteAddress = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true)
+        : this(new DriverOptions(browser, isHeadless, secondsToWait, remoteAddress, useDefaultDriverPath, hideDriverWindow))
         {
         }
 

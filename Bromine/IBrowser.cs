@@ -3,7 +3,6 @@ using System.Drawing;
 
 using Bromine.Core;
 using Bromine.Core.Element;
-using Bromine.Logger;
 using Bromine.Models;
 using Bromine.Verifies;
 
@@ -35,31 +34,6 @@ namespace Bromine
         /// Get the HTML source (DOM).
         /// </summary>
         string Source { get; }
-
-        /// <summary>
-        /// Directory where ScreenShots are saved.
-        /// </summary>
-        string ScreenShotDirectory { get; }
-
-        /// <summary>
-        /// Name of the last ScreenShot file.
-        /// </summary>
-        string ScreenShotName { get; set; }
-
-        /// <summary>
-        /// String combining the ScreenShotDirectory and the ScreenShotName.
-        /// </summary>
-        string ScreenShotPath { get; }
-
-        /// <summary>
-        /// Get the driver logs.
-        /// </summary>
-        ILogs SeleniumLogs { get; }
-
-        /// <summary>
-        /// Manipulate cookies.
-        /// </summary>
-        ICookieJar Cookies { get; }
 
         /// <summary>
         /// Manipulate currently focused window.
@@ -107,16 +81,6 @@ namespace Bromine
         Wait Wait { get; }
 
         /// <summary>
-        /// Last image saved at the <see cref="ScreenShotDirectory"/>.
-        /// </summary>
-        Image LastImage { get; }
-
-        /// <summary>
-        /// Size of the last image saved at the <see cref="ScreenShotDirectory"/>.
-        /// </summary>
-        Size LastImageSize { get; }
-
-        /// <summary>
         /// Namespace of the Selenium driver being used by the browser.
         /// </summary>
         string Information { get; }
@@ -141,24 +105,24 @@ namespace Bromine
         SoftVerify SoftVerify { get; }
 
         /// <summary>
-        /// Take a ScreenShot of requested element.
+        /// Take a Image of requested element.
         /// </summary>
-        /// <param name="name">Name of the file of the ScreenShot.</param>
-        /// <param name="element">Element to take a ScreenShot of.</param>
-        void TakeElementScreenShot(string name, Element element);
+        /// <param name="name">Name of the file of the Image.</param>
+        /// <param name="element">Element to take a Image of.</param>
+        void TakeElementImage(string name, Element element);
 
         /// <summary>
-        /// Take a ScreenShot of requested region on the screen.
+        /// Take a Image of requested region on the screen.
         /// </summary>
-        /// <param name="name">Name of the file of the ScreenShot.</param>
-        /// <param name="screenShotRegion">Region to take a ScreenShot of.</param>
-        void TakeRegionScreenShot(string name, Rectangle screenShotRegion);
+        /// <param name="name">Name of the file of the Image.</param>
+        /// <param name="imageRegion">Region to take a Image of.</param>
+        void TakeRegionImage(string name, Rectangle imageRegion);
 
         /// <summary>
-        /// Take a ScreenShot of the visible page.
+        /// Take a Image of the visible page.
         /// </summary>
-        /// <param name="name">Name of the file of the ScreenShot.</param>
-        void TakeVisibleScreenShot(string name);
+        /// <param name="name">Name of the file of the Image.</param>
+        void TakeVisibleImage(string name);
 
         /// <summary>
         /// Execute the jS script.

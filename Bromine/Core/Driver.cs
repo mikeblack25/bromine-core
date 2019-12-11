@@ -1,8 +1,9 @@
 using System;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
+
 using Bromine.Constants;
-using Bromine.Logger;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -40,9 +41,9 @@ namespace Bromine.Core
         public DriverService DriverService { get; private set; }
 
         /// <summary>
-        /// Take a ScreenShot for the given visible page.
+        /// Take a Image for the given visible page.
         /// </summary>
-        public Screenshot ScreenShot => WebDriver.TakeScreenshot();
+        public Screenshot Image => WebDriver.TakeScreenshot();
 
         internal IWebDriver WebDriver { get; }
 

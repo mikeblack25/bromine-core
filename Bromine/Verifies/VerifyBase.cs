@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Bromine.Logger;
+using Bromine.Core;
 
 using Xunit;
 using Xunit.Sdk;

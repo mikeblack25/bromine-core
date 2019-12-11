@@ -3,7 +3,6 @@
 using Bromine.Constants;
 using Bromine.Core;
 using Bromine.Core.Element;
-using Bromine.Logger;
 using Bromine.Models;
 
 using Xunit;
@@ -14,7 +13,7 @@ namespace Tests.Bromine.Core.ElementLocator
     /// <summary>
     /// Tests to verify the behavior of <see cref="Find"/> and <see cref="SeleniumFind"/>.
     /// </summary>
-    public class FindTests : CoreTestsBase
+    public class FindTests : Framework
     {
         /// <summary>
         /// Create a headless Chrome browser for all tests.
@@ -23,7 +22,7 @@ namespace Tests.Bromine.Core.ElementLocator
         public FindTests(ITestOutputHelper output) : base(output, true)
         {
             var options = new BrowserOptions(BrowserType.Chrome, true);
-            Browser = new Browser(options, Output, LogType.XunitConsole, LogType.Text);
+            Browser = new Browser(options: options, LogLevels.Framework, output: output);
 
             CommonPage = new Page.Common(Browser);
             CommonPage.Navigate();

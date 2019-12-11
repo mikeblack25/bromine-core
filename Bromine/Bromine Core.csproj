@@ -76,12 +76,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants\BrowserType.cs" />
+    <Compile Include="Constants\LogLevels.cs" />
     <Compile Include="Core\Browser.cs" />
     <Compile Include="Core\Driver.cs" />
     <Compile Include="Core\Element\Information.cs" />
     <Compile Include="Core\Element\Strategy.cs" />
     <Compile Include="Core\Element\Find.cs" />
-    <Compile Include="Logger\LogBase.cs" />
+    <Compile Include="Core\Log.cs" />
     <Compile Include="Core\Navigate.cs" />
     <Compile Include="Core\Element\SeleniumFind.cs" />
     <Compile Include="Core\Page.cs" />
@@ -92,9 +93,6 @@
     <Compile Include="Core\Element\ElementStyle.cs" />
     <Compile Include="Constants\CssFormatExtensions.cs" />
     <Compile Include="IBrowser.cs" />
-    <Compile Include="Logger\Log.cs" />
-    <Compile Include="Logger\TextLog.cs" />
-    <Compile Include="Logger\XunitConsoleLog.cs" />
     <Compile Include="Models\BrowserOptions.cs" />
     <Compile Include="Models\DriverOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
