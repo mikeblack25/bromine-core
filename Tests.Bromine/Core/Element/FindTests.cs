@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 
-using Bromine.Constants;
-using Bromine.Core;
 using Bromine.Core.Element;
-using Bromine.Models;
 
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Tests.Bromine.Core.ElementLocator
+namespace Tests.Bromine.Core.Element
 {
     /// <summary>
     /// Tests to verify the behavior of <see cref="Find"/> and <see cref="SeleniumFind"/>.
@@ -21,11 +18,7 @@ namespace Tests.Bromine.Core.ElementLocator
         /// </summary>
         public FindTests(ITestOutputHelper output) : base(output, true)
         {
-            var options = new BrowserOptions(BrowserType.Chrome, true);
-            Browser = new Browser(options: options, LogLevels.Framework, output: output);
-
-            CommonPage = new Page.Common(Browser);
-            CommonPage.Navigate();
+            HeadlessInit();
         }
 
         /// <summary>
@@ -64,8 +57,6 @@ namespace Tests.Bromine.Core.ElementLocator
         /// <see cref="SeleniumFind.ElementByCssSelector"/>
         /// <see cref="SeleniumFind.ElementByText"/>
         /// <see cref="SeleniumFind.ElementByPartialText"/>
-        /// Is the element <see cref="Element.IsInitialized"/> property false?
-        /// Is the element <see cref="Element.WebElement"/> property null?
         /// Does <see cref="SeleniumFind.Element"/> returns null when an undefined <see cref="Strategy"/> is provided?
         /// </summary>
         [Fact]
@@ -111,13 +102,13 @@ namespace Tests.Bromine.Core.ElementLocator
             Browser.SoftVerify.Equal(2, CommonPage.EnabledButtonDescendentCssElements.Count);
         }
 
-        private void VerifyStrategy(Element element, Strategy expectedStrategy)
+        private void VerifyStrategy(global::Bromine.Core.Element.Element element, Strategy expectedStrategy)
         {
             Log.Message($"Find.Element by {element.Information.LocatorString} and {element.Information.Strategy}");
             Browser.SoftVerify.Equal(expectedStrategy, element.Information.Strategy);
         }
 
-        private void VerifyInvalidElement(Element element)
+        private void VerifyInvalidElement(global::Bromine.Core.Element.Element element)
         {
             Browser.SoftVerify.False(element.IsInitialized);
             Browser.SoftVerify.Null(element.WebElement);
@@ -130,8 +121,6 @@ namespace Tests.Bromine.Core.ElementLocator
             Browser.SoftVerify.Equal(expectedCount, Elements.Count);
         }
 
-        private List<Element> Elements { get; set; }
-
-        private Page.Common CommonPage { get; }
+        private List<global::Bromine.Core.Element.Element> Elements { get; set; }
     }
 }

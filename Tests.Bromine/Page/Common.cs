@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Bromine;
+using Bromine.Core;
 using Bromine.Core.Element;
 
 namespace Tests.Bromine.Page
@@ -39,18 +40,12 @@ namespace Tests.Bromine.Page
         public Element EnabledButtonChildElementParentElement => Browser.Find.ChildElement(Browser.Find.Element(DivTagString), EnableButtonIdString);
         public Element EnabledButtonDescendentCssElement => Browser.Find.ElementByDescendentCss("html body div #enabled_button");
 
+        public Element ExampleField => Browser.Find.Element("field");
+
         public List<Element> EnabledButtonElementsClasses => Browser.Find.ElementsByClasses("button normal");
         public List<Element> EnabledButtonChildElements => Browser.Find.ChildElements(DivTagString, EnableButtonIdString);
         public List<Element> EnabledButtonDescendentCssElements => Browser.Find.ElementsByDescendentCss("html body div button");
 #pragma warning restore 1591
-
-        /// <summary>
-        /// Navigate to the Pages\Common.html file.
-        /// </summary>
-        public override void Navigate()
-        {
-            Browser.Navigate.ToFile(Url);
-        }
 
         private const string DivTagString = "div";
         private const string EnableButtonIdUnformattedString = "enabled_button";

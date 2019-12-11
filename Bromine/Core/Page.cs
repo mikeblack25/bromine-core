@@ -6,7 +6,7 @@
     public abstract class Page
     {
         /// <inheritdoc />
-        protected Page(IBrowser browser, bool isHeadless = false)
+        protected Page(IBrowser browser)
         {
             Browser = browser;
         }

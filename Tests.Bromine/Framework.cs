@@ -1,7 +1,9 @@
 using System;
 
 using Bromine;
+using Bromine.Constants;
 using Bromine.Core;
+using Bromine.Models;
 
 using Xunit.Abstractions;
 
@@ -24,6 +26,23 @@ namespace Tests.Bromine
             {
                 Browser = new Browser(output: Output);
             }
+        }
+
+        /// <summary>
+        /// Page with common html elements.
+        /// </summary>
+        public Page.Common CommonPage { get; private set; }
+
+        /// <summary>
+        /// Initialize a headless Chrome browser and navigate to CommonPage.
+        /// </summary>
+        public void HeadlessInit()
+        {
+            var options = new BrowserOptions(BrowserType.Chrome, true);
+            Browser = new Browser(options: options, logLevel: LogLevels.Framework, output: Output);
+
+            CommonPage = new Page.Common(Browser);
+            CommonPage.Navigate();
         }
 
         /// <summary>

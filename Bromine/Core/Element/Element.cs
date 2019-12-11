@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+
 using OpenQA.Selenium;
 
 namespace Bromine.Core.Element
@@ -17,7 +18,7 @@ namespace Bromine.Core.Element
         /// <param name="log"><see cref="Log"/></param>
         /// <param name="locatorString">Locator string used to find the requested element.</param>
         /// <param name="locatorType">Type of locator used to find the requested element.</param>
-        internal Element(IWebElement element, Log log, string locatorString = "", Strategy locatorType = 0) : this()
+        internal Element(IWebElement element, Log log, string locatorString = "", Strategy locatorType = Strategy.Undefined) : this()
         {
             WebElement = element;
             Log = log;
@@ -47,126 +48,82 @@ namespace Bromine.Core.Element
         /// <summary>
         /// Element TagName value.
         /// </summary>
-        public string TagName
-        {
-            get
-            {
-                if (WebElement != null)
-                {
-                    return WebElement.TagName;
-                }
-
-                Log.Error("Unable to find the tag for the requested element");
-
-                return string.Empty;
-            }
-        }
+        public string TagName => GetProperty(() => WebElement.TagName, "Unable to find the tag for the requested element").ToString();
 
         /// <summary>
         /// Element Text value.
         /// </summary>
-        public string Text
-        {
-            get
-            {
-                if (WebElement != null)
-                {
-                    return WebElement.Text;
-                }
-
-                Log.Error("Unable to find the text for the requested element");
-
-                return string.Empty;
-            }
-        }
+        public string Text => GetProperty(() => WebElement.Text, "Unable to find the text for the requested element").ToString();
 
         /// <summary>
         /// Element Enabled status. This can be used to determine if an element can be interacted with.
         /// </summary>
-        public bool Enabled
-        {
-            get
-            {
-                if (WebElement != null)
-                {
-                    return WebElement.Enabled;
-                }
-
-                Log.Error("Unable to find the enabled property for the requested element");
-
-                return false;
-            }
-        }
+        public bool Enabled => (bool) GetProperty(() => WebElement.Enabled, "Unable to find the enabled property for the requested element");
 
         /// <summary>
         /// Element selected status.
         /// </summary>
-        public bool Selected
-        {
-            get
-            {
-                if (WebElement != null)
-                {
-                    return WebElement.Selected;
-                }
-
-                Log.Error("Unable to find the selected property for the requested element");
-
-                return false;
-            }
-        }
+        public bool Selected => (bool)GetProperty(() => WebElement.Selected, "Unable to find the selected property for the requested element");
 
         /// <summary>
         /// Element location in the rendered DOM.
         /// </summary>
-        public Point Location
-        {
-            get
-            {
-                if (WebElement != null)
-                {
-                    return WebElement.Location;
-                }
-
-                Log.Error("Unable to find the location for the requested element");
-
-                return new Point();
-            }
-        }
+        public Point Location => (Point)GetProperty(() => WebElement.Location, "Unable to find the location for the requested element");
 
         /// <summary>
         /// Element size.
         /// </summary>
-        public Size Size
-        {
-            get
-            {
-                if (WebElement != null)
-                {
-                    return WebElement.Size;
-                }
-
-                Log.Error("Unable to find the size for the requested element");
-
-                return new Size();
-            }
-        }
+        public Size Size => (Size)GetProperty(() => WebElement.Size, "Unable to find the size for the requested element");
 
         /// <summary>
         /// Element displayed status. This is helpful as some interactions require an element to be in view.
         /// </summary>
-        public bool Displayed
+        public bool Displayed => (bool)GetProperty(() => WebElement.Displayed, "Unable to find the displayed property for the requested element");
+
+        /// <summary>
+        /// Find the parent element of the requested element.
+        /// Note: This requires first locating an element and then calling this.
+        /// </summary>
+        /// <returns></returns>
+        public Element ParentElement => (Element)GetProperty(() => new Element(WebElement.FindElement(By.XPath("..")), Log, ".."), "Unable to find the parent element for the requested element");
+
+        /// <summary>
+        /// Find the requested element with the given attribute.
+        /// Note: This requires first locating an element and then calling this.
+        /// </summary>
+        /// <param name="attributeName">Attribute name of the requested element.</param>
+        /// <returns></returns>
+        public string GetAttribute(string attributeName) => (string)GetProperty(() => WebElement.GetAttribute(attributeName), $"Unable to find the value {attributeName} for the requested element");
+
+        /// <summary>
+        /// Get the CSS value for the requested element by property name.
+        /// Note: This requires first locating an element and then calling this.
+        /// </summary>
+        /// <param name="cssValue">CSS value for the requested element.</param>
+        /// <returns></returns>
+        public string GetCssValue(string cssValue) => (string)GetProperty(() => WebElement.GetCssValue(cssValue), $"Unable to find the CSS value {cssValue} for the requested element");
+
+        /// <summary>
+        /// Get the JavaScript value for the requested property.
+        /// Note: This requires first locating an element and then calling this.
+        /// </summary>
+        /// <param name="propertyName">Property value for the requested element.</param>
+        /// <returns></returns>
+        public string GetJavaScriptProperty(string propertyName) => (string)GetProperty(() => WebElement.GetProperty(propertyName), $"Unable to find the property {propertyName} for the requested element");
+
+        /// <summary>
+        /// Update the value property for the requested element.
+        /// </summary>
+        /// <param name="text">Text to update to the requested element.</param>
+        public void SendKeys(string text)
         {
-            get
+            if (WebElement != null)
             {
-                if (WebElement != null)
-                {
-                    return WebElement.Displayed;
-                }
-
-                Log.Error("Unable to find the displayed property for the requested element");
-
-                return false;
+                WebElement.SendKeys(text);
+            }
+            else
+            {
+                Log.Error($"Unable to send keys {text} to the requested element");
             }
         }
 
@@ -197,102 +154,6 @@ namespace Bromine.Core.Element
             else
             {
                 Log.Error("Unable to click the requested element");
-            }
-        }
-
-        /// <summary>
-        /// Find the parent element of the requested element.
-        /// Note: This requires first locating an element and then calling this.
-        /// </summary>
-        /// <returns></returns>
-        public Element ParentElement
-        {
-            get
-            {
-                if (WebElement != null)
-                {
-                    return new Element(WebElement.FindElement(By.XPath("..")), Log, "..");
-                }
-
-                Log.Error("Unable to find the displayed property for the requested element");
-
-                return new Element();
-            }
-        }
-
-        /// <summary>
-        /// Find the requested element with the given attribute.
-        /// Note: This requires first locating an element and then calling this.
-        /// </summary>
-        /// <param name="attributeName">Attribute name of the requested element.</param>
-        /// <returns></returns>
-        public string GetAttribute(string attributeName)
-        {
-            if (WebElement != null)
-            {
-                return WebElement.GetAttribute(attributeName);
-            }
-            else
-            {
-                Log.Error($"Unable to find the attribute {attributeName} for the requested element");
-
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Get the CSS value for the requested element by property name.
-        /// Note: This requires first locating an element and then calling this.
-        /// </summary>
-        /// <param name="cssValue">CSS value for the requested element.</param>
-        /// <returns></returns>
-        public string GetCssValue(string cssValue)
-        {
-            if (WebElement != null)
-            {
-                return WebElement.GetCssValue(cssValue);
-            }
-            else
-            {
-                Log.Error($"Unable to find the CSS value {cssValue} for the requested element");
-
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Get the value for the requested property.
-        /// Note: This requires first locating an element and then calling this.
-        /// </summary>
-        /// <param name="propertyName">Property value for the requested element.</param>
-        /// <returns></returns>
-        public string GetProperty(string propertyName)
-        {
-            if (WebElement != null)
-            {
-                return WebElement.GetProperty(propertyName);
-            }
-            else
-            {
-                Log.Error($"Unable to find the property {propertyName} for the requested element");
-
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Update the value property for the requested element.
-        /// </summary>
-        /// <param name="text">Text to update to the requested element.</param>
-        public void SendKeys(string text)
-        {
-            if (WebElement != null)
-            {
-                WebElement.SendKeys(text);
-            }
-            else
-            {
-                Log.Error($"Unable to send keys {text} to the requested element");
             }
         }
 
@@ -348,6 +209,20 @@ namespace Bromine.Core.Element
             };
 
             IsInitialized = false;
+        }
+
+        private object GetProperty(Func<object> method, string errorMessage)
+        {
+            try
+            {
+                return method.Invoke();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{errorMessage}{Environment.NewLine}{e.Message}");
+
+                return null;
+            }
         }
 
         internal readonly IWebElement WebElement;
