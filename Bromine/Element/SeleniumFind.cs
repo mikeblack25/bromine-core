@@ -165,11 +165,12 @@ namespace Bromine.Element
 
         /// <summary>
         /// Get By object based on the strategy and locator string.
+        /// Strategy.Text and Strategy.Partial text are not available here because the current implementation is using Strategy.Css.
         /// </summary>
         /// <param name="strategy">How will the element be located?</param>
         /// <param name="locator">String used to find the element.</param>
         /// <returns></returns>
-        public static By Element(Strategy strategy, string locator)
+        internal static By Element(Strategy strategy, string locator)
         {
             // ReSharper disable once SwitchStatementMissingSomeCases
             switch (strategy)

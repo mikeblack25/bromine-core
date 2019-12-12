@@ -77,9 +77,10 @@
   <ItemGroup>
     <Compile Include="Common\Category.cs" />
     <Compile Include="Common\TestSites.cs" />
-    <Compile Include="Core\Element\ElementTests.cs" />
+    <Compile Include="Element\ElementTests.cs" />
+    <Compile Include="Element\ElementStyleTests.cs" />
     <Compile Include="Framework.cs" />
-    <Compile Include="Core\Element\FindTests.cs" />
+    <Compile Include="Element\FindTests.cs" />
     <Compile Include="Page\Common.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

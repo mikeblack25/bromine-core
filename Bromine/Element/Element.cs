@@ -125,14 +125,7 @@ namespace Bromine.Element
         /// <param name="text">Text to update to the requested element.</param>
         public void SendKeys(string text)
         {
-            if (SeleniumElement != null)
-            {
-                SeleniumElement.SendKeys(text);
-            }
-            else
-            {
-                Log.Error($"Unable to send keys {text} to the requested element");
-            }
+            SeleniumElement?.SendKeys(text);
         }
 
         /// <summary>
@@ -140,14 +133,7 @@ namespace Bromine.Element
         /// </summary>
         public void Clear()
         {
-            if (SeleniumElement != null)
-            {
-                SeleniumElement.Clear();
-            }
-            else
-            {
-                Log.Error("Unable to clear the requested element");
-            }
+            SeleniumElement?.Clear();
         }
 
         /// <summary>
@@ -155,29 +141,7 @@ namespace Bromine.Element
         /// </summary>
         public void Click()
         {
-            if (SeleniumElement != null)
-            {
-                SeleniumElement.Click();
-            }
-            else
-            {
-                Log.Error("Unable to click the requested element");
-            }
-        }
-
-        /// <summary>
-        /// Update information about the element. This is similar to <see cref="Click"/>, but can be used on any form element not just buttons.
-        /// </summary>
-        public void Submit()
-        {
-            if (SeleniumElement != null)
-            {
-                SeleniumElement.Submit();
-            }
-            else
-            {
-                Log.Error("Unable to submit to the requested element");
-            }
+            SeleniumElement?.Click();
         }
 
         /// <summary>
@@ -194,32 +158,6 @@ namespace Bromine.Element
             }
 
             return elementList;
-        }
-
-        /// <summary>
-        /// Find an element by the requested locator strategy.
-        /// </summary>
-        /// <param name="by">Locator strategy to use to find a requested element.</param>
-        /// <returns></returns>
-        internal IElement FindElement(By by) => new Element(SeleniumElement.FindElement(by), Log);
-
-        /// <summary>
-        /// Find elements by the requested locator strategy.
-        /// </summary>
-        /// <param name="by">Locator strategy to use to find requested elements.</param>
-        /// <returns></returns>
-        internal List<IElement> FindElements(By by)
-        {
-            var list = new List<IElement>();
-
-            var elements = SeleniumElement.FindElements(by);
-
-            foreach (var element in elements)
-            {
-                list.Add(new Element(element, Log));
-            }
-
-            return list;
         }
 
         /// <summary>
@@ -286,15 +224,6 @@ namespace Bromine.Element
         /// <param name="locator">String to locate child elements.</param>
         /// <returns></returns>
         public static List<IElement> FindElements(this IElement element, string locator) => element.FindElements(Strategy.Css, locator);
-
-        /// <summary>
-        /// Find child element with the given strategy and locator string.
-        /// </summary>
-        /// <param name="element">Parent element to find a child of.</param>
-        /// <param name="strategy">How will the element be found.</param>
-        /// <param name="locator">String to locate child elements.</param>
-        /// <returns></returns>
-        public static IElement FindElement(this IElement element, Strategy strategy, string locator) => FindElements(element, strategy, locator).FirstOrDefault();
 
         /// <summary>
         /// Find child element by CSS and locator string.

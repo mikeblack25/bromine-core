@@ -107,10 +107,5 @@ namespace Bromine
         /// Click the element. The element should be enabled to be clickable.
         /// </summary>
         void Click();
-
-        /// <summary>
-        /// Update information about the element. This is similar to Element.Click, but can be used on any form element not just buttons.
-        /// </summary>
-        void Submit();
     }
 }

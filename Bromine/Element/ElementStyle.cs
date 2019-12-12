@@ -44,7 +44,7 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="element">Element to add a border around.</param>
         /// <param name="color">Element border color.</param>
-        public void AddBorder(Element element, string color)
+        public void AddBorder(IElement element, string color)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="element">Element to add a border around.</param>
         /// <param name="color">Element border color.</param>
-        public void AddBorders(Element element, string color)
+        public void AddBorders(IElement element, string color)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="element">Element to get style attribute of.</param>
         /// <returns></returns>
-        public string GetStyleAttribute(Element element) => element.GetAttribute("style");
+        public string GetStyleAttribute(IElement element) => element.GetAttribute("style");
 
         private Strategy LocatorStrategyFromCss(Strategy locatorStrategy, string locator)
         {

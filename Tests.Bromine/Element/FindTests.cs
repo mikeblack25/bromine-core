@@ -6,7 +6,7 @@ using Bromine.Element;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Tests.Bromine.Core.Element
+namespace Tests.Bromine.Element
 {
     /// <summary>
     /// Tests to verify the behavior of <see cref="Find"/> and <see cref="SeleniumFind"/>.

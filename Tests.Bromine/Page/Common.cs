@@ -37,6 +37,7 @@ namespace Tests.Bromine.Page
         public IElement EnabledButtonChildElementParentElement => Browser.Find.ChildElement(Browser.Find.Element(DivTagString), EnableButtonIdString);
         public IElement EnabledButtonDescendentCssElement => Browser.Find.ElementByDescendentCss("html body div #enabled_button");
 
+        public IElement DisabledButton => Browser.Find.Element("disabled_button");
         public IElement ExampleField => Browser.Find.Element("field");
 
         public List<IElement> EnabledButtonElementsClasses => Browser.Find.ElementsByClasses("button normal");
