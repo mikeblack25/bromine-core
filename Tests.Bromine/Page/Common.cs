@@ -28,7 +28,6 @@ namespace Tests.Bromine.Page
         public IElement EnableButtonInvalidSeleniumCss => Browser.SeleniumFind.ElementByCssSelector(InvalidString);
 
         public IElement EnableButtonText => Browser.Find.Element(EnableButtonTextString);
-        public IElement EnableButtonInvalidSeleniumText => Browser.SeleniumFind.ElementByText(InvalidString);
 
         public IElement EnableButtonPartialText => Browser.Find.Element(EnaButtonTextString);
         public IElement EnableButtonInvalidSeleniumPartialText => Browser.SeleniumFind.ElementByPartialText(InvalidString);
@@ -45,12 +44,16 @@ namespace Tests.Bromine.Page
         public List<IElement> EnabledButtonDescendentCssElements => Browser.Find.ElementsByDescendentCss("html body div button");
 #pragma warning restore 1591
 
+        /// <summary>
+        /// "123456" This string was picked because it is not a valid string for id, class, or css.
+        /// </summary>
+        public string InvalidString => "123456";
+
         private const string DivTagString = "div";
         private const string EnableButtonIdUnformattedString = "enabled_button";
         private const string EnableButtonClassUnformattedString = "normal";
         private const string EnableButtonIdString = "#enabled_button";
         private const string EnableButtonTextString = "Enabled";
         private const string EnaButtonTextString = "Ena";
-        private const string InvalidString = "123456";
     }
 }

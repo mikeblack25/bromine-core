@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +29,7 @@ namespace Bromine.Element
         /// <returns></returns>
         public IElement ElementById(string id)
         {
+            if (!string.IsNullOrWhiteSpace(id)) { id = id[0] == '.' ? id : $".{id}"; }
             var elements = ElementsById(id);
 
             return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: id, locatorType: Strategy.Id);
@@ -40,7 +40,7 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="id">ID to locate an element.</param>
         /// <returns></returns>
-        public List<IElement> ElementsById(string id) => Elements(Strategy.Id, id);
+        public List<IElement> ElementsById(string id) => ToList(Driver.FindElements(Element(Strategy.Id, id)), id, Strategy.Id);
 
         /// <summary>
         /// Find Element by Class identifier.
@@ -49,6 +49,7 @@ namespace Bromine.Element
         /// <returns></returns>
         public IElement ElementByClass(string className)
         {
+            if (!string.IsNullOrWhiteSpace(className)) { className = className[0] == '.' ? className : $".{className}"; }
             var elements = ElementsByClass(className);
 
             return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locatorString: className, locatorType: Strategy.Class);
@@ -59,7 +60,7 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="className">Class name to locate elements.</param>
         /// <returns></returns>
-        public List<IElement> ElementsByClass(string className) => Elements(Strategy.Class, className);
+        public List<IElement> ElementsByClass(string className) => ToList(Driver.FindElements(Element(Strategy.Class, className)), className, Strategy.Class);
 
         /// <summary>
         /// Find Element by CSS selector.
@@ -78,7 +79,21 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="cssSelector">Locate element by CSS selector.</param>
         /// <returns></returns>
-        public List<IElement> ElementsByCssSelector(string cssSelector) => Elements(Strategy.Css, cssSelector);
+        public List<IElement> ElementsByCssSelector(string cssSelector)
+        {
+            var elements = new List<IElement>();
+
+            try
+            {
+                elements = ToList(Driver.FindElements(Element(Strategy.Css, cssSelector)), cssSelector, Strategy.Css);
+            }
+            catch
+            {
+                Log.Framework($"Unable to locate element by {Strategy.Css} '{cssSelector}'");
+            }
+
+            return elements;
+        }
 
         /// <summary>
         /// Find Element by text.
@@ -97,7 +112,22 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="text">Element text of the HTML element to find.</param>
         /// <returns></returns>
-        public List<IElement> ElementsByText(string text) => Elements(Strategy.Text, text);
+        public List<IElement> ElementsByText(string text)
+        {
+            var list = new List<IElement>();
+
+            var elements = ToList(Driver.FindElements(Element(Strategy.Css, "*")), text, Strategy.Text);
+
+            foreach (var element in elements)
+            {
+                if (element.Text.Equals(text))
+                {
+                    list.Add(new Element(element.SeleniumElement, Log, text, Strategy.Text));
+                }
+            }
+
+            return list;
+        }
 
         /// <summary>
         /// Find Element by partial text.
@@ -116,69 +146,21 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="partialText">Partial text of the HTML element to find.</param>
         /// <returns></returns>
-        public List<IElement> ElementsByPartialText(string partialText) => Elements(Strategy.PartialText, partialText);
-
-        /// <summary>
-        /// Locate elements by strategy and locator string.
-        /// </summary>
-        /// <param name="strategy">How will elements be found?</param>
-        /// <param name="locator">String to locate elements based on the provided locationStrategy.</param>
-        /// <returns></returns>
-        public List<IElement> Elements(Strategy strategy, string locator)
+        public List<IElement> ElementsByPartialText(string partialText)
         {
-            var elementsList = new List<IElement>();
+            var list = new List<IElement>();
 
-            try
+            var elements = ToList(Driver.FindElements(Element(Strategy.Css, "*")), partialText, Strategy.PartialText);
+
+            foreach (var element in elements)
             {
-                var elements = Driver.FindElements(Element(strategy, locator));
-
-                switch (strategy)
+                if (element.Text.Contains(partialText))
                 {
-                    case Strategy.Class:
-                    case Strategy.Css:
-                    case Strategy.Id:
-                    {
-                        foreach (var element in elements)
-                        {
-                            elementsList.Add(new Element(element, Log, locator, strategy));
-                        }
-
-                        break;
-                    }
-                    case Strategy.Text:
-                    case Strategy.PartialText:
-                    {
-                        var containsList = new List<IElement>();
-                        elements = Driver.FindElements(Element(Strategy.Css, "*"));
-
-                        foreach (var element in elements)
-                        {
-                            if (element.Text.Equals(locator))
-                            {
-                                elementsList.Add(new Element(element, Log, locator, strategy));
-                            }
-                            else if (element.Text.Contains(locator))
-                            {
-                                containsList.Add(new Element(element, Log, locator, strategy));
-                            }
-                        }
-
-                        if (strategy == Strategy.PartialText)
-                        {
-                            elementsList = containsList;
-                        }
-
-                        break;
-                    }
-                        
+                    list.Add(new Element(element.SeleniumElement, Log, partialText, Strategy.PartialText));
                 }
             }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
 
-            return elementsList;
+            return list;
         }
 
         /// <summary>
@@ -204,14 +186,6 @@ namespace Bromine.Element
                 {
                     return By.Id(locator);
                 }
-                case Strategy.PartialText:
-                {
-                    return By.PartialLinkText(locator);
-                }
-                case Strategy.Text:
-                {
-                    return By.LinkText(locator);
-                }
                 default:
                 {
                     return null;
@@ -219,9 +193,22 @@ namespace Bromine.Element
             }
         }
 
-        private Browser Browser { get; }
+        private List<IElement> ToList(IReadOnlyCollection<IWebElement> elements, string locator, Strategy strategy)
+        {
+            var list = new List<IElement>();
+
+            foreach (var element in elements)
+            {
+                list.Add(new Element(element, Log, locator, strategy));
+            }
+
+            return list;
+        }
+
+        internal Browser Browser { get; }
+        internal Log Log => Browser.Log;
+
         private IWebDriver Driver => Browser.Driver.WebDriver;
-        private Log Log => Browser.Log;
     }
 
 

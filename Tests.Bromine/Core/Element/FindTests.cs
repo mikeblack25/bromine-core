@@ -66,7 +66,8 @@ namespace Tests.Bromine.Core.Element
             VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumId);
             VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumClass);
             VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumCss);
-            VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumText);
+            VerifyInvalidElement(CommonPage.Browser.SeleniumFind.ElementByText(CommonPage.InvalidString));
+            VerifyInvalidElement(CommonPage.Browser.SeleniumFind.ElementByText(null));
             VerifyInvalidElement(CommonPage.EnableButtonInvalidSeleniumPartialText);
 
             Browser.Verify.Null(SeleniumFind.Element(Strategy.Undefined, string.Empty));

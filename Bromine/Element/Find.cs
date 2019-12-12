@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -42,7 +43,11 @@ namespace Bromine.Element
         /// <returns></returns>
         public List<IElement> Elements(string locator)
         {
-            var elements = SeleniumFind.ElementsById(locator);
+            var elements = SeleniumFind.ElementsByCssSelector(locator);
+
+            if (elements.Count > 0) { return elements; }
+
+            elements = SeleniumFind.ElementsById(locator);
 
             if (elements.Count > 0) { return elements; }
 
@@ -60,11 +65,7 @@ namespace Bromine.Element
 
             if (elements.Count > 0) { return elements; }
 
-            elements = SeleniumFind.ElementsByPartialText(locator);
-
-            if (elements.Count > 0) { return elements; }
-
-            return SeleniumFind.ElementsByCssSelector(locator);
+            return SeleniumFind.ElementsByPartialText(locator);
         }
 
         /// <summary>
