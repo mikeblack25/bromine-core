@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 
 using Bromine.Core;
-using Bromine.Core.Element;
+using Bromine.Element;
 using Bromine.Models;
 using Bromine.Verifies;
 
@@ -109,7 +109,7 @@ namespace Bromine
         /// </summary>
         /// <param name="name">Name of the file of the Image.</param>
         /// <param name="element">Element to take a Image of.</param>
-        void TakeElementImage(string name, Element element);
+        void TakeElementImage(string name, Element.Element element);
 
         /// <summary>
         /// Take a Image of requested region on the screen.

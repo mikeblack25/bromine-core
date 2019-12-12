@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Bromine.Core.Element
+namespace Bromine.Element
 {
     /// <summary>
     /// Provide details about how and when the element was requested.

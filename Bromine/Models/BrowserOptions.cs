@@ -1,6 +1,4 @@
-﻿using Bromine.Core;
-
-namespace Bromine.Models
+﻿namespace Bromine.Models
 {
     /// <summary>
     /// Driver configuration options for browser setup.
@@ -49,5 +47,19 @@ namespace Bromine.Models
         /// Type of browser to use.
         /// </summary>
         public DriverOptions Driver { get; }
+    }
+
+
+    /// <summary>
+    /// Supported web browser types.
+    /// </summary>
+    public enum BrowserType
+    {
+#pragma warning disable 1591
+        Chrome,
+        Edge,
+        Firefox,
+        InternetExplorer
+#pragma warning restore 1591
     }
 }

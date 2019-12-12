@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Bromine.Core;
+
 using OpenQA.Selenium;
 
-namespace Bromine.Core.Element
+namespace Bromine.Element
 {
     /// <summary>
     /// Find elements using Selenium location strategies.
@@ -26,7 +28,7 @@ namespace Bromine.Core.Element
         /// </summary>
         /// <param name="id">ID to locate an element.</param>
         /// <returns></returns>
-        public Element ElementById(string id)
+        public IElement ElementById(string id)
         {
             var elements = ElementsById(id);
 
@@ -38,14 +40,14 @@ namespace Bromine.Core.Element
         /// </summary>
         /// <param name="id">ID to locate an element.</param>
         /// <returns></returns>
-        public List<Element> ElementsById(string id) => Elements(Strategy.Id, id);
+        public List<IElement> ElementsById(string id) => Elements(Strategy.Id, id);
 
         /// <summary>
         /// Find Element by Class identifier.
         /// </summary>
         /// <param name="className">Class name to locate an element.</param>
         /// <returns></returns>
-        public Element ElementByClass(string className)
+        public IElement ElementByClass(string className)
         {
             var elements = ElementsByClass(className);
 
@@ -57,14 +59,14 @@ namespace Bromine.Core.Element
         /// </summary>
         /// <param name="className">Class name to locate elements.</param>
         /// <returns></returns>
-        public List<Element> ElementsByClass(string className) => Elements(Strategy.Class, className);
+        public List<IElement> ElementsByClass(string className) => Elements(Strategy.Class, className);
 
         /// <summary>
         /// Find Element by CSS selector.
         /// </summary>
         /// <param name="cssSelector">CSS Selector to locate an element.</param>
         /// <returns></returns>
-        public Element ElementByCssSelector(string cssSelector)
+        public IElement ElementByCssSelector(string cssSelector)
         {
             var elements = ElementsByCssSelector(cssSelector);
 
@@ -76,14 +78,14 @@ namespace Bromine.Core.Element
         /// </summary>
         /// <param name="cssSelector">Locate element by CSS selector.</param>
         /// <returns></returns>
-        public List<Element> ElementsByCssSelector(string cssSelector) => Elements(Strategy.Css, cssSelector);
+        public List<IElement> ElementsByCssSelector(string cssSelector) => Elements(Strategy.Css, cssSelector);
 
         /// <summary>
         /// Find Element by text.
         /// </summary>
         /// <param name="text">Element text of the HTML element to find.</param>
         /// <returns></returns>
-        public Element ElementByText(string text)
+        public IElement ElementByText(string text)
         {
             var elements = ElementsByText(text);
 
@@ -95,14 +97,14 @@ namespace Bromine.Core.Element
         /// </summary>
         /// <param name="text">Element text of the HTML element to find.</param>
         /// <returns></returns>
-        public List<Element> ElementsByText(string text) => Elements(Strategy.Text, text);
+        public List<IElement> ElementsByText(string text) => Elements(Strategy.Text, text);
 
         /// <summary>
         /// Find Element by partial text.
         /// </summary>
         /// <param name="partialText">Partial text of the HTML element to find.</param>
         /// <returns></returns>
-        public Element ElementByPartialText(string partialText)
+        public IElement ElementByPartialText(string partialText)
         {
             var elements = ElementsByPartialText(partialText);
 
@@ -114,7 +116,7 @@ namespace Bromine.Core.Element
         /// </summary>
         /// <param name="partialText">Partial text of the HTML element to find.</param>
         /// <returns></returns>
-        public List<Element> ElementsByPartialText(string partialText) => Elements(Strategy.PartialText, partialText);
+        public List<IElement> ElementsByPartialText(string partialText) => Elements(Strategy.PartialText, partialText);
 
         /// <summary>
         /// Locate elements by strategy and locator string.
@@ -122,9 +124,9 @@ namespace Bromine.Core.Element
         /// <param name="strategy">How will elements be found?</param>
         /// <param name="locator">String to locate elements based on the provided locationStrategy.</param>
         /// <returns></returns>
-        public List<Element> Elements(Strategy strategy, string locator)
+        public List<IElement> Elements(Strategy strategy, string locator)
         {
-            var elementsList = new List<Element>();
+            var elementsList = new List<IElement>();
 
             try
             {
@@ -146,7 +148,7 @@ namespace Bromine.Core.Element
                     case Strategy.Text:
                     case Strategy.PartialText:
                     {
-                        var containsList = new List<Element>();
+                        var containsList = new List<IElement>();
                         elements = Driver.FindElements(Element(Strategy.Css, "*"));
 
                         foreach (var element in elements)
@@ -185,7 +187,7 @@ namespace Bromine.Core.Element
         /// <param name="strategy">How will the element be located?</param>
         /// <param name="locator">String used to find the element.</param>
         /// <returns></returns>
-        internal static By Element(Strategy strategy, string locator)
+        public static By Element(Strategy strategy, string locator)
         {
             // ReSharper disable once SwitchStatementMissingSomeCases
             switch (strategy)
@@ -220,5 +222,21 @@ namespace Bromine.Core.Element
         private Browser Browser { get; }
         private IWebDriver Driver => Browser.Driver.WebDriver;
         private Log Log => Browser.Log;
+    }
+
+
+    /// <summary>
+    /// Supported approaches to locate an element.
+    /// </summary>
+    public enum Strategy
+    {
+#pragma warning disable 1591
+        Undefined = 0,
+        Id,
+        Class,
+        Css,
+        Text,
+        PartialText,
+#pragma warning restore 1591
     }
 }

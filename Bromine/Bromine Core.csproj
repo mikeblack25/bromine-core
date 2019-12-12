@@ -75,22 +75,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\BrowserType.cs" />
-    <Compile Include="Core\LogLevels.cs" />
     <Compile Include="Core\Browser.cs" />
     <Compile Include="Core\Driver.cs" />
-    <Compile Include="Core\Element\Information.cs" />
-    <Compile Include="Core\Element\Strategy.cs" />
-    <Compile Include="Core\Element\Find.cs" />
+    <Compile Include="IElement.cs" />
+    <Compile Include="Element\Information.cs" />
+    <Compile Include="Element\Find.cs" />
     <Compile Include="Core\Log.cs" />
     <Compile Include="Core\Navigate.cs" />
-    <Compile Include="Core\Element\SeleniumFind.cs" />
+    <Compile Include="Element\SeleniumFind.cs" />
     <Compile Include="Core\Page.cs" />
     <Compile Include="Core\Wait.cs" />
     <Compile Include="Core\Window.cs" />
-    <Compile Include="Core\Element\Element.cs" />
-    <Compile Include="Core\Element\ElementExtensions.cs" />
-    <Compile Include="Core\Element\ElementStyle.cs" />
+    <Compile Include="Element\Element.cs" />
+    <Compile Include="Element\ElementStyle.cs" />
     <Compile Include="Core\CssFormatExtensions.cs" />
     <Compile Include="IBrowser.cs" />
     <Compile Include="Models\BrowserOptions.cs" />

@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Reflection;
 
+using Bromine.Models;
+
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;

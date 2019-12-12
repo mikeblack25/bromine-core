@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 
 using Bromine;
-using Bromine.Core;
-using Bromine.Core.Element;
 
 namespace Tests.Bromine.Page
 {
@@ -20,31 +18,31 @@ namespace Tests.Bromine.Page
 #pragma warning disable 1591
         public override string Url => $@"{AppDomain.CurrentDomain.BaseDirectory}\Pages\Common.html";
 
-        public Element EnableButtonId => Browser.Find.Element(EnableButtonIdUnformattedString);
-        public Element EnableButtonInvalidSeleniumId => Browser.SeleniumFind.ElementById(InvalidString);
+        public IElement EnableButtonId => Browser.Find.Element(EnableButtonIdUnformattedString);
+        public IElement EnableButtonInvalidSeleniumId => Browser.SeleniumFind.ElementById(InvalidString);
 
-        public Element EnableButtonClass => Browser.Find.Element(EnableButtonClassUnformattedString);
-        public Element EnableButtonInvalidSeleniumClass => Browser.SeleniumFind.ElementByClass(InvalidString);
+        public IElement EnableButtonClass => Browser.Find.Element(EnableButtonClassUnformattedString);
+        public IElement EnableButtonInvalidSeleniumClass => Browser.SeleniumFind.ElementByClass(InvalidString);
 
-        public Element EnableButtonCss => Browser.Find.Element(EnableButtonIdString);
-        public Element EnableButtonInvalidSeleniumCss => Browser.SeleniumFind.ElementByCssSelector(InvalidString);
+        public IElement EnableButtonCss => Browser.Find.Element(EnableButtonIdString);
+        public IElement EnableButtonInvalidSeleniumCss => Browser.SeleniumFind.ElementByCssSelector(InvalidString);
 
-        public Element EnableButtonText => Browser.Find.Element(EnableButtonTextString);
-        public Element EnableButtonInvalidSeleniumText => Browser.SeleniumFind.ElementByText(InvalidString);
+        public IElement EnableButtonText => Browser.Find.Element(EnableButtonTextString);
+        public IElement EnableButtonInvalidSeleniumText => Browser.SeleniumFind.ElementByText(InvalidString);
 
-        public Element EnableButtonPartialText => Browser.Find.Element(EnaButtonTextString);
-        public Element EnableButtonInvalidSeleniumPartialText => Browser.SeleniumFind.ElementByPartialText(InvalidString);
+        public IElement EnableButtonPartialText => Browser.Find.Element(EnaButtonTextString);
+        public IElement EnableButtonInvalidSeleniumPartialText => Browser.SeleniumFind.ElementByPartialText(InvalidString);
 
-        public Element EnabledButtonElementClasses => Browser.Find.ElementByClasses("button normal");
-        public Element EnabledButtonChildElement => Browser.Find.ChildElement(DivTagString, EnableButtonIdString);
-        public Element EnabledButtonChildElementParentElement => Browser.Find.ChildElement(Browser.Find.Element(DivTagString), EnableButtonIdString);
-        public Element EnabledButtonDescendentCssElement => Browser.Find.ElementByDescendentCss("html body div #enabled_button");
+        public IElement EnabledButtonElementClasses => Browser.Find.ElementByClasses("button normal");
+        public IElement EnabledButtonChildElement => Browser.Find.ChildElement(DivTagString, EnableButtonIdString);
+        public IElement EnabledButtonChildElementParentElement => Browser.Find.ChildElement(Browser.Find.Element(DivTagString), EnableButtonIdString);
+        public IElement EnabledButtonDescendentCssElement => Browser.Find.ElementByDescendentCss("html body div #enabled_button");
 
-        public Element ExampleField => Browser.Find.Element("field");
+        public IElement ExampleField => Browser.Find.Element("field");
 
-        public List<Element> EnabledButtonElementsClasses => Browser.Find.ElementsByClasses("button normal");
-        public List<Element> EnabledButtonChildElements => Browser.Find.ChildElements(DivTagString, EnableButtonIdString);
-        public List<Element> EnabledButtonDescendentCssElements => Browser.Find.ElementsByDescendentCss("html body div button");
+        public List<IElement> EnabledButtonElementsClasses => Browser.Find.ElementsByClasses("button normal");
+        public List<IElement> EnabledButtonChildElements => Browser.Find.ChildElements(DivTagString, EnableButtonIdString);
+        public List<IElement> EnabledButtonDescendentCssElements => Browser.Find.ElementsByDescendentCss("html body div button");
 #pragma warning restore 1591
 
         private const string DivTagString = "div";

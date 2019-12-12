@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
-using Bromine.Core.Element;
+
+using Bromine;
+using Bromine.Element;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -101,16 +103,16 @@ namespace Tests.Bromine.Core.Element
             Browser.SoftVerify.Equal(2, CommonPage.EnabledButtonDescendentCssElements.Count);
         }
 
-        private void VerifyStrategy(global::Bromine.Core.Element.Element element, Strategy expectedStrategy)
+        private void VerifyStrategy(IElement element, Strategy expectedStrategy)
         {
             Log.Message($"Find.Element by {element.Information.LocatorString} and {element.Information.Strategy}");
             Browser.SoftVerify.Equal(expectedStrategy, element.Information.Strategy);
         }
 
-        private void VerifyInvalidElement(global::Bromine.Core.Element.Element element)
+        private void VerifyInvalidElement(IElement element)
         {
             Browser.SoftVerify.False(element.IsInitialized);
-            Browser.SoftVerify.Null(element.WebElement);
+            Browser.SoftVerify.Null(element.SeleniumElement);
         }
 
         private void VerifyElementCount(string locator, int expectedCount)
@@ -120,6 +122,6 @@ namespace Tests.Bromine.Core.Element
             Browser.SoftVerify.Equal(expectedCount, Elements.Count);
         }
 
-        private List<global::Bromine.Core.Element.Element> Elements { get; set; }
+        private List<IElement> Elements { get; set; }
     }
 }

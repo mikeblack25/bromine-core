@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 
+using Bromine.Core;
+
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 
-namespace Bromine.Core.Element
+namespace Bromine.Element
 {
     /// <summary>
     /// Add style to WebElements.
