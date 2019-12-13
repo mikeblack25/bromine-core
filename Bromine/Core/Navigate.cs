@@ -27,7 +27,7 @@ namespace Bromine.Core
             try
             {
                 Nav.GoToUrl(url);
-                Log.Message($"Navigate to {url}");
+                Log.Debug($"Navigate to {url}");
 
             }
             catch (Exception e)

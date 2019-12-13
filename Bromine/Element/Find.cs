@@ -55,10 +55,7 @@ namespace Bromine.Element
             {
                 elements = SeleniumFind.ElementsByClass(locator);
 
-                if (elements.Count > 0)
-                {
-                    return elements;
-                }
+                if (elements.Count > 0) { return elements; }
             }
 
             elements = SeleniumFind.ElementsByText(locator);

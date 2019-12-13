@@ -116,14 +116,26 @@ namespace Bromine.Element
         {
             var list = new List<IElement>();
 
-            var elements = ToList(Driver.FindElements(Element(Strategy.Css, "*")), text, Strategy.Text);
-
-            foreach (var element in elements)
+            try
             {
-                if (element.Text.Equals(text))
+                list = ToList(Driver.FindElements(Element(Strategy.Text, text)), text, Strategy.Text);
+
+                if (list.Count == 0)
                 {
-                    list.Add(new Element(element.SeleniumElement, Log, text, Strategy.Text));
+                     var tempList = ToList(Driver.FindElements(Element(Strategy.Css, "*")), text, Strategy.Text);
+
+                    foreach (var element in tempList)
+                    {
+                        if (element.Text.Equals(text))
+                        {
+                            list.Add(new Element(element.SeleniumElement, Log, text, Strategy.Text));
+                        }
+                    }
                 }
+            }
+            catch
+            {
+                Log.Framework($"Unable to locate element by {Strategy.Text} '{text}'");
             }
 
             return list;
@@ -150,14 +162,26 @@ namespace Bromine.Element
         {
             var list = new List<IElement>();
 
-            var elements = ToList(Driver.FindElements(Element(Strategy.Css, "*")), partialText, Strategy.PartialText);
-
-            foreach (var element in elements)
+            try
             {
-                if (element.Text.Contains(partialText))
+                list = ToList(Driver.FindElements(Element(Strategy.PartialText, partialText)), partialText, Strategy.PartialText);
+
+                if (list.Count == 0)
                 {
-                    list.Add(new Element(element.SeleniumElement, Log, partialText, Strategy.PartialText));
+                    var tempList = ToList(Driver.FindElements(Element(Strategy.Css, "*")), partialText, Strategy.PartialText);
+
+                    foreach (var element in tempList)
+                    {
+                        if (element.Text.Contains(partialText))
+                        {
+                            list.Add(new Element(element.SeleniumElement, Log, partialText, Strategy.PartialText));
+                        }
+                    }
                 }
+            }
+            catch
+            {
+                Log.Framework($"Unable to locate element by {Strategy.PartialText} '{partialText}'");
             }
 
             return list;
@@ -186,6 +210,14 @@ namespace Bromine.Element
                 case Strategy.Id:
                 {
                     return By.Id(locator);
+                }
+                case Strategy.Text:
+                {
+                    return By.LinkText(locator);
+                }
+                case Strategy.PartialText:
+                {
+                    return By.PartialLinkText(locator);
                 }
                 default:
                 {

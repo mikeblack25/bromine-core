@@ -148,7 +148,7 @@ namespace Bromine.Core
                 }
                 if (Log.ErrorCount > 0)
                 {
-                    Log.Message("REVIEW: One or more errors occured during execution");
+                    Log.Debug("REVIEW: One or more errors occured during execution");
                 }
             }
             finally

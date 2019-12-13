@@ -413,7 +413,7 @@ namespace Bromine.Verifies
 
         private void BuildMessage(string message)
         {
-            Log.Message($"{message}".TrimEnd());
+            Log.Debug($"{message}".TrimEnd());
         }
     }
 }
