@@ -24,24 +24,6 @@ namespace Bromine.Element
         /// <summary>
         /// Add a border to an element located by the given strategy and locator string.
         /// </summary>
-        /// <param name="strategy">How will the element be found?</param>
-        /// <param name="locator">String used to locate the element.</param>
-        /// <param name="color">Element border color.</param>
-        public void AddBorder(Strategy strategy, string locator, string color)
-        {
-            try
-            {
-                Driver.ExecuteJavaScript(ElementBorderScript(strategy, locator, color));
-            }
-            catch (Exception e)
-            {
-                Browser.Log.Error(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Add a border to an element located by the given strategy and locator string.
-        /// </summary>
         /// <param name="element">Element to add a border around.</param>
         /// <param name="color">Element border color.</param>
         public void AddBorder(IElement element, string color)
@@ -49,24 +31,6 @@ namespace Bromine.Element
             try
             {
                 Driver.ExecuteJavaScript(ElementBorderScript(LocatorStrategyFromCss(element.Information.Strategy, element.Information.LocatorString), RemoveLocatorPrefix(element.Information.LocatorString), color));
-            }
-            catch (Exception e)
-            {
-                Browser.Log.Error(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Add Borders to elements located by the given strategy and locator string.
-        /// </summary>
-        /// <param name="strategy">How will the element be found?</param>
-        /// <param name="locator">String used to locate the element.</param>
-        /// <param name="color">Element border color.</param>
-        public void AddBorders(Strategy strategy, string locator, string color)
-        {
-            try
-            {
-                Driver.ExecuteJavaScript(ElementsBorderScript(strategy, locator, color));
             }
             catch (Exception e)
             {
