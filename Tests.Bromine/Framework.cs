@@ -17,13 +17,13 @@ namespace Tests.Bromine
         /// <summary>
         /// Construct a Chrome browser to use for tests.
         /// </summary>
-        protected Framework(ITestOutputHelper output = null, bool ignoreBrowserInit = false)
+        protected Framework(ITestOutputHelper output = null, bool ignoreBrowserInit = false, LogLevels logLevel = LogLevels.Message)
         {
             Output = output;
 
             if (!ignoreBrowserInit)
             {
-                Browser = new Browser(output: Output);
+                Browser = new Browser(output: Output, logLevel: logLevel);
             }
         }
 
@@ -37,7 +37,7 @@ namespace Tests.Bromine
         /// </summary>
         public void HeadlessInit()
         {
-            var options = new BrowserOptions(BrowserType.Chrome, true);
+            var options = new BrowserOptions(BrowserType.Chrome, isHeadless: true);
             Browser = new Browser(options: options, logLevel: LogLevels.Framework, output: Output);
 
             CommonPage = new Page.Common(Browser);

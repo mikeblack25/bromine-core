@@ -97,7 +97,7 @@ namespace Bromine.Core
         /// <param name="message">Error message to log.</param>
         public void Error(string message)
         {
-            if (LogLevel <= LogLevels.Error) { WriteMessage(message, "Error" , true); }
+            if (LogLevel >= LogLevels.Error) { WriteMessage(message, "Error" , true); }
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Bromine.Core
         /// <param name="message"></param>
         public void Debug(string message)
         {
-            if (LogLevel <= LogLevels.Debug) { WriteMessage(message, "Debug"); }
+            if (LogLevel >= LogLevels.Debug) { WriteMessage(message, "Debug"); }
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Bromine.Core
         /// <param name="isError"></param>
         public void Framework(string message, bool isError = false)
         {
-            if (LogLevel <= LogLevels.Framework) { WriteMessage(message, "Framework", isError); }
+            if (LogLevel >= LogLevels.Framework) { WriteMessage(message, "Framework", isError); }
         }
 
         /// <summary>

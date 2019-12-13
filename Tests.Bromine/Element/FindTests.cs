@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Bromine;
+using Bromine.Core;
 using Bromine.Element;
 
 using Xunit;
@@ -17,7 +18,7 @@ namespace Tests.Bromine.Element
         /// Create a headless Chrome browser for all tests.
         /// Build and navigate to Common.html.
         /// </summary>
-        public FindTests(ITestOutputHelper output) : base(output, true)
+        public FindTests(ITestOutputHelper output) : base(output, true, LogLevels.Framework)
         {
             HeadlessInit();
         }

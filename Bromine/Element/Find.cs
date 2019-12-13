@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -39,7 +38,7 @@ namespace Bromine.Element
         /// Find Elements by a valid locator strategy.
         /// <see cref="Strategy"/> for supported options.
         /// </summary>
-        /// <param name="locator">String to locate an element.</param>
+        /// <param name="locator">String to locate elements.</param>
         /// <returns></returns>
         public List<IElement> Elements(string locator)
         {

@@ -1,4 +1,5 @@
-﻿using Bromine.Element;
+﻿using Bromine.Core;
+using Bromine.Element;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -14,7 +15,7 @@ namespace Tests.Bromine.Element
         /// Create a headless Chrome browser for all tests.
         /// Build and navigate to Common.html.
         /// </summary>
-        public ElementStyleTests(ITestOutputHelper output) : base(output, true)
+        public ElementStyleTests(ITestOutputHelper output) : base(output, true, LogLevels.Framework)
         {
             HeadlessInit();
         }
