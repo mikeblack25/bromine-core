@@ -15,31 +15,12 @@ namespace Bromine.Core
         /// </summary>
         public Wait(Browser browser)
         {
-            For = new For(browser);
-        }
-
-        /// <summary>
-        /// <see cref="For"/>
-        /// </summary>
-        public For For { get; }
-    }
-
-
-    /// <summary>
-    /// Provides specific wait methods to wait for conditions.
-    /// </summary>
-    public class For
-    {
-        /// <summary>
-        /// Construct a For object with the provided browser.
-        /// </summary>
-        public For(Browser browser)
-        {
             Browser = browser;
-
             DefaultWait = new DefaultWait<IWebDriver>(Driver)
             {
                 PollingInterval = TimeSpan.FromMilliseconds(250)
+
+                    
             };
         }
 
@@ -48,19 +29,14 @@ namespace Bromine.Core
         /// </summary>
         /// <param name="element">Element to wait for.</param>
         /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
-        public void DisplayedElement(Element.Element element, int timeToWait = 1) => Condition(() => element.Displayed, timeToWait);
+        public void ForDisplayedElement(IElement element, int timeToWait) => ForCondition(() => element.Displayed, timeToWait);
 
         /// <summary>
         /// Wait for the given URL to be loaded.
         /// </summary>
         /// <param name="expectedUrl">Expected URL to wait for.</param>
         /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
-        public void Navigation(string expectedUrl, int timeToWait = 1) => Condition(() => Browser.Url == expectedUrl, timeToWait);
-
-        /// <summary>
-        /// Wait for the document to be in a "complete" state.
-        /// </summary>
-        public void PageLoaded() => Browser.ExecuteJs(PageLoadedScript);
+        public void ForNavigation(string expectedUrl, int timeToWait) => ForCondition(() => Browser.Url == expectedUrl, timeToWait);
 
         /// <summary>
         /// Wait for the given condition to be true.
@@ -68,12 +44,11 @@ namespace Bromine.Core
         /// <param name="condition">Condition to wait for.</param>
         /// <param name="timeToWait">Time in seconds to wait for the condition to be true.</param>
         /// <returns></returns>
-        public bool Condition(Func<bool> condition, int timeToWait = 1)
+        public bool ForCondition(Func<bool> condition, int timeToWait)
         {
             try
             {
                 DefaultWait.Timeout = TimeSpan.FromSeconds(timeToWait);
-
                 DefaultWait.Until(x => condition());
 
                 return true;
@@ -85,8 +60,6 @@ namespace Bromine.Core
                 return false;
             }
         }
-
-        private const string PageLoadedScript = "\"return document.readyState\").Equals(\"complete\")";
 
         private Browser Browser { get; }
         private IWebDriver Driver => Browser.Driver.WebDriver;

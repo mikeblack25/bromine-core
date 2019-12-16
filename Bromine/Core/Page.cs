@@ -3,27 +3,27 @@
     /// <summary>
     /// Base page object. This provides access to the Browser.
     /// </summary>
-    public abstract class Page
+    public class Page : IPage
     {
         /// <inheritdoc />
-        protected Page(IBrowser browser)
+        protected Page(IBrowser browser, string url = "", string baseAddress = "")
         {
             Browser = browser;
+
+            BaseAddress = baseAddress;
+            Url = !string.IsNullOrWhiteSpace(BaseAddress) ? $"{BaseAddress}{url}" : url;
         }
 
-        /// <summary>
-        /// <see cref="Core.Browser"/>
-        /// </summary>
+        /// <inheritdoc />
         public IBrowser Browser { get; }
 
-        /// <summary>
-        /// Page URL.
-        /// </summary>
-        public abstract string Url { get; }
+        /// <inheritdoc />>
+        public string Url { get; }
 
-        /// <summary>
-        /// Navigate to the page URL.
-        /// </summary>
+        /// <inheritdoc />
+        public string BaseAddress { get; }
+
+        /// <inheritdoc />
         public virtual void Navigate()
         {
             Browser.Navigate.ToUrl(Url);

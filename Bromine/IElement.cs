@@ -27,6 +27,11 @@ namespace Bromine
         IWebElement SeleniumElement { get; }
 
         /// <summary>
+        /// By object used by Selenium.
+        /// </summary>
+        By SeleniumBy { get; }
+
+        /// <summary>
         /// Element TagName value.
         /// </summary>
         string TagName { get; }

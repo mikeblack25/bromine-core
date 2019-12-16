@@ -19,17 +19,19 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="element">Requested element.</param>
         /// <param name="log"><see cref="Log"/></param>
-        /// <param name="locatorString">Locator string used to find the requested element.</param>
-        /// <param name="locatorType">Type of locator used to find the requested element.</param>
-        internal Element(IWebElement element, Log log, string locatorString = "", Strategy locatorType = Strategy.Undefined) : this()
+        /// <param name="by"><see cref="By"/></param>
+        /// <param name="locator">Locator string used to find the requested element.</param>
+        /// <param name="strategy">Type of locator used to find the requested element.</param>
+        internal Element(IWebElement element, Log log, By by = null, string locator = "", Strategy strategy = Strategy.Undefined) : this()
         {
             SeleniumElement = element;
             Log = log;
+            SeleniumBy = by;
 
-            if (!string.IsNullOrEmpty(locatorString) && locatorType != 0)
+            if (!string.IsNullOrEmpty(locator) && strategy != 0)
             {
-                Information.LocatorString = locatorString;
-                Information.Strategy = locatorType;
+                Information.LocatorString = locator;
+                Information.Strategy = strategy;
             }
 
             if (element != null)
@@ -52,6 +54,11 @@ namespace Bromine.Element
         /// Selenium IWebElement.
         /// </summary>
         public IWebElement SeleniumElement { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public By SeleniumBy { get; internal set; }
 
         /// <summary>
         /// Element TagName value.
@@ -93,7 +100,7 @@ namespace Bromine.Element
         /// Note: This requires first locating an element and then calling this.
         /// </summary>
         /// <returns></returns>
-        public Element ParentElement => (Element)GetProperty(() => new Element(SeleniumElement.FindElement(By.XPath("..")), Log, ".."), "Unable to find the parent element for the requested element");
+        public Element ParentElement => (Element)GetProperty(() => new Element(SeleniumElement.FindElement(By.XPath("..")), Log, locator:".."), "Unable to find the parent element for the requested element");
 
         /// <summary>
         /// Find the requested element with the given attribute.

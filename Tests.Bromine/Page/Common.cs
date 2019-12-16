@@ -11,13 +11,11 @@ namespace Tests.Bromine.Page
     public class Common : global::Bromine.Core.Page
     {
         /// <inheritdoc />
-        public Common(IBrowser browser) : base(browser)
+        public Common(IBrowser browser) : base(browser, $@"{AppDomain.CurrentDomain.BaseDirectory}\Pages\Common.html")
         {
         }
 
 #pragma warning disable 1591
-        public override string Url => $@"{AppDomain.CurrentDomain.BaseDirectory}\Pages\Common.html";
-
         public IElement EnableButtonId => Browser.Find.Element(EnableButtonIdUnformattedString);
         public IElement EnableButtonInvalidSeleniumId => Browser.SeleniumFind.ElementById(InvalidString);
 
@@ -31,6 +29,8 @@ namespace Tests.Bromine.Page
 
         public IElement EnableButtonPartialText => Browser.Find.Element(EnaButtonTextString);
         public IElement EnableButtonInvalidSeleniumPartialText => Browser.SeleniumFind.ElementByPartialText(InvalidString);
+
+        public IElement ButtonTag => Browser.Find.Element("button");
 
         public IElement EnabledButtonElementClasses => Browser.Find.ElementByClasses("button normal");
         public IElement EnabledButtonChildElement => Browser.Find.ChildElement(DivTagString, EnableButtonIdString);

@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="Core\Browser.cs" />
     <Compile Include="Core\Driver.cs" />
+    <Compile Include="IPage.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="Element\Information.cs" />
     <Compile Include="Element\Find.cs" />
