@@ -38,7 +38,7 @@ namespace Bromine
         /// <summary>
         /// Manipulate currently focused window.
         /// </summary>
-        IWindow Window { get; }
+        Window Window { get; }
 
         /// <summary>
         /// Position of the browser window.
@@ -103,6 +103,11 @@ namespace Bromine
         /// The test will be marked as failed if any exceptions occur during execution.
         /// </summary>
         SoftVerify SoftVerify { get; }
+
+        /// <summary>
+        /// Configure Selenium <see cref="IWebDriver"/> for the session.
+        /// </summary>
+        Driver Driver { get; }
 
         /// <summary>
         /// Take a Image of requested element.

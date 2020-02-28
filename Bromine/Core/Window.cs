@@ -1,12 +1,11 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 using OpenQA.Selenium;
 
 namespace Bromine.Core
 {
     /// <summary>
-    /// Interact with the Browser Window.
+    /// Configure and get size and location information for the browser window.
     /// </summary>
     public class Window : IWindow
     {
@@ -14,9 +13,77 @@ namespace Bromine.Core
         /// Construct a window object for the given driver.
         /// </summary>
         /// <param name="browser">Browser used to navigate.</param>
-        public Window(Browser browser)
+        public Window(IBrowser browser)
         {
             Browser = browser;
+        }
+
+        /// <summary>
+        /// Is the window minimized?
+        /// </summary>
+        public bool IsMinimized
+        {
+            get => _isMinimized;
+            private set
+            {
+                _isMinimized = value;
+                _isCustom = false;
+                _isMaximized = false;
+                _isFullScreen = false;
+                Log.Framework(WindowIsMinimizedMessage);
+                LogUpdateMessage();
+            }
+        }
+
+        /// <summary>
+        /// Has the window been set to a custom size and / or position?
+        /// Not Minimized, Maximized, or FullScreen.
+        /// </summary>
+        public bool IsCustom
+        {
+            get => _isCustom;
+            private set
+            {
+                _isCustom = value;
+                _isMinimized = false;
+                _isMaximized = false;
+                _isFullScreen = false;
+                LogUpdateMessage();
+            }
+        }
+
+        /// <summary>
+        /// Is the window maximized?
+        /// </summary>
+        public bool IsMaximized
+        {
+            get => _isMaximized;
+            private set
+            {
+                _isMaximized = value;
+                _isMinimized = false;
+                _isCustom = false;
+                _isFullScreen = false;
+                Log.Framework(WindowIsMaximizedMessage);
+                LogUpdateMessage();
+            }
+        }
+
+        /// <summary>
+        /// Is the window full screen?
+        /// </summary>
+        public bool IsFullScreen
+        {
+            get => _isFullScreen;
+            private set
+            {
+                _isFullScreen = value;
+                _isMinimized = false;
+                _isCustom = false;
+                _isMaximized = false;
+                Log.Framework(WindowIsFullScreenMessage);
+                LogUpdateMessage();
+            }
         }
 
         /// <summary>
@@ -27,14 +94,8 @@ namespace Bromine.Core
             get => BrowserWindow.Position;
             set
             {
-                try
-                {
-                    BrowserWindow.Position = value;
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e.Message);
-                }            
+                BrowserWindow.Position = value;
+                IsCustom = true;
             }
         } 
 
@@ -46,29 +107,8 @@ namespace Bromine.Core
             get => BrowserWindow.Size;
             set
             {
-                try
-                {
-                    BrowserWindow.Size = value;
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e.Message);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Maximize the window.
-        /// </summary>
-        public void Maximize()
-        {
-            try
-            {
-                BrowserWindow.Maximize();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
+                BrowserWindow.Size = value;
+                IsCustom = true;
             }
         }
 
@@ -77,14 +117,17 @@ namespace Bromine.Core
         /// </summary>
         public void Minimize()
         {
-            try
-            {
-                BrowserWindow.Minimize();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
+            BrowserWindow.Minimize();
+            IsMinimized = true;
+        }
+
+        /// <summary>
+        /// Maximize the window.
+        /// </summary>
+        public void Maximize()
+        {
+            BrowserWindow.Maximize();
+            IsMaximized = true;
         }
 
         /// <summary>
@@ -92,19 +135,39 @@ namespace Bromine.Core
         /// </summary>
         public void FullScreen()
         {
-            try
-            {
-                BrowserWindow.FullScreen();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
+            BrowserWindow.FullScreen();
+            IsFullScreen = true;
         }
 
-        private Browser Browser { get; }
-        private IWebDriver Driver => Browser.Driver.WebDriver;
+        /// <summary>
+        /// Window is minimized
+        /// </summary>
+        public const string WindowIsMinimizedMessage = "Window is minimized";
+
+        /// <summary>
+        /// Window is maximized
+        /// </summary>
+        public const string WindowIsMaximizedMessage = "Window is maximized";
+
+        /// <summary>
+        /// Window is full screen.
+        /// </summary>
+        public const string WindowIsFullScreenMessage = "Window is full screen";
+
+        private void LogUpdateMessage()
+        {
+            Log.Framework($"Window Size: height = {Size.Height} width = {Size.Width} Position: x = {Position.X} y = {Position.Y}");
+        }
+
+        private IWindow BrowserWindow => Driver.WebDriver.Manage().Window;
+
+        private bool _isMinimized;
+        private bool _isCustom;
+        private bool _isMaximized;
+        private bool _isFullScreen;
+
+        private IBrowser Browser { get; }
+        private Driver Driver => Browser.Driver;
         private Log Log => Browser.Log;
-        private IWindow BrowserWindow => Driver.Manage().Window;
     }
 }

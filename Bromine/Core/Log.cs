@@ -97,26 +97,27 @@ namespace Bromine.Core
         /// <param name="message">Error message to log.</param>
         public void Error(string message)
         {
-            if (LogLevel >= LogLevels.Error) { WriteMessage(message, "Error" , true); }
+            if (LogLevel >= LogLevels.Error) { WriteMessage(message, LogLevels.Error); }
+
+            ErrorCount++;
         }
 
         /// <summary>
         /// Add a debug message to the log.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">Error message to log.</param>
         public void Debug(string message)
         {
-            if (LogLevel >= LogLevels.Debug) { WriteMessage(message, "Debug"); }
+            if (LogLevel >= LogLevels.Debug) { WriteMessage(message, LogLevels.Debug); }
         }
 
         /// <summary>
         /// Add a debug message to the log.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="isError"></param>
-        public void Framework(string message, bool isError = false)
+        /// <param name="message">Error message to log.</param>
+        public void Framework(string message)
         {
-            if (LogLevel >= LogLevels.Framework) { WriteMessage(message, "Framework", isError); }
+            if (LogLevel >= LogLevels.Framework) { WriteMessage(message, LogLevels.Framework); }
         }
 
         /// <summary>
@@ -210,34 +211,22 @@ namespace Bromine.Core
             }
         }
 
-        internal string FormattedLogMessage(string message, string type = "") => $"{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.ffff")} {type} {message}";
+        internal string FormattedLogMessage(string message) => $"{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.ffff")} {LogLevel.ToString()} {message}";
 
-        private void WriteMessage(string message, string type = "", bool isError = false)
+        private void WriteMessage(string message, LogLevels type = LogLevels.Message)
         {
-            try
+            if (IsEnabled)
             {
-                if (IsEnabled)
+                var formattedMessage = FormattedLogMessage(message);
+
+                if (Output != null)
                 {
-                    var formattedMessage = FormattedLogMessage(message, type);
-
-                    if (Output != null)
-                    {
-                        Output.WriteLine(formattedMessage);
-                    }
-                    else
-                    {
-                        Logs.AppendLine(formattedMessage);
-                    }
-
-                    if (isError)
-                    {
-                        ErrorCount++;
-                    }
+                    Output.WriteLine(formattedMessage);
                 }
-            }
-            catch (Exception ex)
-            {
-                Error(ex.Message);
+                else
+                {
+                    Logs.AppendLine(formattedMessage);
+                }
             }
         }
 

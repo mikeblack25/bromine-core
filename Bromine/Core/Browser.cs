@@ -47,7 +47,7 @@ namespace Bromine.Core
         public string Source => Driver.WebDriver.PageSource;
 
         /// <inheritdoc />
-        public IWindow Window { get; private set; }
+        public Window Window { get; private set; }
 
         /// <inheritdoc />
         public Point Position => Driver.WebDriver.Manage().Window.Position;
@@ -85,7 +85,8 @@ namespace Bromine.Core
         /// <inheritdoc />
         public SoftVerify SoftVerify { get; private set; }
 
-        internal Driver Driver { get; private set; }
+        /// <inheritdoc />
+        public Driver Driver { get; private set; }
 
         /// <inheritdoc />
         public void TakeElementImage(string name, Element.Element element)

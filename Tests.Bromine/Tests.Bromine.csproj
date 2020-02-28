@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="Common\Category.cs" />
     <Compile Include="Common\TestSites.cs" />
+    <Compile Include="Core\WindowTests.cs" />
     <Compile Include="Element\ElementTests.cs" />
     <Compile Include="Element\ElementStyleTests.cs" />
     <Compile Include="Framework.cs" />
