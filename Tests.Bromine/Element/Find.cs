@@ -12,19 +12,19 @@ namespace Tests.Bromine.Element
     /// <summary>
     /// Tests to verify the behavior of <see cref="Find"/> and <see cref="SeleniumFind"/>.
     /// </summary>
-    public class FindTests : Framework
+    public class Find : Framework
     {
         /// <summary>
         /// Create a headless Chrome browser for all tests.
         /// Build and navigate to Common.html.
         /// </summary>
-        public FindTests(ITestOutputHelper output) : base(output, true, LogLevels.Framework)
+        public Find(ITestOutputHelper output) : base(output, true, LogLevels.Framework)
         {
             HeadlessInit();
         }
 
         /// <summary>
-        /// Call <see cref="Find.Element"/> with all supported <see cref="Strategy"/>.
+        /// Call Find.Element with all supported <see cref="Strategy"/>.
         /// Is <see cref="Strategy"/> as expected?
         /// Is the element count as expected?
         /// </summary>
@@ -54,12 +54,6 @@ namespace Tests.Bromine.Element
 
         /// <summary>
         /// Call the following with an invalid locator string.
-        /// <see cref="SeleniumFind.ElementById"/>
-        /// <see cref="SeleniumFind.ElementByClass"/>
-        /// <see cref="SeleniumFind.ElementByCssSelector"/>
-        /// <see cref="SeleniumFind.ElementByText"/>
-        /// <see cref="SeleniumFind.ElementByPartialText"/>
-        /// Does <see cref="SeleniumFind.Element"/> returns null when an undefined <see cref="Strategy"/> is provided?
         /// </summary>
         [Fact]
         public void SeleniumFindInvalidStrategy()
@@ -75,7 +69,6 @@ namespace Tests.Bromine.Element
     }
 
         /// <summary>
-        /// <see cref="Find.ElementByClasses"/>
         /// Is the expected element displayed?
         /// Is the expected element count found?
         /// </summary>

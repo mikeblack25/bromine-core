@@ -10,13 +10,13 @@ namespace Tests.Bromine.Element
     /// <summary>
     /// Tests to verify the behavior of Element.
     /// </summary>
-    public class ElementTests : Framework
+    public class Element : Framework
     {
         /// <summary>
         /// Create a headless Chrome browser for all tests.
         /// Build and navigate to Common.html.
         /// </summary>
-        public ElementTests(ITestOutputHelper output) : base(output, true, LogLevels.Framework)
+        public Element(ITestOutputHelper output) : base(output, true, LogLevels.Framework)
         {
             HeadlessInit();
         }

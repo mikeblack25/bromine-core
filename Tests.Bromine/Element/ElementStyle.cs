@@ -1,5 +1,4 @@
 ﻿using Bromine.Core;
-using Bromine.Element;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -7,15 +6,15 @@ using Xunit.Abstractions;
 namespace Tests.Bromine.Element
 {
     /// <summary>
-    /// Tests to verify the behavior of <see cref="ElementStyle"/>.
+    /// Tests to verify the behavior of ElementStyle.
     /// </summary>
-    public class ElementStyleTests : Framework
+    public class ElementStyle : Framework
     {
         /// <summary>
         /// Create a headless Chrome browser for all tests.
         /// Build and navigate to Common.html.
         /// </summary>
-        public ElementStyleTests(ITestOutputHelper output) : base(output, true, LogLevels.Framework)
+        public ElementStyle(ITestOutputHelper output) : base(output, true, LogLevels.Framework)
         {
             HeadlessInit();
         }
