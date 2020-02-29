@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -22,6 +23,24 @@ namespace Bromine.Core
 
                     
             };
+        }
+
+        /// <summary>
+        /// Wait for the specified time. To use milliseconds set timeInMilliseconds to true.
+        /// </summary>
+        /// <param name="time">Time to wait, if timeInMilliseconds is false this will be time in seconds.</param>
+        /// <param name="timeInMilliseconds">When true the time will be in milliseconds, seconds are used otherwise.</param>
+        /// <param name="message">Optional information to add to the log message.</param>
+        public void ForTime(int time, bool timeInMilliseconds = false, string message = "")
+        {
+            var timeUnit = !timeInMilliseconds ? "seconds" : "milliseconds";
+            Log.Framework($"Wait {time} {timeUnit} {message}".Trim());
+
+            if (!timeInMilliseconds)
+            {
+                time *= 1000;
+            }
+            Thread.Sleep(time);
         }
 
         /// <summary>

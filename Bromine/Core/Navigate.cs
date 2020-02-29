@@ -24,16 +24,13 @@ namespace Bromine.Core
         /// <param name="url">URL to navigate to.</param>
         public void ToUrl(string url)
         {
-            try
+            if (!url.StartsWith("http://") && !url.StartsWith("https://"))
             {
-                Nav.GoToUrl(url);
-                Log.Debug($"Navigate to {url}");
+                url = $"https://{url}";
+            }
 
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
+            Nav.GoToUrl(url);
+            Log.Debug($"Navigate to {url}");
         }
 
         /// <summary>
@@ -42,14 +39,14 @@ namespace Bromine.Core
         /// <param name="path"></param>
         public void ToFile(string path)
         {
-            try
+            var filePathString = @"file:\\\";
+
+            if (!path.StartsWith(filePathString))
             {
-                Nav.GoToUrl($"file://{path}");
+                path = $"{filePathString}{path}";
             }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
+
+            Nav.GoToUrl(path);
         }
 
         /// <summary>
@@ -57,14 +54,7 @@ namespace Bromine.Core
         /// </summary>
         public void Back()
         {
-            try
-            {
-                Nav.Back();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
+            Nav.Back();
         }
 
         /// <summary>
@@ -72,14 +62,7 @@ namespace Bromine.Core
         /// </summary>
         public void Forward()
         {
-            try
-            {
-                Nav.Forward();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
+            Nav.Forward();
         }
 
         /// <summary>
@@ -87,14 +70,7 @@ namespace Bromine.Core
         /// </summary>
         public void Refresh()
         {
-            try
-            {
-                Nav.Refresh();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
+            Nav.Refresh();
         }
 
         private Browser Browser { get; }

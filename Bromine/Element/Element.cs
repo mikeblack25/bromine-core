@@ -45,6 +45,9 @@ namespace Bromine.Element
         /// </summary>
         public Information Information { get; }
 
+        /// <inheritdoc />
+        public Log Log { get; }
+
         /// <summary>
         /// Flag to determine if the element has been created correctly.
         /// </summary>
@@ -154,14 +157,18 @@ namespace Bromine.Element
         /// <summary>
         /// Convert an IReadOnlyCollection of IWebElements to a List of IElements.
         /// </summary>
-        /// <param name="elements"></param>
-        internal static List<IElement> ToList(IReadOnlyCollection<IWebElement> elements)
+        /// <param name="elements">IWebElement collection to wrap.</param>
+        /// <param name="log">Log object needed to construct an Element.</param>
+        /// <param name="locator">Locator string used to find the elements.</param>
+        /// <param name="strategy">Location strategy used to find the elements.</param>
+        /// <returns></returns>
+        internal static List<IElement> ToList(IReadOnlyCollection<IWebElement> elements, Log log, string locator = "",  Strategy strategy = Strategy.Undefined)
         {
             var elementList = new List<IElement>();
 
             foreach (var element in elements)
             {
-                elementList.Add(new Element(element));
+                elementList.Add(new Element(element, log: log, locator: locator, strategy: strategy));
             }
 
             return elementList;
@@ -180,18 +187,6 @@ namespace Bromine.Element
             IsInitialized = false;
         }
 
-        internal Element(IWebElement element)
-        {
-            Information = new Information
-            {
-                CalledTimestamp = DateTime.Now
-            };
-
-            SeleniumElement = element;
-
-            IsInitialized = false;
-        }
-
         private object GetProperty(Func<object> method, string errorMessage)
         {
             try
@@ -205,8 +200,6 @@ namespace Bromine.Element
                 return null;
             }
         }
-
-        internal Log Log { get; }
     }
 
 
@@ -222,7 +215,7 @@ namespace Bromine.Element
         /// <param name="strategy">How will the element be found?</param>
         /// <param name="locator">String to locate child elements.</param>
         /// <returns></returns>
-        public static List<IElement> FindElements(this IElement element, Strategy strategy, string locator) => Element.ToList(element.SeleniumElement.FindElements(SeleniumFind.Element(strategy, locator)));
+        public static List<IElement> FindElements(this IElement element, Strategy strategy, string locator) => Element.ToList(element.SeleniumElement.FindElements(SeleniumFind.Element(strategy, locator)), element.Log, locator, strategy);
 
         /// <summary>
         /// Find child elements by CSS and locator string.

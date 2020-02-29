@@ -95,7 +95,7 @@ namespace Tests.Bromine.Element
             Browser.SoftVerify.True(CommonPage.EnabledButtonChildElementParentElement.Displayed);
             Browser.SoftVerify.True(CommonPage.EnabledButtonDescendentCssElement.Displayed);
             Browser.SoftVerify.Equal(1, CommonPage.EnabledButtonChildElements.Count);
-            Browser.SoftVerify.Equal(2, CommonPage.EnabledButtonDescendentCssElements.Count);
+            Browser.SoftVerify.Equal(3, CommonPage.EnabledButtonDescendentCssElements.Count);
         }
 
         private void VerifyStrategy(IElement element, Strategy expectedStrategy)

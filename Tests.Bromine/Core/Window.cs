@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+
 using Bromine.Core;
 
 using Xunit;
@@ -10,12 +11,12 @@ namespace Tests.Bromine.Core
     /// <summary>
     /// Tests the behavior of Core.Window.
     /// </summary>
-    public class Window : Framework
+    public class WindowTests : Framework
     {
         /// <summary>
         /// Launch a browser and set the initial windows size to width = 200, height = 200.
         /// </summary>
-        public Window(ITestOutputHelper output) : base(output, false, LogLevels.Framework)
+        public WindowTests(ITestOutputHelper output) : base(output, false, LogLevels.Framework)
         {
             WindowObject.Size = new Size(200, 200);
         }
@@ -26,11 +27,11 @@ namespace Tests.Bromine.Core
         [Fact]
         public void MinimizeWindowTest()
         {
-            Browser.ConditionalVerify.False(WindowObject.IsMinimized, global::Bromine.Core.Window.WindowIsMinimizedMessage);
+            Browser.ConditionalVerify.False(WindowObject.IsMinimized, Window.WindowIsMinimizedMessage);
 
             Browser.Window.Minimize();
 
-            Browser.Verify.True(WindowObject.IsMinimized, global::Bromine.Core.Window.WindowIsMinimizedMessage);
+            Browser.Verify.True(WindowObject.IsMinimized, Window.WindowIsMinimizedMessage);
         }
 
         /// <summary>
@@ -86,11 +87,11 @@ namespace Tests.Bromine.Core
         [Fact]
         public void MaximizeWindowTest()
         {
-            Browser.ConditionalVerify.False(WindowObject.IsMaximized, global::Bromine.Core.Window.WindowIsMaximizedMessage);
+            Browser.ConditionalVerify.False(WindowObject.IsMaximized, Window.WindowIsMaximizedMessage);
 
             Browser.Window.Maximize();
 
-            Browser.Verify.True(WindowObject.IsMaximized, global::Bromine.Core.Window.WindowIsMaximizedMessage);
+            Browser.Verify.True(WindowObject.IsMaximized, Window.WindowIsMaximizedMessage);
         }
 
         /// <summary>
@@ -99,15 +100,15 @@ namespace Tests.Bromine.Core
         [Fact]
         public void FullScreenWindowTest()
         {
-            Browser.ConditionalVerify.False(WindowObject.IsFullScreen, global::Bromine.Core.Window.WindowIsFullScreenMessage);
+            Browser.ConditionalVerify.False(WindowObject.IsFullScreen, Window.WindowIsFullScreenMessage);
 
             Browser.Window.FullScreen();
 
-            Browser.Verify.True(WindowObject.IsFullScreen, global::Bromine.Core.Window.WindowIsFullScreenMessage);
+            Browser.Verify.True(WindowObject.IsFullScreen, Window.WindowIsFullScreenMessage);
         }
 
         private const string CustomMessage = "Window.IsCustom";
 
-        private global::Bromine.Core.Window WindowObject => Browser.Window;
+        private Window WindowObject => Browser.Window;
     }
 }

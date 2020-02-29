@@ -1,15 +1,26 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <title>Page with common elements</title>
 </head>
+
 <body>
-    <div id="buttons">
-        <button id="enabled_button" class="button normal">Enabled</button>
-        <button id="disabled_button" disabled="disabled" class="button">Disabled</button>
-        <input  id="example_field" type="text" class="field">
-    </div>
+<p id="last_updated">
+    <script>
+        document.write(Date());
+    </script>
+</p>
+
+<div id="buttons">
+    <button id="enabled_button" class="button normal">Enabled</button>
+    <button id="disabled_button" disabled="disabled" class="button">Disabled</button>
+    <button id="next_button" onclick="window.location.href = 'New%20Page.html';">Next</button>
+</div>
+
+<br/>
+
+<input id="example_field" class="field" type="text">
 </body>
 </html>

@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 
+using Bromine.Core;
 using Bromine.Element;
 
 using OpenQA.Selenium;
@@ -15,6 +16,11 @@ namespace Bromine
         /// Details about the location strategy used for the requested element.
         /// </summary>
         Information Information { get; }
+
+        /// <summary>
+        /// Session log object.
+        /// </summary>
+        Log Log { get; }
 
         /// <summary>
         /// Flag to determine if the element has been created correctly.

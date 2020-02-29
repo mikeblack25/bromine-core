@@ -35,11 +35,11 @@ namespace Tests.Bromine.Element
 
             CommonPage.EnableButtonId.Click(); // TODO: Verify the click was successful.
 
-            Browser.SoftVerify.Equal(new Point(8, 8), CommonPage.EnableButtonId.Location);
+            Browser.SoftVerify.Equal(new Point(8, 50), CommonPage.EnableButtonId.Location);
             Browser.SoftVerify.Equal(new Size(65, 21), CommonPage.EnableButtonId.Size);
             Browser.SoftVerify.Equal(true, CommonPage.EnableButtonId.Displayed);
 
-            var expectedText = "Enabled Disabled";
+            var expectedText = "Enabled Disabled Next";
             Browser.SoftVerify.Equal(expectedText, CommonPage.EnableButtonId.ParentElement.Text);
 
             var stringToEnter = "123";

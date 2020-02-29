@@ -38,7 +38,7 @@ namespace Bromine.Core
         public Log Log { get; }
 
         /// <inheritdoc />
-        public string Url => Driver.WebDriver.Url;
+        public string Url => !Driver.WebDriver.Url.StartsWith("file://") ? Driver.WebDriver.Url : Driver.WebDriver.Url.Replace('/', '\\');
 
         /// <inheritdoc />
         public string Title => Driver.WebDriver.Title;

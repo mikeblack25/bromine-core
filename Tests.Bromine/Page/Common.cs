@@ -16,8 +16,11 @@ namespace Tests.Bromine.Page
         }
 
 #pragma warning disable 1591
+        public IElement LastUpdatedLabel => Browser.Find.Element("#last_updated");
+
         public IElement EnableButtonId => Browser.Find.Element(EnableButtonIdUnformattedString);
         public IElement EnableButtonInvalidSeleniumId => Browser.SeleniumFind.ElementById(InvalidString);
+        public IElement NextButton => Browser.Find.Element("#next_button");
 
         public IElement EnableButtonClass => Browser.Find.Element(EnableButtonClassUnformattedString);
         public IElement EnableButtonInvalidSeleniumClass => Browser.SeleniumFind.ElementByClass(InvalidString);
@@ -44,6 +47,14 @@ namespace Tests.Bromine.Page
         public List<IElement> EnabledButtonChildElements => Browser.Find.ChildElements(DivTagString, EnableButtonIdString);
         public List<IElement> EnabledButtonDescendentCssElements => Browser.Find.ElementsByDescendentCss("html body div button");
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Navigate to the local Common.html file.
+        /// </summary>
+        public override void Navigate()
+        {
+            Browser.Navigate.ToFile(Url);
+        }
 
         /// <summary>
         /// "123456" This string was picked because it is not a valid string for id, class, or css.
