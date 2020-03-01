@@ -36,7 +36,7 @@ namespace Bromine.Element
 
             if (element != null)
             {
-                IsInitialized = true;
+                Information.IsInitialized = true;
             }
         }
 
@@ -47,11 +47,6 @@ namespace Bromine.Element
 
         /// <inheritdoc />
         public Log Log => Browser.Log;
-
-        /// <summary>
-        /// Flag to determine if the element has been created correctly.
-        /// </summary>
-        public bool IsInitialized { get; }
 
         /// <summary>
         /// Selenium IWebElement.
@@ -183,10 +178,9 @@ namespace Bromine.Element
         {
             Information = new Information
             {
-                CalledTimestamp = DateTime.Now
+                CalledTimestamp = DateTime.Now,
+                IsInitialized = false
             };
-
-            IsInitialized = false;
         }
 
         private object GetProperty(Func<object> method, string errorMessage)

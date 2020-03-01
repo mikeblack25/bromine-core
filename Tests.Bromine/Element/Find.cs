@@ -106,7 +106,7 @@ namespace Tests.Bromine.Element
 
         private void VerifyInvalidElement(IElement element)
         {
-            Browser.SoftVerify.False(element.IsInitialized);
+            Browser.SoftVerify.False(element.Information.IsInitialized);
             Browser.SoftVerify.Null(element.SeleniumElement);
         }
 

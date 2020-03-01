@@ -23,11 +23,6 @@ namespace Bromine
         Log Log { get; }
 
         /// <summary>
-        /// Flag to determine if the element has been created correctly.
-        /// </summary>
-        bool IsInitialized { get; }
-
-        /// <summary>
         /// Raw Selenium IWebElement.
         /// </summary>
         IWebElement SeleniumElement { get; }

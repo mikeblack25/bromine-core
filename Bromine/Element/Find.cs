@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -26,12 +27,38 @@ namespace Bromine.Element
         /// <see cref="Strategy"/> for supported options.
         /// </summary>
         /// <param name="locator">String to locate an element.</param>
+        /// <param name="name"></param>
+        /// <param name="sourcePath"></param>
+        /// <param name="lineNumber"></param>
         /// <returns></returns>
-        public IElement Element(string locator)
+        public IElement Element(string locator,
+                                [System.Runtime.CompilerServices.CallerMemberName] string name = "",
+                                [System.Runtime.CompilerServices.CallerFilePath] string sourcePath = "",
+                                [System.Runtime.CompilerServices.CallerLineNumber] int lineNumber = 0)
         {
-            var elements = Elements(locator);
+            var elements = new List<IElement>();
+            IElement element;
 
-            return elements.Count > 0 ? elements.First() : new Element();
+            try
+            {
+                elements = Elements(locator);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+            }
+            finally
+            {
+                element = elements.Count > 0 ? elements.First() : new Element();
+
+                element.Information.CalledTimestamp = DateTime.Now;
+                element.Information.LocatorString = locator;
+                element.Information.Name = name;
+                element.Information.CallerFilePath = sourcePath;
+                element.Information.CallerLineNumber = lineNumber;
+            }
+
+            return element;
         }
 
         /// <summary>
@@ -147,5 +174,6 @@ namespace Bromine.Element
         }
 
         private SeleniumFind SeleniumFind { get; }
+        private Log Log => SeleniumFind.Log;
     }
 }
