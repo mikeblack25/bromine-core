@@ -13,14 +13,9 @@ namespace Bromine.Verifies
     public class SoftVerify : VerifyBase
     {
         /// <inheritdoc />
-        public SoftVerify(Log log) : base(log)
+        public SoftVerify(IBrowser browser) : base(browser)
         {
         }
-
-        /// <summary>
-        /// SoftVerify
-        /// </summary>
-        public override string Type => "SoftVerify";
 
         /// <summary>
         /// True if a SoftVerify statement has failed.
@@ -31,8 +26,6 @@ namespace Bromine.Verifies
         {
             HasFailure = true;
             LogErrorMessage(exception, message);
-
-            OnVerifyFailed(exception, new VerifyFailedEvent(Type, message));
         }
     }
 }

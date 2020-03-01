@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -18,14 +18,14 @@ namespace Bromine.Element
         /// Create an Element which can interact with web applications.
         /// </summary>
         /// <param name="element">Requested element.</param>
-        /// <param name="log"><see cref="Log"/></param>
+        /// <param name="browser"><see cref="IBrowser"/></param>
         /// <param name="by"><see cref="By"/></param>
         /// <param name="locator">Locator string used to find the requested element.</param>
         /// <param name="strategy">Type of locator used to find the requested element.</param>
-        internal Element(IWebElement element, Log log, By by = null, string locator = "", Strategy strategy = Strategy.Undefined) : this()
+        internal Element(IWebElement element, IBrowser browser, By by = null, string locator = "", Strategy strategy = Strategy.Undefined) : this()
         {
             SeleniumElement = element;
-            Log = log;
+            Browser = browser;
             SeleniumBy = by;
 
             if (!string.IsNullOrEmpty(locator) && strategy != 0)
@@ -46,7 +46,7 @@ namespace Bromine.Element
         public Information Information { get; }
 
         /// <inheritdoc />
-        public Log Log { get; }
+        public Log Log => Browser.Log;
 
         /// <summary>
         /// Flag to determine if the element has been created correctly.
@@ -103,7 +103,7 @@ namespace Bromine.Element
         /// Note: This requires first locating an element and then calling this.
         /// </summary>
         /// <returns></returns>
-        public Element ParentElement => (Element)GetProperty(() => new Element(SeleniumElement.FindElement(By.XPath("..")), Log, locator:".."), "Unable to find the parent element for the requested element");
+        public Element ParentElement => (Element)GetProperty(() => new Element(SeleniumElement.FindElement(By.XPath("..")), Browser, locator:".."), "Unable to find the parent element for the requested element");
 
         /// <summary>
         /// Find the requested element with the given attribute.
@@ -128,6 +128,8 @@ namespace Bromine.Element
         /// <param name="propertyName">Property value for the requested element.</param>
         /// <returns></returns>
         public string GetJavaScriptProperty(string propertyName) => (string)GetProperty(() => SeleniumElement.GetProperty(propertyName), $"Unable to find the property {propertyName} for the requested element");
+
+        internal IBrowser Browser { get; }
 
         /// <summary>
         /// Update the value property for the requested element.
@@ -158,17 +160,17 @@ namespace Bromine.Element
         /// Convert an IReadOnlyCollection of IWebElements to a List of IElements.
         /// </summary>
         /// <param name="elements">IWebElement collection to wrap.</param>
-        /// <param name="log">Log object needed to construct an Element.</param>
+        /// <param name="browser">Browser object for logging.</param>
         /// <param name="locator">Locator string used to find the elements.</param>
         /// <param name="strategy">Location strategy used to find the elements.</param>
         /// <returns></returns>
-        internal static List<IElement> ToList(IReadOnlyCollection<IWebElement> elements, Log log, string locator = "",  Strategy strategy = Strategy.Undefined)
+        internal static List<IElement> ToList(IReadOnlyCollection<IWebElement> elements, IBrowser browser, string locator = "",  Strategy strategy = Strategy.Undefined)
         {
             var elementList = new List<IElement>();
 
             foreach (var element in elements)
             {
-                elementList.Add(new Element(element, log: log, locator: locator, strategy: strategy));
+                elementList.Add(new Element(element, browser: browser, locator: locator, strategy: strategy));
             }
 
             return elementList;
@@ -215,7 +217,7 @@ namespace Bromine.Element
         /// <param name="strategy">How will the element be found?</param>
         /// <param name="locator">String to locate child elements.</param>
         /// <returns></returns>
-        public static List<IElement> FindElements(this IElement element, Strategy strategy, string locator) => Element.ToList(element.SeleniumElement.FindElements(SeleniumFind.Element(strategy, locator)), element.Log, locator, strategy);
+        public static List<IElement> FindElements(this Element element, Strategy strategy, string locator) => Element.ToList(element.SeleniumElement.FindElements(SeleniumFind.Element(strategy, locator)), element.Browser, locator, strategy);
 
         /// <summary>
         /// Find child elements by CSS and locator string.
@@ -223,7 +225,7 @@ namespace Bromine.Element
         /// <param name="element">Parent element to find children of.</param>
         /// <param name="locator">String to locate child elements.</param>
         /// <returns></returns>
-        public static List<IElement> FindElements(this IElement element, string locator) => element.FindElements(Strategy.Css, locator);
+        public static List<IElement> FindElements(this Element element, string locator) => element.FindElements(Strategy.Css, locator);
 
         /// <summary>
         /// Find child element by CSS and locator string.
@@ -231,6 +233,6 @@ namespace Bromine.Element
         /// <param name="element">Parent element to find a child of.</param>
         /// <param name="locator">String to locate child elements.</param>
         /// <returns></returns>
-        public static IElement FindElement(this IElement element, string locator) => FindElements(element, Strategy.Css, locator).FirstOrDefault();
+        public static IElement FindElement(this Element element, string locator) => FindElements(element, Strategy.Css, locator).FirstOrDefault();
     }
 }

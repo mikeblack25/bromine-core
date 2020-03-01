@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Bromine.Core;
-
 namespace Bromine.Verifies
 {
     /// <summary>
@@ -13,20 +11,13 @@ namespace Bromine.Verifies
     public class Verify : VerifyBase
     {
         /// <inheritdoc />
-        public Verify(Log log) : base(log)
+        public Verify(IBrowser browser) : base(browser)
         {
         }
-
-        /// <summary>
-        /// Verify
-        /// </summary>
-        public override string Type => "Verify";
 
         internal override void HandleException(Exception exception, string message = "")
         {
             LogErrorMessage(exception, message);
-
-            OnVerifyFailed(exception, new VerifyFailedEvent(Type, message));
 
             throw exception;
         }

@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Bromine.Core;
-
 using Xunit;
 
 namespace Bromine.Verifies
@@ -16,20 +14,13 @@ namespace Bromine.Verifies
     public class ConditionalVerify : VerifyBase
     {
         /// <inheritdoc />
-        public ConditionalVerify(Log log) : base(log) { }
-
-        /// <summary>
-        /// ConditionalVerify
-        /// </summary>
-        public override string Type => "ConditionalVerify";
+        public ConditionalVerify(IBrowser browser) : base(browser) { }
 
         internal override void HandleException(Exception exception, string message = "")
         {
             Skip.If(true, message);
 
             LogErrorMessage(exception, message);
-
-            OnVerifyFailed(exception, new VerifyFailedEvent(Type, message));
 
             throw exception;
         }

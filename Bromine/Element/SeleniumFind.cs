@@ -32,7 +32,7 @@ namespace Bromine.Element
             if (!string.IsNullOrWhiteSpace(id)) { id = id[0] == '#' ? id : $"#{id}"; }
             var elements = ElementsById(id);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locator: id, strategy: Strategy.Id);
+            return elements.Count > 0 ? elements.First() : new Element(null, browser: Browser, locator: id, strategy: Strategy.Id);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Bromine.Element
             if (!string.IsNullOrWhiteSpace(className)) { className = className[0] == '.' ? className : $".{className}"; }
             var elements = ElementsByClass(className);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locator: className, strategy: Strategy.Class);
+            return elements.Count > 0 ? elements.First() : new Element(null, browser: Browser, locator: className, strategy: Strategy.Class);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Bromine.Element
         {
             var elements = ElementsByCssSelector(cssSelector);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locator: cssSelector, strategy: Strategy.Css);
+            return elements.Count > 0 ? elements.First() : new Element(null, browser: Browser, locator: cssSelector, strategy: Strategy.Css);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Bromine.Element
         {
             var elements = ElementsByText(text);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locator: text, strategy: Strategy.Text);
+            return elements.Count > 0 ? elements.First() : new Element(null, browser: Browser, locator: text, strategy: Strategy.Text);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Bromine.Element
                     {
                         if (element.Text.Equals(text))
                         {
-                            list.Add(new Element(element.SeleniumElement, log: Log, locator: text, strategy: Strategy.Text));
+                            list.Add(new Element(element.SeleniumElement, browser: Browser, locator: text, strategy: Strategy.Text));
                         }
                     }
                 }
@@ -150,7 +150,7 @@ namespace Bromine.Element
         {
             var elements = ElementsByPartialText(partialText);
 
-            return elements.Count > 0 ? elements.First() : new Element(null, log: Log, locator: partialText, strategy: Strategy.PartialText);
+            return elements.Count > 0 ? elements.First() : new Element(null, browser: Browser, locator: partialText, strategy: Strategy.PartialText);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Bromine.Element
                     {
                         if (element.Text.Contains(partialText))
                         {
-                            list.Add(new Element(element.SeleniumElement, log: Log, locator: partialText, strategy: Strategy.PartialText));
+                            list.Add(new Element(element.SeleniumElement, browser: Browser, locator: partialText, strategy: Strategy.PartialText));
                         }
                     }
                 }
@@ -232,7 +232,7 @@ namespace Bromine.Element
 
             foreach (var element in elements)
             {
-                list.Add(new Element(element, log: Log, locator: locator, strategy: strategy));
+                list.Add(new Element(element, browser: Browser, locator: locator, strategy: strategy));
             }
 
             return list;

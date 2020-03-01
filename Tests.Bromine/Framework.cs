@@ -60,7 +60,7 @@ namespace Tests.Bromine
         /// Dispose of the Browser.
         /// </summary>
         // ReSharper disable once InheritdocConsiderUsage
-        public virtual void Dispose()
+        public void Dispose()
         {
             Browser?.Dispose();
         }

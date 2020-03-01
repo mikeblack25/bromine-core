@@ -147,6 +147,7 @@ namespace Bromine.Core
                 {
                     Verify.Fail("One or more SoftVerify statements FAILED");
                 }
+
                 if (Log.ErrorCount > 0)
                 {
                     Log.Debug("REVIEW: One or more errors occured during execution");
@@ -161,11 +162,9 @@ namespace Bromine.Core
 
         private void Initialize()
         {
-            Verify = new Verify(Log);
-            ConditionalVerify = new ConditionalVerify(Log);
-            SoftVerify = new SoftVerify(Log);
-
-            Verify.VerifyFailed += VerifyOnVerifyFailed;
+            Verify = new Verify(this);
+            ConditionalVerify = new ConditionalVerify(this);
+            SoftVerify = new SoftVerify(this);
 
             Driver = new Driver(this);
             if (BrowserOptions.Driver.ImplicitWaitEnabled)
@@ -184,14 +183,6 @@ namespace Bromine.Core
         private void EnableImplicitWait(int secondsToWait)
         {
             Driver.WebDriver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, secondsToWait);
-        }
-
-
-        private void VerifyOnVerifyFailed(Exception e, VerifyFailedEvent args)
-        {
-            Dispose();
-
-            if (args.Type != ConditionalVerify.Type) { throw e; }
         }
 
         private Screenshot Image { get; set; }

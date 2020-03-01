@@ -86,7 +86,7 @@ namespace Bromine.Element
         /// <param name="parentLocator">Locate element by CSS selector.</param>
         /// <param name="childLocator">Locate element by CSS selector.</param>
         /// <returns></returns>
-        public IElement ChildElement(string parentLocator, string childLocator) => Element(parentLocator).FindElement(childLocator);
+        public IElement ChildElement(string parentLocator, string childLocator) => (Element(parentLocator) as Element).FindElement(childLocator);
 
         /// <summary>
         /// Find child Element by CSS selector based on a parent element found by CSS selector.
@@ -94,7 +94,7 @@ namespace Bromine.Element
         /// <param name="parentElement">Parent element to find child elements of.</param>
         /// <param name="childLocator">Locate child element by CSS selector.</param>
         /// <returns></returns>
-        public IElement ChildElement(IElement parentElement, string childLocator) => parentElement.FindElement(childLocator);
+        public IElement ChildElement(IElement parentElement, string childLocator) => (parentElement as Element).FindElement(childLocator);
 
         /// <summary>
         /// Find child Elements by CSS selector based on a parent element found by CSS selector.
@@ -115,7 +115,7 @@ namespace Bromine.Element
         /// <param name="parentElement">Parent element to find child elements of.</param>
         /// <param name="childLocator">Locate child elements by CSS selector.</param>
         /// <returns></returns>
-        public List<IElement> ChildElements(IElement parentElement, string childLocator) => parentElement.FindElements(childLocator);
+        public List<IElement> ChildElements(IElement parentElement, string childLocator) => (parentElement as Element).FindElements(childLocator);
 
         /// <summary>
         /// Find element by descendent className.
