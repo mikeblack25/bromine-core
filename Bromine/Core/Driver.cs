@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Reflection;
 
-using Bromine.Models;
-
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
@@ -11,8 +9,6 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Extensions;
-
-using DriverOptions = Bromine.Models.DriverOptions;
 
 namespace Bromine.Core
 {

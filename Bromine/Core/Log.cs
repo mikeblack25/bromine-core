@@ -97,7 +97,7 @@ namespace Bromine.Core
         /// <param name="message">Error message to log.</param>
         public void Error(string message)
         {
-            if (LogLevel >= LogLevels.Error) { WriteMessage(message, LogLevels.Error); }
+            if (LogLevel >= LogLevels.Error) { WriteMessage(message); }
 
             ErrorCount++;
         }
@@ -108,7 +108,7 @@ namespace Bromine.Core
         /// <param name="message">Error message to log.</param>
         public void Debug(string message)
         {
-            if (LogLevel >= LogLevels.Debug) { WriteMessage(message, LogLevels.Debug); }
+            if (LogLevel >= LogLevels.Debug) { WriteMessage(message); }
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Bromine.Core
         /// <param name="message">Error message to log.</param>
         public void Framework(string message)
         {
-            if (LogLevel >= LogLevels.Framework) { WriteMessage(message, LogLevels.Framework); }
+            if (LogLevel >= LogLevels.Framework) { WriteMessage(message); }
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace Bromine.Core
 
         internal string FormattedLogMessage(string message) => $"{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.ffff")} {LogLevel.ToString()} {message}";
 
-        private void WriteMessage(string message, LogLevels type = LogLevels.Message)
+        private void WriteMessage(string message)
         {
             if (IsEnabled)
             {

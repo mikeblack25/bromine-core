@@ -1,8 +1,6 @@
 ﻿using System;
 
-using Bromine.Core;
-
-namespace Bromine.Models
+namespace Bromine.Core
 {
     /// <summary>
     /// Allows configuration of the driver used to launch a browser.
@@ -19,7 +17,12 @@ namespace Bromine.Models
         /// <param name="remoteAddress">Host address of the Selenium Grid.</param>
         /// <param name="useDefaultDriverPath">When true, the driver will be located in the default path. This is required if used with .NET Core.</param>
         /// <param name="hideDriverWindow">Hide the window of the web driver during execution. Drivers may have to be manually closed if not disposed properly.</param>
-        public DriverOptions(BrowserType browser = BrowserType.Chrome, bool isHeadless = false, int secondsToWait = 0, string remoteAddress = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true)
+        public DriverOptions(BrowserType browser = BrowserType.Chrome,
+                             bool isHeadless = false,
+                             int secondsToWait = 0,
+                             string remoteAddress = "",
+                             bool useDefaultDriverPath = false,
+                             bool hideDriverWindow = true)
         {
             Browser = browser;
             IsHeadless = isHeadless;

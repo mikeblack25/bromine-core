@@ -2,8 +2,6 @@ using System;
 
 using Bromine;
 using Bromine.Core;
-using Bromine.Models;
-
 using Xunit.Abstractions;
 
 namespace Tests.Bromine

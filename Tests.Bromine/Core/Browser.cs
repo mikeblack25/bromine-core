@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Bromine.Core;
 
-using Bromine.Core;
 using OpenQA.Selenium;
+
 using Xunit;
 using Xunit.Abstractions;
 

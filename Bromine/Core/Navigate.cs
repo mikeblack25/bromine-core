@@ -1,5 +1,3 @@
-using System;
-
 using OpenQA.Selenium;
 
 namespace Bromine.Core

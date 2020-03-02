@@ -3,7 +3,6 @@ using System.Drawing;
 
 using Bromine.Core;
 using Bromine.Element;
-using Bromine.Models;
 using Bromine.Verifies;
 
 using OpenQA.Selenium;

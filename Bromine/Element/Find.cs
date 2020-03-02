@@ -49,6 +49,7 @@ namespace Bromine.Element
 
                 if (Browser.BrowserOptions.StopOnError)
                 {
+                    // ReSharper disable once PossibleIntendedRethrow
                     throw e;
                 }
             }

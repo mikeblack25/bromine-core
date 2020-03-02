@@ -1,4 +1,4 @@
-﻿namespace Bromine.Models
+﻿namespace Bromine.Core
 {
     /// <summary>
     /// Driver configuration options for browser setup.
