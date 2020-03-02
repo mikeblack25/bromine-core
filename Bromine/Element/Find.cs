@@ -46,6 +46,11 @@ namespace Bromine.Element
             catch (Exception e)
             {
                 Log.Error(e.Message);
+
+                if (Browser.BrowserOptions.StopOnError)
+                {
+                    throw e;
+                }
             }
             finally
             {
@@ -174,6 +179,7 @@ namespace Bromine.Element
         }
 
         private SeleniumFind SeleniumFind { get; }
+        private Browser Browser => SeleniumFind.Browser;
         private Log Log => SeleniumFind.Log;
     }
 }

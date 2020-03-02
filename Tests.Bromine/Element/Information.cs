@@ -19,7 +19,6 @@ namespace Tests.Bromine.Element
         /// </summary>
         public Information(ITestOutputHelper output) : base(output, true, LogLevels.Framework)
         {
-            HeadlessInit();
         }
 
         /// <summary>
@@ -31,6 +30,8 @@ namespace Tests.Bromine.Element
         [Fact]
         public void ElementInformation()
         {
+            HeadlessInit();
+
             var element = CommonPage.EnableButtonId;
 
             Browser.SoftVerify.InRange(element.Information.CalledTimestamp, DateTime.Now, DateTime.Now.AddMinutes(1));
@@ -47,6 +48,8 @@ namespace Tests.Bromine.Element
         [Fact]
         public void UnInitializedElementInformation()
         {
+            HeadlessInit(stopOnError: false);
+
             var element = Browser.Find.Element(string.Empty);
 
             Browser.SoftVerify.Equal(string.Empty, element.Information.LocatorString);

@@ -28,8 +28,9 @@
         /// <param name="remoteAddress"><see cref="DriverOptions.RemoteAddress"/></param>
         /// <param name="useDefaultDriverPath"><see cref="DriverOptions.UseDefaultDriverPath"/></param>
         /// <param name="hideDriverWindow"><see cref="DriverOptions.HideDriverWindow"/></param>
-        public BrowserOptions(BrowserType browser, bool isHeadless = false, int secondsToWait = 0, string remoteAddress = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true)
-        : this(new DriverOptions(browser, isHeadless, secondsToWait, remoteAddress, useDefaultDriverPath, hideDriverWindow))
+        /// <param name="stopOnError">When true, execution will stop when during some errors.</param>
+        public BrowserOptions(BrowserType browser, bool isHeadless = false, int secondsToWait = 0, string remoteAddress = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true, bool stopOnError = true)
+        : this(new DriverOptions(browser, isHeadless, secondsToWait, remoteAddress, useDefaultDriverPath, hideDriverWindow), stopOnError: stopOnError)
         {
         }
 
@@ -38,15 +39,22 @@
         /// NOTE: This options is best for creating reusable configurations as needed for advanced setup.
         /// </summary>
         /// <param name="options"><see cref="DriverOptions"/></param>
-        public BrowserOptions(DriverOptions options)
+        /// <param name="stopOnError">When true, execution will stop when during some errors.</param>
+        public BrowserOptions(DriverOptions options, bool stopOnError = true)
         {
             Driver = options;
+            StopOnError = stopOnError;
         }
 
         /// <summary>
         /// Type of browser to use.
         /// </summary>
         public DriverOptions Driver { get; }
+
+        /// <summary>
+        /// When true errors locating elements will stop execution.
+        /// </summary>
+        public bool StopOnError { get; }
     }
 
 

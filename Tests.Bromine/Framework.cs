@@ -35,9 +35,9 @@ namespace Tests.Bromine
         /// <summary>
         /// Initialize a headless Chrome browser and navigate to CommonPage.
         /// </summary>
-        public void HeadlessInit()
+        public void HeadlessInit(bool stopOnError = true)
         {
-            var options = new BrowserOptions(BrowserType.Chrome, isHeadless: true);
+            var options = new BrowserOptions(BrowserType.Chrome, isHeadless: true, stopOnError: stopOnError);
             Browser = new Browser(options: options, logLevel: LogLevels.Framework, output: Output);
 
             CommonPage = new Page.Common(Browser);
