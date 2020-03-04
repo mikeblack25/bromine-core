@@ -30,11 +30,19 @@ namespace Bromine.Core
                 Log = new Log(logLevel, output);
             }
 
+            if (BrowserOptions.LogElementHistory)
+            {
+                Session = new Session();
+            }
+
             Initialize();
         }
 
         /// <inheritdoc />
         public Log Log { get; }
+
+        /// <inheritdoc />
+        public Session Session { get; }
 
         /// <inheritdoc />
         public string Url => !Driver.WebDriver.Url.StartsWith("file://") ? Driver.WebDriver.Url : Driver.WebDriver.Url.Replace('/', '\\');

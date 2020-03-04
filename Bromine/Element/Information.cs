@@ -1,5 +1,8 @@
 ﻿using System;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace Bromine.Element
 {
     /// <summary>
@@ -20,6 +23,7 @@ namespace Bromine.Element
         /// <summary>
         /// Locator strategy used to find the requested element.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public Strategy Strategy { get; set; }
 
         /// <summary>

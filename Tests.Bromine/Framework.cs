@@ -31,11 +31,13 @@ namespace Tests.Bromine
         public Page.Common CommonPage { get; private set; }
 
         /// <summary>
-        /// Initialize a headless Chrome browser and navigate to CommonPage.
+        /// 
         /// </summary>
-        public void HeadlessInit(bool stopOnError = true)
+        /// <param name="stopOnError"></param>
+        /// <param name="logElementHistory"></param>
+        public void HeadlessInit(bool stopOnError = true, bool logElementHistory = false)
         {
-            var options = new BrowserOptions(BrowserType.Chrome, isHeadless: true, stopOnError: stopOnError);
+            var options = new BrowserOptions(BrowserType.Chrome, isHeadless: true, stopOnError: stopOnError, logElementHistory: logElementHistory);
             Browser = new Browser(options: options, logLevel: LogLevels.Framework, output: Output);
 
             CommonPage = new Page.Common(Browser);

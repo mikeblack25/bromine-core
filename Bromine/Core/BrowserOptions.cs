@@ -28,9 +28,10 @@
         /// <param name="remoteAddress"><see cref="DriverOptions.RemoteAddress"/></param>
         /// <param name="useDefaultDriverPath"><see cref="DriverOptions.UseDefaultDriverPath"/></param>
         /// <param name="hideDriverWindow"><see cref="DriverOptions.HideDriverWindow"/></param>
-        /// <param name="stopOnError">When true, execution will stop when during some errors.</param>
-        public BrowserOptions(BrowserType browser, bool isHeadless = false, int secondsToWait = 0, string remoteAddress = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true, bool stopOnError = true)
-        : this(new DriverOptions(browser, isHeadless, secondsToWait, remoteAddress, useDefaultDriverPath, hideDriverWindow), stopOnError: stopOnError)
+        /// <param name="stopOnError"><see cref="StopOnError"/></param>
+        /// <param name="logElementHistory"><see cref="LogElementHistory"/></param>
+        public BrowserOptions(BrowserType browser, bool isHeadless = false, int secondsToWait = 0, string remoteAddress = "", bool useDefaultDriverPath = false, bool hideDriverWindow = true, bool stopOnError = true, bool logElementHistory = false)
+        : this(new DriverOptions(browser, isHeadless, secondsToWait, remoteAddress, useDefaultDriverPath, hideDriverWindow), stopOnError: stopOnError, logElementHistory: logElementHistory)
         {
         }
 
@@ -39,11 +40,13 @@
         /// NOTE: This options is best for creating reusable configurations as needed for advanced setup.
         /// </summary>
         /// <param name="options"><see cref="DriverOptions"/></param>
-        /// <param name="stopOnError">When true, execution will stop when during some errors.</param>
-        public BrowserOptions(DriverOptions options, bool stopOnError = true)
+        /// <param name="stopOnError"><see cref="StopOnError"/></param>
+        /// <param name="logElementHistory"><see cref="LogElementHistory"/></param>
+        public BrowserOptions(DriverOptions options, bool stopOnError = true, bool logElementHistory = false)
         {
             Driver = options;
             StopOnError = stopOnError;
+            LogElementHistory = logElementHistory;
         }
 
         /// <summary>
@@ -55,6 +58,11 @@
         /// When true errors locating elements will stop execution.
         /// </summary>
         public bool StopOnError { get; }
+
+        /// <summary>
+        /// Update the the session log with information about elements.
+        /// </summary>
+        public bool LogElementHistory { get; }
     }
 
 

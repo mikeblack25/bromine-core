@@ -15,9 +15,14 @@ namespace Bromine
     public interface IBrowser : IDisposable
     {
         /// <summary>
-        /// <see cref="Log"/>
+        /// Provides ability to log messages.
         /// </summary>
         Log Log { get; }
+
+        /// <summary>
+        /// Logs history about element information.
+        /// </summary>
+        Session Session { get; }
 
         /// <summary>
         /// Url of the current page.

@@ -64,6 +64,11 @@ namespace Bromine.Element
                 element.Information.CallerLineNumber = lineNumber;
             }
 
+            if (Browser.BrowserOptions.LogElementHistory)
+            {
+                Browser.Session.AddElement(element.Information);
+            }
+
             return element;
         }
 
