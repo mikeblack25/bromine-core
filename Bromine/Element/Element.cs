@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-
 using Bromine.Core;
 
 using OpenQA.Selenium;
@@ -124,8 +122,6 @@ namespace Bromine.Element
         /// <returns></returns>
         public string GetJavaScriptProperty(string propertyName) => (string)GetProperty(() => SeleniumElement.GetProperty(propertyName), $"Unable to find the property {propertyName} for the requested element");
 
-        internal IBrowser Browser { get; }
-
         /// <summary>
         /// Update the value property for the requested element.
         /// </summary>
@@ -150,6 +146,8 @@ namespace Bromine.Element
         {
             SeleniumElement?.Click();
         }
+
+        internal IBrowser Browser { get; }
 
         /// <summary>
         /// Convert an IReadOnlyCollection of IWebElements to a List of IElements.
@@ -178,7 +176,7 @@ namespace Bromine.Element
         {
             Information = new Information
             {
-                CalledTimestamp = DateTime.Now,
+                Created = DateTime.Now,
                 IsInitialized = false
             };
         }
@@ -196,37 +194,5 @@ namespace Bromine.Element
                 return null;
             }
         }
-    }
-
-
-    /// <summary>
-    /// Extension methods to provide additional capabilities to Elements.
-    /// </summary>
-    public static class ElementExtensions
-    {
-        /// <summary>
-        /// Find child elements with the given strategy and locator string.
-        /// </summary>
-        /// <param name="element">Parent element to find children of.</param>
-        /// <param name="strategy">How will the element be found?</param>
-        /// <param name="locator">String to locate child elements.</param>
-        /// <returns></returns>
-        public static List<IElement> FindElements(this Element element, Strategy strategy, string locator) => Element.ToList(element.SeleniumElement.FindElements(SeleniumFind.Element(strategy, locator)), element.Browser, locator, strategy);
-
-        /// <summary>
-        /// Find child elements by CSS and locator string.
-        /// </summary>
-        /// <param name="element">Parent element to find children of.</param>
-        /// <param name="locator">String to locate child elements.</param>
-        /// <returns></returns>
-        public static List<IElement> FindElements(this Element element, string locator) => element.FindElements(Strategy.Css, locator);
-
-        /// <summary>
-        /// Find child element by CSS and locator string.
-        /// </summary>
-        /// <param name="element">Parent element to find a child of.</param>
-        /// <param name="locator">String to locate child elements.</param>
-        /// <returns></returns>
-        public static IElement FindElement(this Element element, string locator) => FindElements(element, Strategy.Css, locator).FirstOrDefault();
     }
 }

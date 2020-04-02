@@ -11,12 +11,12 @@ namespace Bromine.Element
     /// <summary>
     /// Add style to WebElements.
     /// </summary>
-    public class ElementStyle
+    public class ElementStyleExtensions
     {
         /// <summary>
         /// Add style to WebElements.
         /// </summary>
-        public ElementStyle(Browser browser)
+        public ElementStyleExtensions(Browser browser)
         {
             Browser = browser;
         }

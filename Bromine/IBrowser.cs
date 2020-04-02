@@ -77,7 +77,7 @@ namespace Bromine
         /// <summary>
         /// Provide ability change the style of Elements.
         /// </summary>
-        ElementStyle ElementStyle { get; }
+        ElementStyleExtensions ElementStyleExtensions { get; }
 
         /// <summary>
         /// Provides Wait behavior using Selenium's DefaultWait class.
@@ -136,9 +136,17 @@ namespace Bromine
         /// <summary>
         /// Execute the jS script.
         /// </summary>
-        /// <param name="script">JavaScript to run on the given page context.</param>
+        /// <param name="jsCode">JavaScript to run on the given page context.</param>
         /// <param name="arguments">Optional arguments to pass to the call.</param>
         /// <returns>Response from the JS request.</returns>
-        object ExecuteJs(string script, object[] arguments);
+        object ExecuteJs(string jsCode, object[] arguments);
+
+        /// <summary>
+        /// Execute the jS script.
+        /// </summary>
+        /// <param name="jsCode">JavaScript to run on the given element.</param>
+        /// <param name="element">Element to interact with via js.</param>
+        /// <returns>NOTE: An object is returned, the caller is responsible for the correct conversion.</returns>
+        object ExecuteJs(string jsCode, IElement element);
     }
 }

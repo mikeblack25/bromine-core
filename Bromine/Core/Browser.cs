@@ -75,7 +75,7 @@ namespace Bromine.Core
         public BrowserOptions BrowserOptions { get; }
 
         /// <inheritdoc />
-        public ElementStyle ElementStyle { get; private set; }
+        public ElementStyleExtensions ElementStyleExtensions { get; private set; }
 
         /// <inheritdoc />
         public Wait Wait { get; private set; }
@@ -134,12 +134,20 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
-        public object ExecuteJs(string script, params object[] arguments)
+        public object ExecuteJs(string jsCode, params object[] arguments)
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
             var js = Driver as IJavaScriptExecutor;
 
-            return js?.ExecuteAsyncScript(script, arguments);
+            return js?.ExecuteAsyncScript(jsCode, arguments);
+        }
+
+        /// <inheritdoc />
+        public object ExecuteJs(string jsCode, IElement element)
+        {
+            var javascriptDriver = (IJavaScriptExecutor)Driver.WebDriver;
+
+            return javascriptDriver.ExecuteScript(jsCode, element.SeleniumElement);
         }
 
         /// <inheritdoc />
@@ -183,7 +191,7 @@ namespace Bromine.Core
             SeleniumFind = new SeleniumFind(this);
             Navigate = new Navigate(this);
             Window = new Window(this);
-            ElementStyle = new ElementStyle(this);
+            ElementStyleExtensions = new ElementStyleExtensions(this);
             Wait = new Wait(this);
         }
 

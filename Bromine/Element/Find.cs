@@ -39,6 +39,8 @@ namespace Bromine.Element
             var elements = new List<IElement>();
             IElement element;
 
+            var locateTime = DateTime.Now;
+
             try
             {
                 elements = Elements(locator);
@@ -57,11 +59,7 @@ namespace Bromine.Element
             {
                 element = elements.Count > 0 ? elements.First() : new Element();
 
-                element.Information.CalledTimestamp = DateTime.Now;
-                element.Information.LocatorString = locator;
-                element.Information.Name = name;
-                element.Information.CallerFilePath = sourcePath;
-                element.Information.CallerLineNumber = lineNumber;
+                UpdateElementInformation(element, locateTime, locator, name, sourcePath, lineNumber);
             }
 
             if (Browser.BrowserOptions.LogElementHistory)
@@ -77,29 +75,52 @@ namespace Bromine.Element
         /// <see cref="Strategy"/> for supported options.
         /// </summary>
         /// <param name="locator">String to locate elements.</param>
+        /// <param name="name"></param>
+        /// <param name="sourcePath"></param>
+        /// <param name="lineNumber"></param>
         /// <returns></returns>
-        public List<IElement> Elements(string locator)
+        public List<IElement> Elements(string locator,
+                                       [System.Runtime.CompilerServices.CallerMemberName] string name = "",
+                                       [System.Runtime.CompilerServices.CallerFilePath] string sourcePath = "",
+                                       [System.Runtime.CompilerServices.CallerLineNumber] int lineNumber = 0)
         {
+            var locateTime = DateTime.Now;
+
             var elements = SeleniumFind.ElementsByCssSelector(locator);
 
-            if (elements.Count > 0) { return elements; }
-
-            elements = SeleniumFind.ElementsById(locator);
-
-            if (elements.Count > 0) { return elements; }
-
-            if (!locator.Contains(" "))
+            if (elements.Count == 0) // No elements were found from the above call.
             {
-                elements = SeleniumFind.ElementsByClass(locator);
+                if (!locator.Contains(" ")) // Id and Class location doesn't have a string but can be in CssSelector location above.
+                {
+                    elements = SeleniumFind.ElementsById(locator);
 
-                if (elements.Count > 0) { return elements; }
+                    if (elements.Count == 0)
+                    {
+                        elements = SeleniumFind.ElementsByClass(locator);
+                    }
+                }
+                else
+                {
+                    elements = SeleniumFind.ElementsByText(locator);
+
+                    if (elements.Count == 0)
+                    {
+                        elements = SeleniumFind.ElementsByPartialText(locator);
+                    }
+                }
             }
 
-            elements = SeleniumFind.ElementsByText(locator);
+            if (elements.Count == 0)
+            {
+                elements.Add(new Element());
+            }
 
-            if (elements.Count > 0) { return elements; }
+            foreach (var element in elements)
+            {
+                UpdateElementInformation(element, locateTime, locator, name, sourcePath, lineNumber);
+            }
 
-            return SeleniumFind.ElementsByPartialText(locator);
+            return elements;
         }
 
         /// <summary>
@@ -170,6 +191,18 @@ namespace Bromine.Element
         /// <param name="classes">Class name(s) of descendent class elements.</param>
         /// <returns></returns>
         public List<IElement> ElementsByDescendentCss(string classes) => Elements(classes);
+
+        private void UpdateElementInformation(IElement element, DateTime requestTime, string locator = "", string name = "", string sourcePath = "", int lineNumber = 0)
+        {
+            element.Information.FindTime = (element.Information.Created - requestTime).Duration();
+            element.Information.LocatorString = locator;
+            element.Information.Name = name;
+            element.Information.CallerFilePath = sourcePath;
+            element.Information.CallerLineNumber = lineNumber;
+
+            element.Information.Attributes = element.GetAttributes();
+            element.Information.TotalTime = (DateTime.Now - element.Information.Created).Duration();
+        }
 
         private string BuildClasses(string classes)
         {

@@ -28,13 +28,13 @@ namespace Tests.Bromine.Element
             var expectedColor = "red";
             var expectedStyle = "border-color: red;";
 
-            Browser.ElementStyle.AddBorder(CommonPage.DisabledButton, expectedColor);
+            Browser.ElementStyleExtensions.AddBorder(CommonPage.DisabledButton, expectedColor);
 
-            var styleAttribute = Browser.ElementStyle.GetStyleAttribute(CommonPage.DisabledButton);
+            var styleAttribute = Browser.ElementStyleExtensions.GetStyleAttribute(CommonPage.DisabledButton);
             Browser.SoftVerify.Equal(expectedStyle, styleAttribute);
 
             var borderElement = Browser.Find.Element(".button");
-            Browser.ElementStyle.AddBorders(borderElement, expectedColor);
+            Browser.ElementStyleExtensions.AddBorders(borderElement, expectedColor);
             // TODO: Verify all ".button" elements have a border.
         }
     }

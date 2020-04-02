@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -10,10 +11,36 @@ namespace Bromine.Element
     /// </summary>
     public class Information
     {
+        /// <inheritdoc />
+        public Information()
+        {
+            Attributes = new Dictionary<string, object>();
+        }
+
+        /// <summary>
+        /// Name of the session or test where the element is called.
+        /// </summary>
+        public string SessionName { get; set; }
+
         /// <summary>
         /// Timestamp the element was requested.
         /// </summary>
-        public DateTime CalledTimestamp { get; set; }
+        public DateTime Created { get; set; }
+
+        /// <summary>
+        /// Time in seconds to locate the element.
+        /// </summary>
+        public TimeSpan FindTime { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public TimeSpan TotalTime { get; set; }
+
+        /// <summary>
+        /// Element attributes.
+        /// </summary>
+        public Dictionary<string, object> Attributes { get; set; }
 
         /// <summary>
         /// String used to find the requested element.
@@ -25,11 +52,6 @@ namespace Bromine.Element
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public Strategy Strategy { get; set; }
-
-        /// <summary>
-        /// Name of the session or test where the element is called.
-        /// </summary>
-        public string SessionName { get; set; }
 
         /// <summary>
         /// Name of the element caller.

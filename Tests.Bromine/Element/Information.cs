@@ -34,7 +34,7 @@ namespace Tests.Bromine.Element
 
             var element = CommonPage.EnableButtonId;
 
-            Browser.SoftVerify.InRange(element.Information.CalledTimestamp, DateTime.Now, DateTime.Now.AddMinutes(1));
+            Browser.SoftVerify.InRange(element.Information.Created, DateTime.Now, DateTime.Now.AddMinutes(1));
 
             Browser.SoftVerify.Equal("enabled_button", element.Information.LocatorString);
             Browser.SoftVerify.Equal(Strategy.Id, element.Information.Strategy);
