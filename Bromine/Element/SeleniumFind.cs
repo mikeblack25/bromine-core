@@ -188,6 +188,39 @@ namespace Bromine.Element
         }
 
         /// <summary>
+        /// Find Element by XPath locator.
+        /// </summary>
+        /// <param name="xpath">XPath locator string to locate an element.</param>
+        /// <returns></returns>
+        public IElement ElementByXpath(string xpath)
+        {
+            var elements = ElementsByXpath(xpath);
+
+            return elements.Count > 0 ? elements.First() : new Element(null, browser: Browser, locator: xpath, strategy: Strategy.Xpath);
+        }
+
+        /// <summary>
+        /// Find Elements by XPath locator.
+        /// </summary>
+        /// <param name="xpath">XPath locator string to find elements.</param>
+        /// <returns></returns>
+        public List<IElement> ElementsByXpath(string xpath)
+        {
+            var elements = new List<IElement>();
+
+            try
+            {
+                elements = ToList(Driver.FindElements(Element(Strategy.Xpath, xpath)), xpath, Strategy.Xpath);
+            }
+            catch
+            {
+                Log.Framework($"Unable to locate element by {Strategy.Xpath} '{xpath}'");
+            }
+
+            return elements;
+        }
+
+        /// <summary>
         /// Get By object based on the strategy and locator string.
         /// Strategy.Text and Strategy.Partial text are not available here because the current implementation is using Strategy.Css.
         /// </summary>
@@ -218,6 +251,10 @@ namespace Bromine.Element
                 case Strategy.PartialText:
                 {
                     return By.PartialLinkText(locator);
+                }
+                case Strategy.Xpath:
+                {
+                    return By.XPath(locator);
                 }
                 default:
                 {
@@ -257,6 +294,7 @@ namespace Bromine.Element
         Css,
         Text,
         PartialText,
+        Xpath
 #pragma warning restore 1591
     }
 }

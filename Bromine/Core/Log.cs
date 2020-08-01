@@ -83,7 +83,7 @@ namespace Bromine.Core
         /// <param name="message">Error message to log.</param>
         public void Error(string message)
         {
-            if (LogLevel >= LogLevels.Error) { WriteMessage(message); }
+            if (LogLevel >= LogLevels.Message) { WriteMessage(message); }
 
             ErrorCount++;
         }
