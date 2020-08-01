@@ -88,7 +88,7 @@ namespace Bromine
         /// </summary>
         /// <param name="cssValue">CSS value for the requested element.</param>
         /// <returns></returns>
-        string GetCssValue(string cssValue);
+        string GetCss(string cssValue);
 
         /// <summary>
         /// Get the JavaScript value for the requested property.

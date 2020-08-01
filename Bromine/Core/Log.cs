@@ -1,10 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
-
-using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace Bromine.Core
 {
@@ -18,33 +14,23 @@ namespace Bromine.Core
     public class Log : IDisposable
     {
         /// <summary>
-        /// Construct a Log with xUnit console support.
+        /// Create an instance of Log for writing log messages.
         /// </summary>
-        /// <param name="logLevel">Determines which messages are logged.</param>
-        /// <param name="output">xUnit object for writing to the console.</param>
-        public Log(LogLevels logLevel, ITestOutputHelper output)
-        {
-            Output = output;
-
-            InitializeLog(logLevel, InitializeXunitTestName());
-        }
-
-        /// <summary>
-        /// Construct for general logging.
-        /// </summary>
+        /// <param name="sessionName"></param>
         /// <param name="logLevel"></param>
-        /// <param name="testName"></param>
-        public Log(LogLevels logLevel, string testName)
+        /// <param name="startLogging"></param>
+        public Log(string sessionName, LogLevels logLevel = LogLevels.Message, bool startLogging = true)
         {
+            InitializeLog(logLevel, sessionName, startLogging);
             Logs = new StringBuilder();
 
-            InitializeLog(logLevel, testName);
+            Message($"'{SessionName}' started");
         }
 
         /// <summary>
         /// Formatted name of the test or file being executed.
         /// </summary>
-        public string TestName { get; private set; }
+        public string SessionName { get; private set; }
 
         /// <summary>
         /// Number of errors that have been logged.
@@ -149,7 +135,7 @@ namespace Bromine.Core
         /// <summary>
         /// Path to the session log file.
         /// </summary>
-        public string LogPath => $@"{LogsDirectory}/{FormattedTimeString(DateTime.Now)} {TestName}{LogExtension}";
+        public string LogPath => $@"{LogsDirectory}/{FormattedTimeString(DateTime.Now)} {SessionName}{LogExtension}";
 
 
         /// <summary>
@@ -159,7 +145,7 @@ namespace Bromine.Core
         /// <param name="message">Optional message to add to the file name.</param>
         public void SaveDom(string source, string message = "")
         {
-            LastDomSnapshotFilePath = $@"{DomDirectory}/{FormattedTimeString(DateTime.Now)} {TestName} {message}".Trim() + LogExtension;
+            LastDomSnapshotFilePath = $@"{DomDirectory}/{FormattedTimeString(DateTime.Now)} {SessionName} {message}".Trim() + LogExtension;
 
             using (var writer = new StreamWriter(LastDomSnapshotFilePath))
             {
@@ -175,7 +161,7 @@ namespace Bromine.Core
         /// <returns></returns>
         public string ImagePath(string message = "")
         {
-            return LastImagePath = $@"{ImagesDirectory}/{FormattedTimeString(DateTime.Now)} {TestName} {message}".Trim() + ImageExtension;
+            return LastImagePath = $@"{ImagesDirectory}/{FormattedTimeString(DateTime.Now)} {SessionName} {message}".Trim() + ImageExtension;
         }
 
         /// <summary>
@@ -186,6 +172,11 @@ namespace Bromine.Core
         public static string FormattedTimeString(DateTime time) => time.ToString("yyyy-MM-dd H_mm_ss");
 
         /// <summary>
+        /// Get the current log output.
+        /// </summary>
+        public string LogOutput => Logs.ToString();
+
+        /// <summary>
         /// Dispose of loggers.
         /// </summary>
         public void Dispose()
@@ -194,49 +185,39 @@ namespace Bromine.Core
             {
                 using (var writer = new StreamWriter(LogPath))
                 {
-                    if (Output != null)
-                    {
-                        var output = Output as TestOutputHelper;
-
-                        // ReSharper disable once PossibleNullReferenceException
-                        writer.Write(output.Output);
-                    }
-                    else
-                    {
-                        writer.Write(Logs.ToString());
-                    }
+                    writer.Write(Logs.ToString());
                 }
 
                 IsInitialized = false;
             }
         }
 
-        internal string FormattedLogMessage(string message) => $"{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.ffff")} {LogLevel.ToString()} {message}";
+        internal string FormattedLogMessage(string message) => $"{DateTime.Now:dd/MM/yyyy HH:mm:ss.ffff} {LogLevel.ToString()} {message}";
 
         private void WriteMessage(string message)
         {
-            if (IsEnabled)
+            if (!IsEnabled)
             {
-                var formattedMessage = FormattedLogMessage(message);
-
-                if (Output != null)
-                {
-                    Output.WriteLine(formattedMessage);
-                }
-                else
-                {
-                    Logs.AppendLine(formattedMessage);
-                }
+                return;
             }
+
+            var formattedMessage = FormattedLogMessage(message);
+
+            Logs.AppendLine(formattedMessage);
         }
 
-        private void InitializeLog(LogLevels logLevel, string testName)
+        private void InitializeLog(LogLevels logLevel, string sessionName, bool startLogging)
         {
             IsInitialized = true;
             LogLevel = logLevel;
-            TestName = testName;
+            SessionName = sessionName;
 
             InitializeDirectories();
+
+            if (startLogging)
+            {
+                Start();
+            }
         }
 
         private void InitializeDirectories()
@@ -250,7 +231,7 @@ namespace Bromine.Core
             CreateDirectory(LogsDirectory);
         }
 
-        private void CreateDirectory(string path)
+        private static void CreateDirectory(string path)
         {
             if (!Directory.Exists(path))
             {
@@ -258,60 +239,6 @@ namespace Bromine.Core
             }
         }
 
-        private string InitializeXunitTestName()
-        {
-            if (Output != null)
-            {
-                // ReSharper disable once PossibleNullReferenceException
-                var testName = (Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Output) as ITest)?.DisplayName;
-                var testData = string.Empty;
-
-                // ReSharper disable once PossibleNullReferenceException
-                TestName = testName.Contains("(") ? testName.Split('(', ')')[0] : testName;
-
-                if (testName.Contains("("))
-                {
-                    var testInfo = testName.Split(new char[] {'(', ')'});
-
-                    TestName = testInfo[0];
-                    testData = testInfo[1];
-                }
-
-                Start();
-                WriteTestStart(testData);
-            }
-            else
-            {
-                Framework("ITestOutputHelper was not provided. A valid object is required for xUnit console logging.");
-            }
-
-            return TestName;
-        }
-
-        private void WriteTestStart(string testData)
-        {
-            var builder = new StringBuilder();
-            Framework($"Test Started");
-
-            if (!string.IsNullOrWhiteSpace(testData))
-            {
-                var formattedData = testData.Split(',');
-
-                builder.AppendLine("Test Data");
-
-                foreach (var param in formattedData)
-                {
-                    builder.AppendLine(param.Replace("\"", string.Empty).Replace("'", string.Empty));
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(builder.ToString()))
-            {
-                Framework(builder.ToString());
-            }
-        }
-
-        private ITestOutputHelper Output { get; }
         private StringBuilder Logs { get; }
 
         private string DomDirectoryText => "DOM";

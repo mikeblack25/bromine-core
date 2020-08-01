@@ -28,7 +28,7 @@ namespace Bromine.Core
             }
 
             Nav.GoToUrl(url);
-            Log.Debug($"Navigate to {url}");
+            Log.Message($"Navigate to {url}");
         }
 
         /// <summary>

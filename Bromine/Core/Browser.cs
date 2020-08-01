@@ -8,8 +8,6 @@ using Bromine.Verifies;
 
 using OpenQA.Selenium;
 
-using Xunit.Abstractions;
-
 namespace Bromine.Core
 {
     /// <inheritdoc cref="IBrowser" />
@@ -19,16 +17,14 @@ namespace Bromine.Core
         /// Launch a requested browser and configuration and log with the provided loggers.
         /// </summary>
         /// <param name="options">Provides advanced browser and driver options.</param>
+        /// <param name="sessionName"></param>
         /// <param name="logLevel"></param>
-        /// <param name="output"></param>
-        public Browser(BrowserOptions options = null, LogLevels logLevel = LogLevels.Message, ITestOutputHelper output = null)
+        /// <param name="startLogging"></param>
+        public Browser(BrowserOptions options = null, string sessionName = "", LogLevels logLevel = LogLevels.Message, bool startLogging = true)
         {
             BrowserOptions = options ?? new BrowserOptions(BrowserType.Chrome);
 
-            if (output != null)
-            {
-                Log = new Log(logLevel, output);
-            }
+            Log = new Log(sessionName, logLevel, startLogging);
 
             if (BrowserOptions.LogElementHistory)
             {

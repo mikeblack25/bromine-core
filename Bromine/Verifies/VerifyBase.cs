@@ -8,9 +8,9 @@ using Xunit;
 namespace Bromine.Verifies
 {
     /// <summary>
-    /// Provides access to Xunit Assertions.
+    /// Provides access to xUnit Assertions.
     /// <see cref="Assert"/>
-    /// Note: This does not include all assertions provided by Xunit at this time.
+    /// Note: This does not include all assertions provided by xUnit at this time.
     /// </summary>
     public abstract class VerifyBase
     {
@@ -29,9 +29,10 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="expectedSubString">The sub-string which is expected not to be in the string.</param>
         /// <param name="actualString">The string to be inspected.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void Contains(string expectedSubString, string actualString, string message = "")
+        public void Contains(string expectedSubString, string actualString)
         {
+            var message = $"Is '{expectedSubString}' found in '{actualString}'?";
+
             InvokeAssert(() => Assert.Contains(expectedSubString, actualString), message);
         }
 
@@ -40,9 +41,10 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="notExpectedSubString">The sub-string which is expected not to be in the string.</param>
         /// <param name="actualString">The string to be inspected.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void DoesNotContain(string notExpectedSubString, string actualString, string message = "")
+        public void DoesNotContain(string notExpectedSubString, string actualString)
         {
+            var message = $"Is '{notExpectedSubString}' not found in '{actualString}'?";
+
             InvokeAssert(() => Assert.DoesNotContain(notExpectedSubString, actualString), message);
         }
 
@@ -50,9 +52,10 @@ namespace Bromine.Verifies
         /// Verifies that a collection is empty.
         /// </summary>
         /// <param name="collection">The collection to be inspected.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void Empty(IEnumerable<object> collection, string message = "")
+        public void Empty(IEnumerable<object> collection)
         {
+            var message = "Is the collection empty?";
+
             InvokeAssert(() => Assert.Empty(collection), message);
         }
 
@@ -61,9 +64,10 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="expectedEndString">The string expected to be at the end of the string.</param>
         /// <param name="actualString">The string to be inspected.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void EndsWith(string expectedEndString, string actualString, string message = "")
+        public void EndsWith(string expectedEndString, string actualString)
         {
+            var message = $"Does '{actualString}' end with '{expectedEndString}'?";
+
             InvokeAssert(() => Assert.EndsWith(expectedEndString, actualString), message);
         }
 
@@ -72,9 +76,10 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="expected">The expected value.</param>
         /// <param name="actual">The value to be compared against.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void Equal(object expected, object actual, string message = "")
+        public void Equal(object expected, object actual)
         {
+            var message = "Are the objects equal?";
+
             InvokeAssert(() => Assert.Equal(expected, actual), message);
         }
 
@@ -83,9 +88,10 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="expected">The expected value.</param>
         /// <param name="actual">The value to be compared against.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void Equal(double expected, double actual, string message = "")
+        public void Equal(double expected, double actual)
         {
+            var message = $"Does '{expected}' = '{actual}'?";
+
             InvokeAssert(() => Assert.Equal(expected, actual), message);
         }
 
@@ -95,7 +101,7 @@ namespace Bromine.Verifies
         /// <param name="condition">The condition to be inspected.</param>
         /// <param name="message">Intent of the verify statement.</param>
         /// <param name="errorMessage">Message to display if the expectation fails.</param>
-        public void False(bool condition, string message = "", string errorMessage = "")
+        public void False(bool condition, string message, string errorMessage = "")
         {
             InvokeAssert(() => Assert.False(condition, errorMessage), message);
         }
@@ -104,7 +110,7 @@ namespace Bromine.Verifies
         /// Fail with the given message.
         /// </summary>
         /// <param name="message"></param>
-        public void Fail(string message = "")
+        public void Fail(string message)
         {
             InvokeAssert(() => Assert.False(true), message);
         }
@@ -115,9 +121,10 @@ namespace Bromine.Verifies
         /// <param name="actual">The actual value to be evaluated.</param>
         /// <param name="low">The (inclusive) low value of the range.</param>
         /// <param name="high">The (inclusive) high value of the range.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void InRange(double actual, double low, double high, string message = "")
+        public void InRange(double actual, double low, double high)
         {
+            var message = $"Is '{actual}' between '{low}' and {high}?";
+
             InvokeAssert(() => Assert.InRange(actual, low, high), message);
         }
 
@@ -127,9 +134,10 @@ namespace Bromine.Verifies
         /// <param name="actual">The actual value to be evaluated.</param>
         /// <param name="low">The (inclusive) low value of the range.</param>
         /// <param name="high">The (inclusive) high value of the range.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void InRange(DateTime actual, DateTime low, DateTime high, string message = "")
+        public void InRange(DateTime actual, DateTime low, DateTime high)
         {
+            var message = $"Is '{actual}' between '{low}' and {high}?";
+
             InvokeAssert(() => Assert.InRange(actual, low, high), message);
         }
 
@@ -139,9 +147,10 @@ namespace Bromine.Verifies
         /// <param name="actual">The actual value to be evaluated.</param>
         /// <param name="low">The (inclusive) low value of the range.</param>
         /// <param name="high">The (inclusive) high value of the range.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void NotInRange(double actual, double low, double high, string message = "")
+        public void NotInRange(double actual, double low, double high)
         {
+            var message = $"Is '{actual}' between '{low}' and {high}?";
+
             InvokeAssert(() => Assert.NotInRange(actual, low, high), message);
         }
 
@@ -151,9 +160,10 @@ namespace Bromine.Verifies
         /// <param name="actual">The actual value to be evaluated.</param>
         /// <param name="low">The (inclusive) low value of the range.</param>
         /// <param name="high">The (inclusive) high value of the range.</param>
-        /// <param name="message">Message to display if the expectation fails.</param>
-        public void NotInRange(DateTime actual, DateTime low, DateTime high, string message = "")
+        public void NotInRange(DateTime actual, DateTime low, DateTime high)
         {
+            var message = $"Is '{actual}' between '{low}' and {high}?";
+
             InvokeAssert(() => Assert.NotInRange(actual, low, high), message);
         }
 
@@ -162,7 +172,7 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="condition">The object to be validated.</param>
         /// <param name="message">Message to display if the expectation fails.</param>
-        public void NotNull(object condition, string message = "")
+        public void NotNull(object condition, string message)
         {
             InvokeAssert(() => Assert.NotNull(condition), message);
         }
@@ -172,7 +182,7 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="condition">The object to be inspected.</param>
         /// <param name="message">Message to display if the expectation fails.</param>
-        public void Null(object condition, string message = "")
+        public void Null(object condition, string message)
         {
             InvokeAssert(() => Assert.Null(condition), message);
         }
@@ -183,7 +193,7 @@ namespace Bromine.Verifies
         /// <param name="expected">The expected object.</param>
         /// <param name="actual">The actual object.</param>
         /// <param name="message">Message to display if the expectation fails.</param>
-        public void NotEqual(object expected, object actual, string message = "")
+        public void NotEqual(object expected, object actual, string message)
         {
             InvokeAssert(() => Assert.NotEqual(expected, actual), message);
         }
@@ -193,7 +203,7 @@ namespace Bromine.Verifies
         /// </summary>
         /// <param name="collection">The collection to be inspected.</param>
         /// <param name="message">Message to display if the expectation fails.</param>
-        public void NotEmpty(IEnumerable<object> collection, string message = "")
+        public void NotEmpty(IEnumerable<object> collection, string message)
         {
             InvokeAssert(() => Assert.NotEmpty(collection), message);
         }
@@ -204,7 +214,7 @@ namespace Bromine.Verifies
         /// <param name="condition">The condition to be inspected.</param>
         /// <param name="message">Intent of the verify statement.</param>
         /// <param name="errorMessage">Message to display if the expectation fails.</param>
-        public void True(bool condition, string message = "", string errorMessage = "")
+        public void True(bool condition, string message, string errorMessage = "")
         {
             InvokeAssert(() => Assert.True(condition, errorMessage), message);
         }
@@ -226,7 +236,7 @@ namespace Bromine.Verifies
         }
 
         /// <summary>
-        /// 
+        /// Common Invoke to log messages and attempt the requested verification.
         /// </summary>
         /// <param name="action"></param>
         /// <param name="message"></param>
@@ -234,8 +244,9 @@ namespace Bromine.Verifies
         {
             try
             {
-                Log.Message(message);
+                Log.Message($"Verify: {message}");
                 action.Invoke();
+                Log.Message("Verify: Passed");
             }
             catch (Exception e)
             {
@@ -244,7 +255,7 @@ namespace Bromine.Verifies
         }
 
         /// <summary>
-        /// 
+        /// Generic Delegate used in the InvokeAssertion.
         /// </summary>
         internal delegate void VerifyAction();
     }

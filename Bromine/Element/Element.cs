@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+
 using Bromine.Core;
 
 using OpenQA.Selenium;
@@ -59,44 +60,117 @@ namespace Bromine.Element
         /// <summary>
         /// Element TagName value.
         /// </summary>
-        public string TagName => GetProperty(() => SeleniumElement.TagName, "Unable to find the tag for the requested element").ToString();
+        public string TagName
+        {
+            get
+            {
+                LogElementInformation("Get TagName for");
+
+                return GetProperty(() => SeleniumElement.TagName, "Unable to find the tag for the requested element").ToString();
+            }
+        }
 
         /// <summary>
         /// Element Text value.
         /// </summary>
-        public string Text => GetProperty(() => SeleniumElement.Text, "Unable to find the text for the requested element").ToString();
+        public string Text
+        {
+            get
+            {
+                LogElementInformation("Get Text for");
+
+                var text = GetProperty(() => SeleniumElement.Text, "Unable to find the text for the requested element").ToString();
+                LogElementInformation($"Text is '{text}' for");
+
+                return text;
+            }
+        }
 
         /// <summary>
         /// Element Enabled status. This can be used to determine if an element can be interacted with.
         /// </summary>
-        public bool Enabled => (bool) GetProperty(() => SeleniumElement.Enabled, "Unable to find the enabled property for the requested element");
+        public bool Enabled
+        {
+            get
+            {
+                LogElementInformation("Get Enabled status for");
+
+                var enabled = (bool)GetProperty(() => SeleniumElement.Enabled, "Unable to find the enabled property for the requested element");
+                LogElementInformation($"Enabled status is '{enabled}' for");
+
+                return enabled;
+            }
+        }
 
         /// <summary>
         /// Element selected status.
         /// </summary>
-        public bool Selected => (bool)GetProperty(() => SeleniumElement.Selected, "Unable to find the selected property for the requested element");
+        public bool Selected
+        {
+            get
+            {
+                LogElementInformation("Get Selection status for");
+
+                var selected = (bool) GetProperty(() => SeleniumElement.Selected, "Unable to find the selected property for the requested element");
+                LogElementInformation($"Selected status is '{selected}' for");
+
+                return selected;
+            }
+        }
 
         /// <summary>
         /// Element location in the rendered DOM.
         /// </summary>
-        public Point Location => (Point)GetProperty(() => SeleniumElement.Location, "Unable to find the location for the requested element");
+        public Point Location
+        {
+            get
+            {
+                LogElementInformation("Get Location for");
+
+                return (Point) GetProperty(() => SeleniumElement.Location, "Unable to find the location for the requested element");
+            }
+        }
 
         /// <summary>
         /// Element size.
         /// </summary>
-        public Size Size => (Size)GetProperty(() => SeleniumElement.Size, "Unable to find the size for the requested element");
+        public Size Size
+        {
+            get
+            {
+                LogElementInformation("Get Size for");
+
+                return (Size) GetProperty(() => SeleniumElement.Size, "Unable to find the size for the requested element");
+            }
+        }
 
         /// <summary>
         /// Element displayed status. This is helpful as some interactions require an element to be in view.
         /// </summary>
-        public bool Displayed => (bool)GetProperty(() => SeleniumElement.Displayed, "Unable to find the displayed property for the requested element");
+        public bool Displayed
+        {
+            get
+            {
+                LogElementInformation("Get Displayed property for");
+
+                return (bool) GetProperty(() => SeleniumElement.Displayed, "Unable to find the displayed property for the requested element");
+            }
+        }
 
         /// <summary>
         /// Find the parent element of the requested element.
         /// Note: This requires first locating an element and then calling this.
         /// </summary>
         /// <returns></returns>
-        public Element ParentElement => (Element)GetProperty(() => new Element(SeleniumElement.FindElement(By.XPath("..")), Browser, locator:".."), "Unable to find the parent element for the requested element");
+        public Element ParentElement
+        {
+            get
+            {
+                LogElementInformation("Get Parent Element for");
+
+                return (Element)GetProperty(() => new Element(SeleniumElement.FindElement(By.XPath("..")), Browser, locator: ".."), "Unable to find the parent element for the requested element");
+            }
+        }
 
         /// <summary>
         /// Find the requested element with the given attribute.
@@ -104,7 +178,12 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="attributeName">Attribute name of the requested element.</param>
         /// <returns></returns>
-        public string GetAttribute(string attributeName) => (string)GetProperty(() => SeleniumElement.GetAttribute(attributeName), $"Unable to find the value {attributeName} for the requested element");
+        public string GetAttribute(string attributeName)
+        {
+            LogElementInformation($"Get {attributeName} attribute for");
+
+            return (string)GetProperty(() => SeleniumElement.GetAttribute(attributeName), $"Unable to find the value {attributeName} for the requested element");
+        }
 
         /// <summary>
         /// Get the CSS value for the requested element by property name.
@@ -112,7 +191,12 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="cssValue">CSS value for the requested element.</param>
         /// <returns></returns>
-        public string GetCssValue(string cssValue) => (string)GetProperty(() => SeleniumElement.GetCssValue(cssValue), $"Unable to find the CSS value {cssValue} for the requested element");
+        public string GetCss(string cssValue)
+        {
+            LogElementInformation($"Get {cssValue} CSS property for");
+
+            return (string)GetProperty(() => SeleniumElement.GetCssValue(cssValue), $"Unable to find the CSS value {cssValue} for the requested element");
+        }
 
         /// <summary>
         /// Get the JavaScript value for the requested property.
@@ -120,7 +204,12 @@ namespace Bromine.Element
         /// </summary>
         /// <param name="propertyName">Property value for the requested element.</param>
         /// <returns></returns>
-        public string GetJavaScriptProperty(string propertyName) => (string)GetProperty(() => SeleniumElement.GetProperty(propertyName), $"Unable to find the property {propertyName} for the requested element");
+        public string GetJavaScriptProperty(string propertyName)
+        {
+            LogElementInformation($"Get {propertyName} JavaScript property for");
+
+            return (string)GetProperty(() => SeleniumElement.GetProperty(propertyName), $"Unable to find the property {propertyName} for the requested element");
+        }
 
         /// <summary>
         /// Update the value property for the requested element.
@@ -128,6 +217,8 @@ namespace Bromine.Element
         /// <param name="text">Text to update to the requested element.</param>
         public void SendKeys(string text)
         {
+            LogElementInformation($"Send Keys {text} to");
+
             SeleniumElement?.SendKeys(text);
         }
 
@@ -136,6 +227,8 @@ namespace Bromine.Element
         /// </summary>
         public void Clear()
         {
+            LogElementInformation("Clear");
+
             SeleniumElement?.Clear();
         }
 
@@ -144,6 +237,8 @@ namespace Bromine.Element
         /// </summary>
         public void Click()
         {
+            LogElementInformation("Click");
+
             SeleniumElement?.Click();
         }
 
@@ -179,6 +274,20 @@ namespace Bromine.Element
                 Created = DateTime.Now,
                 IsInitialized = false
             };
+        }
+
+        /// <summary>
+        /// Log a standard message for element interaction in the form:
+        /// {info} {Information.Name} element
+        /// NOTE: Elements named 'Element' will be ignored from logging as this is the base element name on construction.
+        /// </summary>
+        /// <param name="info">Element interaction information to log.</param>
+        private void LogElementInformation(string info)
+        {
+            if (Information.Name != "Element")
+            {
+                Log.Message($"{info} {Information.Name} element");
+            }
         }
 
         private object GetProperty(Func<object> method, string errorMessage)
