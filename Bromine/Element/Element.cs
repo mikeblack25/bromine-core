@@ -124,6 +124,17 @@ namespace Bromine.Element
         public string GetJavaScriptProperty(string propertyName) => (string)GetProperty(() => SeleniumElement.GetProperty(propertyName), $"Unable to find the property {propertyName} for the requested element");
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="attributeName"></param>
+        /// <param name="attributeValue"></param>
+        /// <returns></returns>
+        public void SetAttribute(string attributeName, string attributeValue)
+        {
+            Browser.ExecuteJs($"arguments[0].setAttribute({attributeName}, {attributeValue});", this);
+        }
+
+        /// <summary>
         /// Update the value property for the requested element.
         /// </summary>
         /// <param name="text">Text to update to the requested element.</param>
