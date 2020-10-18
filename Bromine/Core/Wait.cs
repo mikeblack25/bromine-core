@@ -45,12 +45,12 @@ namespace Bromine.Core
 
         /// <summary>
         /// What for the page to load by checking the document ready state.
-        /// NOTE: An additional 500 ms will be added to the end of the conditional check to ensure time for the page to load and avoid stale element references.
+        /// NOTE: An additional 1 second will be added to the end of the conditional check to ensure time for the page to load and avoid stale element references.
         /// </summary>
         public void ForPageToLoad()
         {
             ForCondition(() => Browser.ExecuteJs("return document.readyState;").ToString() == "complete", 5);
-            ForTime(500, true);
+            ForTime(1000, true);
         }
 
         /// <summary>
