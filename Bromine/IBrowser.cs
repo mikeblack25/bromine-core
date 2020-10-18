@@ -134,7 +134,7 @@ namespace Bromine
         void TakeVisibleImage(string name);
 
         /// <summary>
-        /// Execute the jS script.
+        /// Execute the js script.
         /// </summary>
         /// <param name="jsCode">JavaScript to run on the given page context.</param>
         /// <param name="arguments">Optional arguments to pass to the call.</param>
@@ -142,11 +142,17 @@ namespace Bromine
         object ExecuteJs(string jsCode, object[] arguments);
 
         /// <summary>
-        /// Execute the jS script.
+        /// Execute the js script.
         /// </summary>
         /// <param name="jsCode">JavaScript to run on the given element.</param>
         /// <param name="element">Element to interact with via js.</param>
         /// <returns>NOTE: An object is returned, the caller is responsible for the correct conversion.</returns>
         object ExecuteJs(string jsCode, IElement element);
+
+        /// <summary>
+        /// Execute the js script.
+        /// </summary>
+        /// <param name="jsCode">JavaScript to run on the given element.</param>
+        object ExecuteJs(string jsCode);
     }
 }

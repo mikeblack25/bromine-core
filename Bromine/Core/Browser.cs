@@ -147,6 +147,14 @@ namespace Bromine.Core
         }
 
         /// <inheritdoc />
+        public object ExecuteJs(string jsCode)
+        {
+            var javascriptDriver = (IJavaScriptExecutor)Driver.WebDriver;
+
+            return javascriptDriver.ExecuteScript(jsCode);
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
             try

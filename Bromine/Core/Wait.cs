@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 
 using OpenQA.Selenium;
@@ -41,6 +41,16 @@ namespace Bromine.Core
                 time *= 1000;
             }
             Thread.Sleep(time);
+        }
+
+        /// <summary>
+        /// What for the page to load by checking the document ready state.
+        /// NOTE: An additional 500 ms will be added to the end of the conditional check to ensure time for the page to load and avoid stale element references.
+        /// </summary>
+        public void ForPageToLoad()
+        {
+            ForCondition(() => Browser.ExecuteJs("return document.readyState;").ToString() == "complete", 5);
+            ForTime(500, true);
         }
 
         /// <summary>
