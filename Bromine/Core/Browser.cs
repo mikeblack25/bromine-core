@@ -186,10 +186,6 @@ namespace Bromine.Core
             SoftVerify = new SoftVerify(this);
 
             Driver = new Driver(this);
-            if (BrowserOptions.Driver.ImplicitWaitEnabled)
-            {
-                EnableImplicitWait(BrowserOptions.Driver.SecondsToWait);
-            }
 
             Find = new Find(this);
             SeleniumFind = new SeleniumFind(this);
@@ -197,11 +193,7 @@ namespace Bromine.Core
             Window = new Window(this);
             ElementStyleExtensions = new ElementStyleExtensions(this);
             Wait = new Wait(this);
-        }
-
-        private void EnableImplicitWait(int secondsToWait)
-        {
-            Driver.WebDriver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, secondsToWait);
+            Wait.EnableImplicitWait(BrowserOptions.Driver.SecondsToWait);
         }
 
         private Screenshot Image { get; set; }

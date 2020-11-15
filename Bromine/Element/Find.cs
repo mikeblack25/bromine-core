@@ -43,7 +43,7 @@ namespace Bromine.Element
 
             try
             {
-                elements = Elements(locator);
+                elements = Elements(locator, waitTime: 0);
             }
             catch (Exception e)
             {
@@ -78,13 +78,21 @@ namespace Bromine.Element
         /// <param name="name"></param>
         /// <param name="sourcePath"></param>
         /// <param name="lineNumber"></param>
+        /// <param name="waitTime"></param>
         /// <returns></returns>
         public List<IElement> Elements(string locator,
                                        [System.Runtime.CompilerServices.CallerMemberName] string name = "",
                                        [System.Runtime.CompilerServices.CallerFilePath] string sourcePath = "",
-                                       [System.Runtime.CompilerServices.CallerLineNumber] int lineNumber = 0)
+                                       [System.Runtime.CompilerServices.CallerLineNumber] int lineNumber = 0,
+                                       int waitTime = -1)
         {
             var locateTime = DateTime.Now;
+            var implicitWait = Browser.Wait.ImplicitWaitTime;
+
+            if (waitTime > -1)
+            {
+                Browser.Wait.EnableImplicitWait(waitTime);
+            }
 
             var elements = SeleniumFind.ElementsByCssSelector(locator);
 
@@ -99,25 +107,26 @@ namespace Bromine.Element
                         elements = SeleniumFind.ElementsByClass(locator);
                     }
                 }
-                else
-                {
-                    elements = SeleniumFind.ElementsByText(locator);
-
-                    if (elements.Count == 0)
-                    {
-                        elements = SeleniumFind.ElementsByPartialText(locator);
-                    }
-                }
             }
 
             if (elements.Count == 0)
             {
-                elements.Add(new Element());
+                elements = SeleniumFind.ElementsByText(locator);
+            }
+
+            if (elements.Count == 0)
+            {
+                elements = SeleniumFind.ElementsByPartialText(locator);
             }
 
             foreach (var element in elements)
             {
                 UpdateElementInformation(element, locateTime, locator, name, sourcePath, lineNumber);
+            }
+
+            if (waitTime > -1)
+            {
+                Browser.Wait.EnableImplicitWait(implicitWait);
             }
 
             return elements;

@@ -20,9 +20,23 @@ namespace Bromine.Core
             DefaultWait = new DefaultWait<IWebDriver>(Driver)
             {
                 PollingInterval = TimeSpan.FromMilliseconds(250)
-
-                    
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ImplicitWaitTime
+        {
+            get
+            {
+                return Browser.BrowserOptions.Driver.SecondsToWait;
+            }
+            set
+            {
+                Browser.BrowserOptions.Driver.SecondsToWait = value;
+                EnableImplicitWait(value);
+            }
         }
 
         /// <summary>
@@ -88,6 +102,15 @@ namespace Bromine.Core
 
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="secondsToWait"></param>
+        public void EnableImplicitWait(int secondsToWait)
+        {
+            Driver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, secondsToWait);
         }
 
         private Browser Browser { get; }

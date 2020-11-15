@@ -75,7 +75,7 @@ namespace Bromine.Element
         /// <summary>
         /// Element selected status.
         /// </summary>
-        public bool Selected => (bool) GetProperty(() => SeleniumElement.Selected, "Unable to find the selected property for the requested element");
+        public bool Selected => (bool)GetProperty(() => SeleniumElement.Selected, "Unable to find the selected property for the requested element");
 
         /// <summary>
         /// Element location in the rendered DOM.
@@ -90,7 +90,18 @@ namespace Bromine.Element
         /// <summary>
         /// Element displayed status. This is helpful as some interactions require an element to be in view.
         /// </summary>
-        public bool Displayed => (bool)GetProperty(() => SeleniumElement.Displayed, "Unable to find the displayed property for the requested element");
+        public bool Displayed
+        {
+            get
+            {
+                if (SeleniumElement != null)
+                {
+                    return (bool)GetProperty(() => SeleniumElement.Displayed, "Unable to find the displayed property for the requested element");
+                }
+
+                return false;
+            }
+        }
 
         /// <summary>
         /// Find the parent element of the requested element.

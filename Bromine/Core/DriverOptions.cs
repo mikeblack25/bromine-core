@@ -60,23 +60,10 @@ namespace Bromine.Core
         public Uri RemoteAddress { get; }
 
         /// <summary>
-        /// Has the driver been configured to automatically wait for Selenium actions.
-        /// </summary>
-        public bool ImplicitWaitEnabled { get; private set; }
-
-        /// <summary>
         /// The number of seconds to implicitly wait for a web action to happen.
         /// This will not wait the specified time if the requested action is successful earlier.
         /// </summary>
-        public int SecondsToWait
-        {
-            get => _secondsToWait;
-            private set
-            {
-                _secondsToWait = value;
-                ImplicitWaitEnabled = true;
-            }
-        }
+        public int SecondsToWait { get; set; }
 
         /// <summary>
         /// When true the driver will be used from the executing directory.
@@ -88,7 +75,5 @@ namespace Bromine.Core
         /// When true the command window will not show when the browser driver is active.
         /// </summary>
         public bool HideDriverWindow { get; }
-
-        private int _secondsToWait;
     }
 }
