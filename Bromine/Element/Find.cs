@@ -109,16 +109,6 @@ namespace Bromine.Element
                 }
             }
 
-            if (elements.Count == 0)
-            {
-                elements = SeleniumFind.ElementsByText(locator);
-            }
-
-            if (elements.Count == 0)
-            {
-                elements = SeleniumFind.ElementsByPartialText(locator);
-            }
-
             foreach (var element in elements)
             {
                 UpdateElementInformation(element, locateTime, locator, name, sourcePath, lineNumber);
