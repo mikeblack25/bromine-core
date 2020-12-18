@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 using OpenQA.Selenium;
 
@@ -113,6 +115,11 @@ namespace Bromine.Core
         }
 
         /// <summary>
+        /// Collection of open tabs.
+        /// </summary>
+        public IReadOnlyCollection<string> Tabs =>  Driver.WebDriver.WindowHandles;
+
+        /// <summary>
         /// Minimize the window.
         /// </summary>
         public void Minimize()
@@ -137,6 +144,21 @@ namespace Bromine.Core
         {
             BrowserWindow.FullScreen();
             IsFullScreen = true;
+        }
+
+        /// <summary>
+        /// Open a window and navigate to a URL if provided.
+        /// </summary>
+        /// <param name="url">URL to navigate to.</param>
+        public void OpenWindow(string url = "")
+        {
+            Browser.Find.Element("body").SendKeys(Keys.Control + "t");
+
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                Driver.WebDriver.SwitchTo().Window(Tabs.Last());
+                Browser.Navigate.ToUrl(url);
+            }
         }
 
         /// <summary>
