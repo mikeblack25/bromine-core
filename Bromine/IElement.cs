@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
 using Bromine.Core;
 using Bromine.Element;
@@ -68,11 +69,26 @@ namespace Bromine
         bool Displayed { get; }
 
         /// <summary>
-        /// Find the parent element of the requested element.
-        /// Note: This requires first locating an element and then calling this.
+        /// Find child elements with the given strategy and locator string.
         /// </summary>
+        /// <param name="strategy">How will the element be found?</param>
+        /// <param name="locator">String to locate child elements.</param>
         /// <returns></returns>
-        Element.Element ParentElement { get; }
+        List<IElement> FindElements(Strategy strategy, string locator);
+
+        /// <summary>
+        /// Find child elements by CSS and locator string.
+        /// </summary>
+        /// <param name="locator">String to locate child elements.</param>
+        /// <returns></returns>
+        List<IElement> FindElements(string locator);
+
+        /// <summary>
+        /// Find child element by CSS and locator string.
+        /// </summary>
+        /// <param name="locator">String to locate child elements.</param>
+        /// <returns></returns>
+        IElement FindElement(string locator);
 
         /// <summary>
         /// Find the requested element with the given attribute.
@@ -98,6 +114,13 @@ namespace Bromine
         /// <returns></returns>
         string GetJavaScriptProperty(string propertyName);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="attributeName"></param>
+        /// <param name="attributeValue"></param>
+        void SetAttribute(string attributeName, string attributeValue);
+        
         /// <summary>
         /// Update the value property for the requested element.
         /// </summary>

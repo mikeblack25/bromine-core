@@ -72,7 +72,6 @@
     <Compile Include="Core\Browser.cs" />
     <Compile Include="Core\Driver.cs" />
     <Compile Include="Core\Session.cs" />
-    <Compile Include="Element\ElementBehaviorExtensions.cs" />
     <Compile Include="Element\Elements.cs" />
     <Compile Include="IPage.cs" />
     <Compile Include="IElement.cs" />

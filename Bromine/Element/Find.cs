@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -199,8 +200,34 @@ namespace Bromine.Element
             element.Information.CallerFilePath = sourcePath;
             element.Information.CallerLineNumber = lineNumber;
 
-            element.Information.Attributes = element.GetAttributes();
+            element.Information.Attributes = GetAttributes(element);
             element.Information.TotalTime = (DateTime.Now - element.Information.Created).Duration();
+        }
+
+        /// <summary>
+        /// Get all element attributes.
+        /// </summary>
+        /// <param name="element">Element to get the attributes of.</param>
+        /// <returns></returns>
+        private Dictionary<string, object> GetAttributes(IElement element)
+        {
+            var dictionary = new Dictionary<string, object>();
+
+            if (element.Information.IsInitialized)
+            {
+                var objects = (element as Element)?.Browser.ExecuteJs("var items = {}; for (index = 0; index < arguments[0].attributes.length; ++index) { items[arguments[0].attributes[index].name] = arguments[0].attributes[index].value }; return items;", element);
+                var strings = ((IEnumerable)objects).Cast<object>().Select(x => x?.ToString()).ToArray();
+
+                foreach (var attribute in strings)
+                {
+                    var attributes = attribute.Split(new[] { '[', ']', ',' });
+                    dictionary.Add(attributes[1], attributes[2]);
+                }
+
+                dictionary.Add("text", element.Text);
+            }
+
+            return dictionary;
         }
 
         private string BuildClasses(string classes)

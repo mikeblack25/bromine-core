@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 using Bromine.Core;
 
@@ -103,52 +104,41 @@ namespace Bromine.Element
             }
         }
 
-        /// <summary>
-        /// Find the parent element of the requested element.
-        /// Note: This requires first locating an element and then calling this.
-        /// </summary>
-        /// <returns></returns>
-        public Element ParentElement => (Element)GetProperty(() => new Element(SeleniumElement.FindElement(By.XPath("..")), Browser, locator: ".."), "Unable to find the parent element for the requested element");
+        /// <inheritdoc />
+        public List<IElement> FindElements(Strategy strategy, string locator)
+        {
+            Element ele = this as Element;
 
-        /// <summary>
-        /// Find the requested element with the given attribute.
-        /// Note: This requires first locating an element and then calling this.
-        /// </summary>
-        /// <param name="attributeName">Attribute name of the requested element.</param>
-        /// <returns></returns>
+            return ToList(ele.SeleniumElement.FindElements(SeleniumFind.Element(strategy, locator)), ele.Browser, locator, strategy);
+        }
+
+        /// <inheritdoc />
+        public List<IElement> FindElements(string locator)
+        {
+            Element ele = this as Element;
+
+            return ele.FindElements(Strategy.Css, locator);
+        }
+
+        /// <inheritdoc />
+        public IElement FindElement(string locator) => FindElements(Strategy.Css, locator).FirstOrDefault();
+
+        /// <inheritdoc />
         public string GetAttribute(string attributeName) => (string)GetProperty(() => SeleniumElement.GetAttribute(attributeName), $"Unable to find the value {attributeName} for the requested element");
 
-        /// <summary>
-        /// Get the CSS value for the requested element by property name.
-        /// Note: This requires first locating an element and then calling this.
-        /// </summary>
-        /// <param name="cssValue">CSS value for the requested element.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public string GetCss(string cssValue) => (string)GetProperty(() => SeleniumElement.GetCssValue(cssValue), $"Unable to find the CSS value {cssValue} for the requested element");
 
-        /// <summary>
-        /// Get the JavaScript value for the requested property.
-        /// Note: This requires first locating an element and then calling this.
-        /// </summary>
-        /// <param name="propertyName">Property value for the requested element.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public string GetJavaScriptProperty(string propertyName) => (string)GetProperty(() => SeleniumElement.GetProperty(propertyName), $"Unable to find the property {propertyName} for the requested element");
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="attributeName"></param>
-        /// <param name="attributeValue"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public void SetAttribute(string attributeName, string attributeValue)
         {
             Browser.ExecuteJs($"arguments[0].setAttribute({attributeName}, {attributeValue});", this);
         }
 
-        /// <summary>
-        /// Update the value property for the requested element.
-        /// </summary>
-        /// <param name="text">Text to update to the requested element.</param>
+        /// <inheritdoc />
         public void SendKeys(string text)
         {
             LogElementInformation($"Send Keys {text} to");
@@ -156,9 +146,7 @@ namespace Bromine.Element
             SeleniumElement?.SendKeys(text);
         }
 
-        /// <summary>
-        /// Clear the element content. This is usually used on a user editable field element.
-        /// </summary>
+        /// <inheritdoc />
         public void Clear()
         {
             LogElementInformation("Clear");
@@ -166,9 +154,7 @@ namespace Bromine.Element
             SeleniumElement?.Clear();
         }
 
-        /// <summary>
-        /// Click the element. The element should be enabled to be clickable.
-        /// </summary>
+        /// <inheritdoc />
         public void Click()
         {
             LogElementInformation("Click");
