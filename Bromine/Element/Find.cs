@@ -124,6 +124,22 @@ namespace Bromine.Element
         }
 
         /// <summary>
+        /// Find element by an attribute and containing string.
+        /// </summary>
+        /// <param name="attribute">Attribute of element to find.</param>
+        /// <param name="containsString">Expected value contained in the attribute string of the element.</param>
+        /// <returns></returns>
+        public IElement ElementByAttributeContains(string attribute, string containsString) => ElementsByAttributeContains(attribute, containsString).FirstOrDefault();
+
+        /// <summary>
+        /// Find elements by an attribute and containing string.
+        /// </summary>
+        /// <param name="attribute">Attribute of element to find.</param>
+        /// <param name="containsString">Expected value contained in the attribute string of the element.</param>
+        /// <returns></returns>
+        public List<IElement> ElementsByAttributeContains(string attribute, string containsString) => Elements($"*[{attribute}*='{containsString}']");
+
+        /// <summary>
         /// Find element by className or classNames.
         /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
