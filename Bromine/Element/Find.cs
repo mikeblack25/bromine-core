@@ -140,6 +140,38 @@ namespace Bromine.Element
         public List<IElement> ElementsByAttributeContains(string attribute, string containsString) => Elements($"*[{attribute}*='{containsString}']");
 
         /// <summary>
+        /// Find element by text.
+        /// </summary>
+        /// <param name="text">Text of the element to search for.</param>
+        /// <returns></returns>
+        public IElement ElementByText(string text) => ElementsByText(text).FirstOrDefault();
+
+        /// <summary>
+        /// Find elements by text.
+        /// </summary>
+        /// <param name="text">Text of the elements to search for.</param>
+        /// <returns></returns>
+        public List<IElement> ElementsByText(string text) => SeleniumFind.ElementsByXpath($"//*[text()='{text}'");
+
+        /// <summary>
+        /// Find the element after an element in the DOM by the text of the reference element.
+        /// NOTE: If the next element is not found, the next element of the parent will be found.
+        /// </summary>
+        /// <param name="text">Text of a reference element to find the element after.</param>
+        /// <returns></returns>
+        public IElement ElementAfterText(string text)
+        {
+            var element = SeleniumFind.ElementByXpath($"//*[text()='{text}']/following-sibling::*");
+
+            if (!element.Displayed)
+            {
+                element = SeleniumFind.ElementByXpath($"//*[text()='{text}']/parent::*/following-sibling::*");
+            }
+
+            return element;
+        }
+
+        /// <summary>
         /// Find element by className or classNames.
         /// NOTE: If multiple inputs are used they are all expected in the given class attribute.
         /// </summary>
