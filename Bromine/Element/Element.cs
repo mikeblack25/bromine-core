@@ -41,6 +41,18 @@ namespace Bromine.Element
         }
 
         /// <summary>
+        /// Construct the default behavior of the Element object.
+        /// </summary>
+        public Element()
+        {
+            Information = new Information
+            {
+                Created = DateTime.Now,
+                IsInitialized = false
+            };
+        }
+
+        /// <summary>
         /// Details about the location strategy used for the requested element.
         /// </summary>
         public Information Information { get; }
@@ -185,18 +197,6 @@ namespace Bromine.Element
         }
 
         /// <summary>
-        /// Construct the default behavior of the Element object.
-        /// </summary>
-        internal Element()
-        {
-            Information = new Information
-            {
-                Created = DateTime.Now,
-                IsInitialized = false
-            };
-        }
-
-        /// <summary>
         /// Log a standard message for element interaction in the form:
         /// {info} {Information.Name} element
         /// NOTE: Elements named 'Element' will be ignored from logging as this is the base element name on construction.
@@ -216,11 +216,12 @@ namespace Bromine.Element
             {
                 return method.Invoke();
             }
-            catch (Exception e)
+            catch //(Exception e)
             {
-                Log.Error($"{errorMessage}{Environment.NewLine}{e.Message}");
+                // TODO: Determine how to log an error here since Log is null.
+                //Log.Error($"{errorMessage}{Environment.NewLine}{e.Message}");
 
-                return null;
+                return string.Empty;
             }
         }
     }
