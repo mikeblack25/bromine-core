@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Bromine.Element
 {
@@ -27,6 +27,35 @@ namespace Bromine.Element
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// Get an Element in a list by index.
+        /// NOTE: An empty Element will be returned if the provided index is out of range.
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static IElement ElementByIndex(this List<IElement> elements, int index)
+        {
+            IElement element = new Element();
+
+            try
+            {
+                if (elements != null)
+                {
+                    if (index < elements.Count)
+                    {
+                        element = elements[index];
+                    }
+                }
+            }
+            catch
+            {
+                // TODO: Should an error be logged if the check fails?
+            }
+
+            return element;
         }
     }
 }
