@@ -27,6 +27,8 @@ namespace Bromine.Core
             Browser = browser;
 
             WebDriver = InitializeDriver();
+
+            WebDriver.ExecuteJavaScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
         }
 
         /// <summary>
@@ -153,6 +155,10 @@ namespace Bromine.Core
         {
             var options = new ChromeOptions();
             options.AddArgument("--allow-file-access-from-files");
+            options.AddArgument("--disable-blink-features");
+            options.AddArgument("--disable-blink-features=AutomationControlled");
+            options.AddArguments("--incognito", "--disable-blink-features=AutomationControlled");
+            options.AddExcludedArgument("enable-automation");
 
             if (Options.IsHeadless)
             {
