@@ -31,11 +31,13 @@ namespace Bromine.Element
         /// <param name="name"></param>
         /// <param name="sourcePath"></param>
         /// <param name="lineNumber"></param>
+        /// <param name="ignoreError"></param>
         /// <returns></returns>
         public IElement Element(string locator,
                                 [System.Runtime.CompilerServices.CallerMemberName] string name = "",
                                 [System.Runtime.CompilerServices.CallerFilePath] string sourcePath = "",
-                                [System.Runtime.CompilerServices.CallerLineNumber] int lineNumber = 0)
+                                [System.Runtime.CompilerServices.CallerLineNumber] int lineNumber = 0,
+                                bool ignoreError = false)
         {
             var elements = new List<IElement>();
             IElement element;
@@ -44,7 +46,7 @@ namespace Bromine.Element
 
             try
             {
-                elements = Elements(locator, waitTime: 0);
+                elements = Elements(locator, name: name, sourcePath: sourcePath, lineNumber: lineNumber, waitTime: 0, ignoreError: ignoreError);
             }
             catch (Exception e)
             {
@@ -80,44 +82,58 @@ namespace Bromine.Element
         /// <param name="sourcePath"></param>
         /// <param name="lineNumber"></param>
         /// <param name="waitTime"></param>
+        /// <param name="ignoreError"></param>
         /// <returns></returns>
         public List<IElement> Elements(string locator,
                                        [System.Runtime.CompilerServices.CallerMemberName] string name = "",
                                        [System.Runtime.CompilerServices.CallerFilePath] string sourcePath = "",
                                        [System.Runtime.CompilerServices.CallerLineNumber] int lineNumber = 0,
-                                       int waitTime = -1)
+                                       int waitTime = -1,
+                                       bool ignoreError = false)
         {
-            var locateTime = DateTime.Now;
-            var implicitWait = Browser.Wait.ImplicitWaitTime;
+            var elements = new List<IElement>();
 
-            if (waitTime > -1)
+            try
             {
-                Browser.Wait.EnableImplicitWait(waitTime);
-            }
+                var locateTime = DateTime.Now;
+                var implicitWait = Browser.Wait.ImplicitWaitTime;
 
-            var elements = SeleniumFind.ElementsByCssSelector(locator);
-
-            if (elements.Count == 0) // No elements were found from the above call.
-            {
-                if (!locator.Contains(" ")) // Id and Class location doesn't have a string but can be in CssSelector location above.
+                if (waitTime > -1)
                 {
-                    elements = SeleniumFind.ElementsById(locator);
+                    Browser.Wait.EnableImplicitWait(waitTime);
+                }
 
-                    if (elements.Count == 0)
+                elements = SeleniumFind.ElementsByCssSelector(locator);
+
+                if (elements.Count == 0) // No elements were found from the above call.
+                {
+                    if (!locator.Contains(" ")) // Id and Class location doesn't have a string but can be in CssSelector location above.
                     {
-                        elements = SeleniumFind.ElementsByClass(locator);
+                        elements = SeleniumFind.ElementsById(locator);
+
+                        if (elements.Count == 0)
+                        {
+                            elements = SeleniumFind.ElementsByClass(locator);
+                        }
                     }
                 }
-            }
 
-            foreach (var element in elements)
-            {
-                UpdateElementInformation(element, locateTime, locator, name, sourcePath, lineNumber);
-            }
+                foreach (var element in elements)
+                {
+                    UpdateElementInformation(element, locateTime, locator, name, sourcePath, lineNumber);
+                }
 
-            if (waitTime > -1)
+                if (waitTime > -1)
+                {
+                    Browser.Wait.EnableImplicitWait(implicitWait);
+                }
+            }
+            catch
             {
-                Browser.Wait.EnableImplicitWait(implicitWait);
+                if (!ignoreError)
+                {
+                    throw;
+                }
             }
 
             return elements;
@@ -161,6 +177,8 @@ namespace Bromine.Element
         /// <returns></returns>
         public IElement ElementAfterText(string text)
         {
+            Browser.Wait.ForPageToLoad();
+
             var element = SeleniumFind.ElementByXpath($"//*[text()='{text}']/following-sibling::*");
 
             if (!element.Displayed)
