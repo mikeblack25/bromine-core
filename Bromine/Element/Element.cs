@@ -6,6 +6,7 @@ using System.Linq;
 using Bromine.Core;
 
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 
 namespace Bromine.Element
 {
@@ -145,33 +146,59 @@ namespace Bromine.Element
         public string GetJavaScriptProperty(string propertyName) => (string)GetProperty(() => SeleniumElement.GetProperty(propertyName), $"Unable to find the property {propertyName} for the requested element");
 
         /// <inheritdoc />
-        public void SetAttribute(string attributeName, string attributeValue)
+        public IElement SetAttribute(string attributeName, string attributeValue)
         {
             Browser.ExecuteJs($"arguments[0].setAttribute({attributeName}, {attributeValue});", this);
+
+            return this;
         }
 
         /// <inheritdoc />
-        public void SendKeys(string text)
+        public IElement SendKeys(string text)
         {
             LogElementInformation($"Send Keys {text} to");
 
             SeleniumElement?.SendKeys(text);
+
+            return this;
         }
 
         /// <inheritdoc />
-        public void Clear()
+        public IElement Clear()
         {
             LogElementInformation("Clear");
 
             SeleniumElement?.Clear();
+
+            return this;
         }
 
         /// <inheritdoc />
-        public void Click()
+        public IElement Click()
         {
             LogElementInformation("Click");
 
             SeleniumElement?.Click();
+
+            return this;
+        }
+
+        /// <inheritdoc />
+        public IElement DoubleClick()
+        {
+            var actions = new Actions(Browser.Driver.WebDriver);
+            actions.DoubleClick(SeleniumElement).Perform();
+
+            return this;
+        }
+
+        /// <inheritdoc />
+        public IElement MoveTo()
+        {
+            var actions = new Actions(Browser.Driver.WebDriver);
+            actions.MoveToElement(SeleniumElement);
+
+            return this;
         }
 
         internal IBrowser Browser { get; }

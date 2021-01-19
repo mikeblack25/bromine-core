@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Drawing;
 
 using Bromine.Core;
@@ -99,10 +99,10 @@ namespace Bromine
         string GetAttribute(string attributeName);
 
         /// <summary>
-        /// Get the CSS value for the requested element by property name.
+        /// Get the CSS value for the element by property name.
         /// Note: This requires first locating an element and then calling this.
         /// </summary>
-        /// <param name="cssValue">CSS value for the requested element.</param>
+        /// <param name="cssValue">CSS value for the element.</param>
         /// <returns></returns>
         string GetCss(string cssValue);
 
@@ -115,26 +115,38 @@ namespace Bromine
         string GetJavaScriptProperty(string propertyName);
 
         /// <summary>
-        /// 
+        /// Update the value of the attribute for the element.
         /// </summary>
-        /// <param name="attributeName"></param>
-        /// <param name="attributeValue"></param>
-        void SetAttribute(string attributeName, string attributeValue);
+        /// <param name="attributeName">Attribute name to update the value of.</param>
+        /// <param name="attributeValue">New value for the attribute.</param>
+        IElement SetAttribute(string attributeName, string attributeValue);
         
         /// <summary>
-        /// Update the value property for the requested element.
+        /// Update the value property for the element.
         /// </summary>
-        /// <param name="text">Text to update to the requested element.</param>
-        void SendKeys(string text);
+        /// <param name="text">Update element text.</param>
+        IElement SendKeys(string text);
 
         /// <summary>
         /// Clear the element content. This is usually used on a user editable field element.
         /// </summary>
-        void Clear();
+        IElement Clear();
 
         /// <summary>
         /// Click the element. The element should be enabled to be clickable.
         /// </summary>
-        void Click();
+        IElement Click();
+
+        /// <summary>
+        /// Double click the left mouse button on the element.
+        /// </summary>
+        /// <returns></returns>
+        IElement DoubleClick();
+
+        /// <summary>
+        /// Move the mouse to the element.
+        /// </summary>
+        /// <returns></returns>
+        IElement MoveTo();
     }
 }
